@@ -21,7 +21,7 @@ ACCEL gAccelerators[] = {
     {FCONTROL | FVIRTKEY, 'N', CmdNewWindow},
     {FSHIFT | FCONTROL | FVIRTKEY, 'N', CmdDuplicateInNewWindow},
     {FCONTROL | FVIRTKEY, 'O', CmdOpen},
-    {FCONTROL | FVIRTKEY, 'S', CmdSaveAs},
+    {FCONTROL | FVIRTKEY, 'S', CmdSaveAnnotations},
     {FSHIFT | FCONTROL | FVIRTKEY, 'S', CmdSaveAsBookmark},
     {FCONTROL | FVIRTKEY, 'P', CmdPrint},
     {FCONTROL | FVIRTKEY, 'Q', CmdExit},

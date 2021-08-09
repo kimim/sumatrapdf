@@ -602,10 +602,11 @@ void UpdateTreeCtrlColors(WindowInfo* win) {
         tocTreeCtrl->SetBackgroundColor(treeBgCol);
         tocTreeCtrl->SetTextColor(treeTxtCol);
 
-        win->tocLabelWithClose->SetBgCol(labelBgCol);
-        win->tocLabelWithClose->SetTextCol(labelTxtCol);
-        win->sidebarSplitter->SetBackgroundColor(splitterCol);
-        SetWindowExStyle(tocTreeCtrl->hwnd, WS_EX_STATICEDGE, !flatTreeWnd);
+        win->tocLabelWithClose->SetBgCol(treeBgCol);
+        win->tocLabelWithClose->SetTextCol(treeTxtCol);
+
+        win->sidebarSplitter->SetBackgroundColor(GetAppColor(AppColor::MainWindowBg));
+        SetWindowExStyle(tocTreeCtrl->hwnd, WS_EX_STATICEDGE, flatTreeWnd);
         uint flags = SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED;
         SetWindowPos(tocTreeCtrl->hwnd, nullptr, 0, 0, 0, 0, flags);
     }
@@ -615,12 +616,12 @@ void UpdateTreeCtrlColors(WindowInfo* win) {
         favTreeCtrl->SetBackgroundColor(treeBgCol);
         favTreeCtrl->SetTextColor(treeTxtCol);
 
-        win->favLabelWithClose->SetBgCol(labelBgCol);
-        win->favLabelWithClose->SetTextCol(labelTxtCol);
+        win->favLabelWithClose->SetBgCol(treeBgCol);
+        win->favLabelWithClose->SetTextCol(treeTxtCol);
 
-        win->favSplitter->SetBackgroundColor(splitterCol);
+        win->favSplitter->SetBackgroundColor(GetAppColor(AppColor::MainWindowBg));
 
-        SetWindowExStyle(favTreeCtrl->hwnd, WS_EX_STATICEDGE, !flatTreeWnd);
+        SetWindowExStyle(favTreeCtrl->hwnd, WS_EX_STATICEDGE, flatTreeWnd);
         uint flags = SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED;
         SetWindowPos(favTreeCtrl->hwnd, nullptr, 0, 0, 0, 0, flags);
     }

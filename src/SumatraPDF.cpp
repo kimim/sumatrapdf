@@ -3956,6 +3956,10 @@ static void FrameOnChar(WindowInfo* win, WPARAM key, LPARAM info = 0) {
         case 'k':
             FrameOnKeydown(win, VK_UP, 0);
             break;
+        case 'v':
+            for (int i=0; i<10; i++) // scroll down 10 lines
+                SendMessageW(win->hwndCanvas, WM_VSCROLL, isShift ? SB_LINEUP : SB_LINEDOWN, 0);
+            break;
         case 'l':
             FrameOnKeydown(win, VK_RIGHT, 0);
             break;
@@ -4045,6 +4049,28 @@ static void FrameOnChar(WindowInfo* win, WPARAM key, LPARAM info = 0) {
                     PdfColor col = GetAnnotationHighlightColor();
                     SetColor(annot, col);
                 }
+                WindowInfoRerender(win);
+                if (isShift) {
+                    StartEditAnnotations(win->currentTab, annots);
+                } else {
+                    auto w = win->currentTab->editAnnotsWindow;
+                    if (w) {
+                        for (auto annot : annots) {
+                            AddAnnotationToEditWindow(w, annot);
+                        }
+                    } else {
+                        DeleteVecMembers(annots);
+                    }
+                }
+            }
+        } break;
+        case '`': {
+            auto annots = MakeAnnotationFromSelection(win->currentTab, AnnotationType::Squiggly);
+            if (!annots.empty()) {
+                //for (auto annot : annots) {
+                //    PdfColor col = GetAnnotationHighlightColor();
+                //    SetColor(annot, col);
+                //}
                 WindowInfoRerender(win);
                 if (isShift) {
                     StartEditAnnotations(win->currentTab, annots);
