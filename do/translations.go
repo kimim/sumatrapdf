@@ -1,9 +1,7 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -11,58 +9,12 @@ import (
 	"github.com/kjk/u"
 )
 
-const translationServer = "https://www.apptranslator.org"
-
 func verifyTranslationsMust() {
 	// TODO: reimplement using /api/dltransfor
+	// this should check if the translations.txt is the latest version
+	// as available on the server. We should download it and
+	// compare with src/docs/translations.txt
 	panic("NYI")
-}
-
-func validSha1(s string) bool {
-	return len(s) == 40
-}
-
-func lastDownloadFilePath() string {
-	return filepath.Join("strings", "translations.txt")
-}
-
-func dummySha1() string {
-	s := ""
-	for i := 0; i < 10; i++ {
-		s += "0000"
-	}
-	return s
-}
-
-func lastDownloadHash() string {
-	path := lastDownloadFilePath()
-	if !u.FileExists(path) {
-		return dummySha1()
-	}
-	d := u.ReadFileMust(path)
-	lines := toTrimmedLines(d)
-	sha1 := lines[1]
-	u.PanicIf(!validSha1(sha1), "'%s' is not a valid sha1", sha1)
-	return sha1
-}
-
-func saveLastDownload(d []byte) {
-	path := lastDownloadFilePath()
-	u.WriteFileMust(path, d)
-}
-
-func downloadTranslations() []byte {
-	logf("Downloading translations from the server...\n")
-
-	app := "SumatraPDF"
-	sha1 := lastDownloadHash()
-	// when testing locally
-	// SERVER = "172.21.12.12"  // mac book
-	// SERVER = "10.37.129.2"    // mac pro
-	// PORT = 5000
-	uri := fmt.Sprintf("https://www.apptranslator.org/dltrans?app=%s&sha1=%s", app, sha1)
-	d := httpDlMust(uri)
-	return d
 }
 
 // Translation describes a single translated text
@@ -127,16 +79,17 @@ func parseTranslations(s string) map[string][]*Translation {
 	return res
 }
 
-func shouldTranslate(path string) bool {
-	ext := strings.ToLower(filepath.Ext(path))
-	return ext == ".cpp"
-}
-
 var (
 	dirsToProcess = []string{"src"}
 )
 
 func getFilesToProcess() []string {
+
+	shouldTranslate := func(path string) bool {
+		ext := strings.ToLower(filepath.Ext(path))
+		return ext == ".cpp"
+	}
+
 	var res []string
 	for _, dir := range dirsToProcess {
 		files, err := ioutil.ReadDir(dir)
@@ -192,144 +145,4 @@ func extractStringsFromCFilesNoPaths() []string {
 	res = uniquifyStrings(res)
 	logf("%d strings to translate\n", len(res))
 	return res
-}
-
-type stringWithPath struct {
-	Text string
-	Path string
-	Dir  string
-}
-
-func extractStringsFromCFiles() []*stringWithPath {
-	filesToProcess := getFilesToProcess()
-	logf("Files to process: %d\n", len(filesToProcess))
-	var res []*stringWithPath
-	for _, path := range filesToProcess {
-		a := extractStringsFromCFile(path)
-		for _, s := range a {
-			swp := &stringWithPath{
-				Text: s,
-				Path: path,
-				Dir:  filepath.Base(filepath.Dir(path)),
-			}
-			res = append(res, swp)
-		}
-	}
-	logf("%d strings to translate\n", len(res))
-	return res
-}
-
-func extractJustStrings(a []*stringWithPath) []string {
-	var res []string
-	for _, el := range a {
-		res = append(res, el.Text)
-	}
-	res = uniquifyStrings(res)
-	return res
-}
-
-func dumpMissingPerLanguage(strings []string, stringsDict map[string][]*Translation, dumpStrings bool) map[string]bool {
-	/*
-	   untranslated_dict = {}
-	   for lang in get_lang_list(strings_dict):
-	       untranslated_dict[lang] = get_missing_for_language(
-	           strings, strings_dict, lang)
-	   items = untranslated_dict.items()
-	   items.sort(langs_sort_func)
-
-	   print("\nMissing translations:")
-	   strs = []
-	   for (lang, untranslated) in items:
-	       if len(untranslated) > 0:
-	           strs.append("%5s: %3d" % (lang, len(untranslated)))
-	   per_line = 5
-	   while len(strs) > 0:
-	       line_strs = strs[:per_line]
-	       strs = strs[per_line:]
-	       print("  ".join(line_strs))
-	   return untranslated_dict
-	*/
-	return nil
-}
-
-func getUntranslatedAsList(untranslatedDict map[string]bool) []string {
-	var a []string
-	for s := range untranslatedDict {
-		a = append(a, s)
-	}
-	return uniquifyStrings(a)
-}
-
-func generateCode(s string) {
-	fmt.Print("generate_code\n")
-	stringsDict := parseTranslations(s)
-	logf("%d strings\n", len(stringsDict))
-
-	strings := extractStringsFromCFiles()
-	stringsList := extractJustStrings(strings)
-
-	// remove obsolete strings from the server
-	var obsolete []string
-	for s := range stringsDict {
-		if !u.StringInSlice(stringsList, s) {
-			obsolete = append(obsolete, s)
-			delete(stringsDict, s)
-		}
-	}
-	if len(obsolete) > 0 {
-		logf("Removed %d obsolete strings\n", len(obsolete))
-	}
-
-	untranslatedDict := dumpMissingPerLanguage(stringsList, stringsDict, false)
-	untranslated := getUntranslatedAsList(untranslatedDict)
-	if len(untranslated) > 0 {
-		logf("%d untranslated\n", len(untranslated))
-		// add untranslated
-		for _, s := range untranslated {
-			if _, ok := stringsDict[s]; !ok {
-				stringsDict[s] = []*Translation{}
-			}
-		}
-	}
-	genCCode(stringsDict, strings)
-}
-
-func downloadAndUpdateTranslationsIfChanged() bool {
-	d := downloadTranslations()
-
-	// write what we download so that when we crash
-	// during processing, we can inspect it
-	// file removed if processing ok
-	tmpPath := filepath.Join("strings", "translations-temp.txt")
-	u.WriteFileMust(tmpPath, d)
-
-	s := string(d)
-	//logf("Downloaded translations:\n%s\n", s)
-	lines := strings.Split(s, "\n")
-	panicIf(len(lines) < 2, "Bad response, less than 2 lines: '%s'", s)
-	panicIf(lines[0] != "AppTranslator: SumatraPDF", "Bad response, invalid first line: '%s'", lines[0])
-	sha1 := lines[1]
-	if strings.HasPrefix(sha1, "No change") {
-		logf("skipping because translations haven't changed\n")
-		return false
-	}
-	panicIf(!validSha1(sha1), "Bad reponse, invalid sha1 on second line: '%s'", sha1)
-	logf("Translation data size: %d\n", len(s))
-	generateCode(s)
-	saveLastDownload(d)
-
-	must(os.Remove(tmpPath))
-	return true
-}
-
-func downloadTranslationsMain() {
-	changed := downloadAndUpdateTranslationsIfChanged()
-	if changed {
-		logf("\nNew translations downloaded from the server! Check them in!\n")
-	}
-}
-
-func regenerateLangs() {
-	d := u.ReadFileMust(lastDownloadFilePath())
-	generateCode(string(d))
 }
