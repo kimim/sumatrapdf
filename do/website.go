@@ -15,7 +15,7 @@ import (
 func websiteRunLocally(dir string) {
 	// using https://github.com/netlify/cli
 	cmd := exec.Command("netlify", "dev", "--dir", dir)
-	u.RunCmdLoggedMust(cmd)
+	runCmdLoggedMust(cmd)
 }
 
 func fileDownload(uri string, dstPath string) error {
@@ -32,7 +32,7 @@ func websiteBuildCloudflare() {
 		fmt.Printf("Skipping downloading executables because not 'website-cf' branch\n")
 		return
 	}
-	ver := "3.2"
+	ver := "3.3.3"
 	files := []string{
 		"SumatraPDF-%VER%-64-install.exe",
 		"SumatraPDF-%VER%-64.zip",
@@ -62,18 +62,18 @@ func websiteDeployCloudlare() {
 	u.EnsureGitClean(".")
 	{
 		cmd := exec.Command("git", "checkout", "website-cf")
-		u.RunCmdLoggedMust(cmd)
+		runCmdLoggedMust(cmd)
 	}
 	{
 		cmd := exec.Command("git", "rebase", "master")
-		u.RunCmdLoggedMust(cmd)
+		runCmdLoggedMust(cmd)
 	}
 	{
 		cmd := exec.Command("git", "push", "--force")
-		u.RunCmdLoggedMust(cmd)
+		runCmdLoggedMust(cmd)
 	}
 	{
 		cmd := exec.Command("git", "checkout", "master")
-		u.RunCmdLoggedMust(cmd)
+		runCmdLoggedMust(cmd)
 	}
 }

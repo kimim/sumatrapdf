@@ -492,15 +492,13 @@ function sumatrapdf_files()
     "CrashHandler.*",
     "DisplayModel.*",
     "DisplayMode.*",
-    "Doc.*",
-    "EbookController.*",
-    "EbookControls.*",
     "EditAnnotations.*",
     "ExternalViewers.*",
     "Favorites.*",
     "FileHistory.*",
     "FileThumbnails.*",
     "Flags.*",
+    "FzImgReader.*",
     "GlobalPrefs.*",
     "Installer.h",
     "Installer.cpp",
@@ -508,9 +506,7 @@ function sumatrapdf_files()
     "Uninstaller.cpp",
     "MemLeakDetect.*",
     "Menu.*",
-    "MuiEbookPageDef.*",
     "Notifications.*",
-    "PagesLayoutDef.*",
     "PdfSync.*",
     "Print.*",
     "ProgressUpdateUI.*",
@@ -647,20 +643,7 @@ end
 
 function mui_files()
   files_in_dir("src/mui", {
-    "MuiBase.*",
     "Mui.*",
-    "MuiCss.*",
-    "MuiLayout.*",
-    "MuiPainter.*",
-    "MuiControl.*",
-    "MuiButton.*",
-    "MuiScrollBar.*",
-    "MuiEventMgr.*",
-    "MuiHwndWrapper.*",
-    "MuiGrid.*",
-    "SvgPath.*",
-    "MuiDefs.*",
-    "MuiFromText.*",
     "TextRender.*",
   })
 end
@@ -1035,13 +1018,11 @@ function test_util_files()
     --"AppTools.*",
     --"StressTesting.*",
     "AppUtil.*",
-    "EngineBase.*",
     "DisplayMode.*",
     "Flags.*",
     "SumatraConfig.*",
     "SettingsStructs.*",
     "SumatraUnitTests.cpp",
-    "mui/SvgPath*",
     "tools/test_util.cpp"
   })
 end
@@ -1050,7 +1031,7 @@ function engine_dump_files()
   files_in_dir("src", {
     "EngineDump.cpp",
     "SumatraConfig.*",    
-    "mui/MiniMui.*",
+    "mui/Mui.*",
     "mui/TextRender.*"
   })
 end
@@ -1064,9 +1045,11 @@ function pdf_preview_files()
 
   files_in_dir("src", {
     "utils/LogDbg.*",
-    "mui/MiniMui.*",
+    "mui/Mui.*",
     "mui/TextRender.*",
-    "MUPDF_Exports.cpp",
+    "ChmFile.*",
+    "EbookDoc.*",
+    "EbookFormatter.*",
     "EngineBase.*",
     "EngineEbook.*",
     "EngineDjVu.*",
@@ -1074,12 +1057,11 @@ function pdf_preview_files()
     "EngineMupdf.*",
     "EngineMupdfImpl.*",
     "EngineAll.h",
-    "ChmFile.*",
-    "PalmDbReader.*",
-    "EbookDoc.*",
-    "EbookFormatter.*",
+    "FzImgReader.*",
     "HtmlFormatter.*",
     "MobiDoc.*",
+    "MUPDF_Exports.cpp",
+    "PalmDbReader.*",
     "PdfCreator.*",
     "SumatraConfig.*",
   })

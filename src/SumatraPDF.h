@@ -26,8 +26,6 @@
 #define AUTO_RELOAD_TIMER_ID 5
 #define AUTO_RELOAD_DELAY_IN_MS 100
 
-#define EBOOK_LAYOUT_TIMER_ID 7
-
 // permissions that can be revoked through sumatrapdfrestrict.ini or the -restrict command line flag
 enum class Perm : uint {
     // enables Update checks, crash report submitting and hyperlinks
@@ -109,8 +107,8 @@ bool IsUIRightToLeft();
 bool SumatraLaunchBrowser(const WCHAR* url);
 bool OpenFileExternally(const WCHAR* path);
 void AssociateExeWithPdfExtension();
-void CloseTab(WindowInfo* win, bool quitIfLast = false);
-bool MayCloseWindow(WindowInfo* win);
+void CloseCurrentTab(WindowInfo* win, bool quitIfLast = false);
+bool CanCloseWindow(WindowInfo* win);
 void CloseWindow(WindowInfo* win, bool quitIfLast, bool forceClose);
 void SetSidebarVisibility(WindowInfo* win, bool tocVisible, bool showFavorites);
 void RememberFavTreeExpansionState(WindowInfo* win);
@@ -186,3 +184,4 @@ void SwitchToDisplayMode(WindowInfo* win, DisplayMode displayMode, bool keepCont
 void WindowInfoRerender(WindowInfo* win, bool includeNonClientArea = false);
 LRESULT CALLBACK WndProcSumatraFrame(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
 void ShutdownCleanup();
+bool DocIsSupportedFileType(Kind);

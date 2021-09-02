@@ -591,7 +591,7 @@ func downloadCrashesAndGenerateHTML() {
 		// using https://github.com/netlify/cli
 		cmd := exec.Command("netlify", "dev", "-p", "8765", "--dir", ".")
 		cmd.Dir = crashesHTMLDataDir()
-		u.RunCmdLoggedMust(cmd)
+		runCmdLoggedMust(cmd)
 	}
 	if true {
 		cmd := exec.Command("netlify", "deploy", "--prod", "--dir", ".")
@@ -601,7 +601,7 @@ func downloadCrashesAndGenerateHTML() {
 			cmd = exec.Command("netlify", "deploy", "--prod", "--open", "--dir", ".")
 		}
 		cmd.Dir = crashesHTMLDataDir()
-		u.RunCmdLoggedMust(cmd)
+		runCmdLoggedMust(cmd)
 	}
 }
 
@@ -712,7 +712,7 @@ func getTmplDay() *template.Template {
 func genCrashHTML(dir string, ci *crashInfo) {
 	name := ci.fileNameHTML
 	path := filepath.Join(dir, name)
-	body := u.ReadFileMust(ci.pathTxt)
+	body := readFileMust(ci.pathTxt)
 	var buf bytes.Buffer
 	bodyStr := template.HTMLEscapeString(string(body))
 	bodyStr = highlightInjectedModules(bodyStr)
@@ -727,7 +727,7 @@ func genCrashHTML(dir string, ci *crashInfo) {
 	must(err)
 	d := buf.Bytes()
 
-	u.WriteFileMust(path, d)
+	writeFileMust(path, d)
 	nWritten++
 	if nWritten < 8 || nWritten%100 == 0 {
 		logf("wrote %s %d\n", path, nWritten)
@@ -763,10 +763,10 @@ func genCrashesHTMLForDay(dir string, day string, isIndex bool) {
 	must(err)
 	d := buf.Bytes()
 
-	u.WriteFileMust(path, d)
+	writeFileMust(path, d)
 	if isIndex {
 		path = filepath.Join(dir, "index.html")
-		u.WriteFileMust(path, d)
+		writeFileMust(path, d)
 	}
 
 	for _, ci := range a {

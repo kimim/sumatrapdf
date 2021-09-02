@@ -17,6 +17,7 @@
 #include "utils/UITask.h"
 #include "utils/WinUtil.h"
 #include "utils/GdiPlusUtil.h"
+#include "utils/Archive.h"
 
 #include "wingui/WinGui.h"
 #include "wingui/Layout.h"
@@ -37,13 +38,15 @@
 #include "Controller.h"
 #include "EngineBase.h"
 #include "EngineAll.h"
-#include "Doc.h"
 #include "PdfCreator.h"
 #include "SettingsStructs.h"
 #include "GlobalPrefs.h"
 #include "ChmModel.h"
+#include "PalmDbReader.h"
+#include "EbookBase.h"
+#include "EbookDoc.h"
+#include "MobiDoc.h"
 #include "DisplayModel.h"
-#include "EbookController.h"
 #include "FileHistory.h"
 #include "PdfSync.h"
 #include "RenderCache.h"
@@ -276,6 +279,22 @@ bool SumatraLaunchBrowser(const WCHAR* url) {
     }
 
     return LaunchFile(url, nullptr, L"open");
+}
+
+bool DocIsSupportedFileType(Kind kind) {
+    if (EpubDoc::IsSupportedFileType(kind)) {
+        return true;
+    }
+    if (Fb2Doc::IsSupportedFileType(kind)) {
+        return true;
+    }
+    if (MobiDoc::IsSupportedFileType(kind)) {
+        return true;
+    }
+    if (PalmDoc::IsSupportedFileType(kind)) {
+        return true;
+    }
+    return false;
 }
 
 // lets the shell open a file of any supported perceived type
@@ -629,8 +648,6 @@ struct ControllerCallbackHandler : ControllerCallback {
     }
     void FocusFrame(bool always) override;
     void SaveDownload(const WCHAR* url, ByteSlice data) override;
-    void HandleLayoutedPages(EbookController* ctrl, EbookFormattingData* data) override;
-    void RequestDelayedLayout(int delay) override;
 };
 
 void ControllerCallbackHandler::RenderThumbnail(DisplayModel* dm, Size size, const onBitmapRenderedCb& saveThumbnail) {
@@ -723,21 +740,6 @@ void ControllerCallbackHandler::SaveDownload(const WCHAR* url, ByteSlice data) {
     SaveDataToFile(win->hwndFrame, fileName, data);
 }
 
-void ControllerCallbackHandler::HandleLayoutedPages(EbookController* ctrl, EbookFormattingData* data) {
-    uitask::Post([=] {
-        if (FindWindowInfoByController(ctrl)) {
-            ctrl->HandlePagesFromEbookLayout(data);
-        } else {
-            // don't leak data if ctrl has already been deleted
-            EbookController::DeleteEbookFormattingData(data);
-        }
-    });
-}
-
-void ControllerCallbackHandler::RequestDelayedLayout(int delay) {
-    SetTimer(win->hwndCanvas, EBOOK_LAYOUT_TIMER_ID, delay, nullptr);
-}
-
 void ControllerCallbackHandler::UpdateScrollbars(Size canvas) {
     CrashIf(!win->AsFixed());
     DisplayModel* dm = win->AsFixed();
@@ -796,9 +798,7 @@ void ControllerCallbackHandler::PageNoChanged(Controller* ctrl, int pageNo) {
         return;
     }
 
-    if (win->AsEbook()) {
-        pageNo = win->AsEbook()->CurrentTocPageNo();
-    } else if (INVALID_PAGE_NO != pageNo) {
+    if (INVALID_PAGE_NO != pageNo) {
         AutoFreeWstr buf(win->ctrl->GetPageLabel(pageNo));
         win::SetText(win->hwndPageBox, buf);
         ToolbarUpdateStateForWindow(win, false);
@@ -829,7 +829,7 @@ static Controller* CreateControllerForEngine(EngineBase* engine, const WCHAR* fi
     }
     Controller* ctrl = nullptr;
     ctrl = new DisplayModel(engine, win->cbHandler);
-    CrashIf(!ctrl || !ctrl->AsFixed() || ctrl->AsChm() || ctrl->AsEbook());
+    CrashIf(!ctrl || !ctrl->AsFixed() || ctrl->AsChm());
     return ctrl;
 }
 
@@ -877,13 +877,13 @@ static Controller* CreateForChm(const WCHAR* path, PasswordUI* pwdUI, WindowInfo
         }
         CrashIf(engine->kind != kindEngineChm);
         ctrl = new DisplayModel(engine, win->cbHandler);
-        CrashIf(!ctrl || !ctrl->AsFixed() || ctrl->AsChm() || ctrl->AsEbook());
+        CrashIf(!ctrl || !ctrl->AsFixed() || ctrl->AsChm());
     } else {
         // another ChmModel might still be active
         chmModel->RemoveParentHwnd();
         ctrl = chmModel;
     }
-    CrashIf(ctrl && (!ctrl->AsChm() || ctrl->AsFixed() || ctrl->AsEbook()));
+    CrashIf(ctrl && (!ctrl->AsChm() || ctrl->AsFixed()));
     VerifyController(ctrl, path);
     return ctrl;
 }
@@ -896,40 +896,25 @@ static Controller* CreateControllerForFile(const WCHAR* path, PasswordUI* pwdUI,
     Controller* ctrl = nullptr;
 
     bool chmInFixedUI = gGlobalPrefs->chmUI.useFixedPageUI;
-    bool ebookInFixedUI = gGlobalPrefs->ebookUI.useFixedPageUI;
 
     // TODO: sniff file content only once
-    EngineBase* engine = CreateEngine(path, pwdUI, chmInFixedUI, ebookInFixedUI);
+    EngineBase* engine = CreateEngine(path, pwdUI, chmInFixedUI);
 
     if (engine) {
         ctrl = new DisplayModel(engine, win->cbHandler);
-        CrashIf(!ctrl || !ctrl->AsFixed() || ctrl->AsChm() || ctrl->AsEbook());
+        CrashIf(!ctrl || !ctrl->AsFixed() || ctrl->AsChm());
         VerifyController(ctrl, path);
         logf(L"CreateControllerForFile: '%s', %d pages\n", path, engine->PageCount());
         return ctrl;
     }
 
-    if (!chmInFixedUI) {
-        ctrl = CreateForChm(path, pwdUI, win);
-        if (ctrl) {
-            logf(L"CreateControllerForFile: '%s', %d pages\n", path, ctrl->PageCount());
-            return ctrl;
-        }
-    }
-
-    if (ebookInFixedUI) {
+    if (chmInFixedUI) {
         return nullptr;
     }
-    Doc doc = Doc::CreateFromFile(path);
-    if (!doc.IsDocLoaded()) {
-        return nullptr;
-    }
-    ctrl = EbookController::Create(doc, win->hwndCanvas, win->cbHandler, win->frameRateWnd);
+    ctrl = CreateForChm(path, pwdUI, win);
     if (!ctrl) {
         return nullptr;
     }
-    CrashIf(!ctrl->AsEbook() || ctrl->AsFixed() || ctrl->AsChm());
-    VerifyController(ctrl, path);
     logf(L"CreateControllerForFile: '%s', %d pages\n", path, ctrl->PageCount());
     return ctrl;
 }
@@ -1100,10 +1085,6 @@ static void LoadDocIntoCurrentTab(const LoadArgs& args, Controller* ctrl, FileSt
             win->ctrl->SetDisplayMode(displayMode);
             ss.page = limitValue(ss.page, 1, win->ctrl->PageCount());
             win->ctrl->GoToPage(ss.page, false);
-        } else if (win->AsEbook()) {
-            if (prevCtrl && prevCtrl->AsEbook() && str::Eq(win->ctrl->GetFilePath(), prevCtrl->GetFilePath())) {
-                win->ctrl->AsEbook()->CopyNavHistory(*prevCtrl->AsEbook());
-            }
         } else {
             CrashIf(true);
         }
@@ -1144,12 +1125,6 @@ static void LoadDocIntoCurrentTab(const LoadArgs& args, Controller* ctrl, FileSt
 
     SetFrameTitleForTab(tab, false);
     UpdateUiForCurrentTab(win);
-
-    if (win->AsEbook()) {
-        // start ebook UI layout after UpdateUiForCurrentTab
-        // (prevents the need for an instant re-layout)
-        win->AsEbook()->StartLayouting(fs ? fs->reparseIdx : 0, displayMode);
-    }
 
     if (HasPermission(Perm::DiskAccess) && tab->GetEngineType() == kindEngineMupdf) {
         CrashIf(!win->AsFixed() || win->AsFixed()->pdfSync);
@@ -1754,9 +1729,6 @@ void LoadModelIntoTab(TabInfo* tab) {
 
     if (win->AsChm()) {
         win->AsChm()->SetParentHwnd(win->hwndCanvas);
-    } else if (win->AsEbook()) {
-        // prevent the ebook UI from redrawing before win->RedrawAll at the bottom
-        win->AsEbook()->EnableMessageHandling(false);
     } else if (win->AsFixed() && win->uiaProvider) {
         // tell UI Automation about content change
         win->uiaProvider->OnDocumentLoad(win->AsFixed());
@@ -1781,11 +1753,6 @@ void LoadModelIntoTab(TabInfo* tab) {
         }
     } else if (win->AsChm()) {
         win->ctrl->GoToPage(win->ctrl->CurrentPageNo(), false);
-    } else if (win->AsEbook()) {
-        win->AsEbook()->EnableMessageHandling(true);
-        if (tab->canvasRc != win->canvasRc) {
-            win->ctrl->SetViewPortSize(win->GetViewPortSize());
-        }
     }
     tab->canvasRc = win->canvasRc;
 
@@ -1955,14 +1922,6 @@ static void RerenderFixedPage() {
 }
 
 void UpdateDocumentColors() {
-    // TODO: only do this if colors have actually changed?
-    for (auto* win : gWindows) {
-        if (win->AsEbook()) {
-            win->AsEbook()->UpdateDocumentColors();
-            UpdateTreeCtrlColors(win);
-        }
-    }
-
     COLORREF text, bg;
     GetFixedPageUiColors(text, bg);
 
@@ -2002,7 +1961,7 @@ static void OnMenuExit() {
     }
 
     for (WindowInfo* win : gWindows) {
-        if (!MayCloseWindow(win)) {
+        if (!CanCloseWindow(win)) {
             return;
         }
     }
@@ -2035,7 +1994,6 @@ static void CloseDocumentInTab(WindowInfo* win, bool keepUIEnabled, bool deleteM
     ClearTocBox(win);
     AbortFinding(win, true);
 
-    delete win->linkOnLastButtonDown;
     win->linkOnLastButtonDown = nullptr;
     delete win->annotationOnLastButtonDown;
     win->annotationOnLastButtonDown = nullptr;
@@ -2135,6 +2093,7 @@ enum class SaveChoice {
     Discard,
     SaveNew,
     SaveExisting,
+    Cancel,
 };
 
 SaveChoice ShouldSaveAnnotationsDialog(HWND hwndParent, const WCHAR* filePath) {
@@ -2145,15 +2104,18 @@ SaveChoice ShouldSaveAnnotationsDialog(HWND hwndParent, const WCHAR* filePath) {
     constexpr int kBtnIdDiscard = 100;
     constexpr int kBtnIdSaveToExisting = 101;
     constexpr int kBtnIdSaveToNew = 102;
+    constexpr int kBtnIdCancel = 103;
     TASKDIALOGCONFIG dialogConfig{};
-    TASKDIALOG_BUTTON buttons[3];
+    TASKDIALOG_BUTTON buttons[4];
 
     buttons[0].nButtonID = kBtnIdSaveToExisting;
     buttons[0].pszButtonText = _TR("&Save to existing PDF");
     buttons[1].nButtonID = kBtnIdSaveToNew;
     buttons[1].pszButtonText = _TR("Save to &new PDF");
     buttons[2].nButtonID = kBtnIdDiscard;
-    buttons[2].pszButtonText = _TR("&Discard");
+    buttons[2].pszButtonText = _TR("&Discard changes");
+    buttons[3].nButtonID = IDCANCEL;
+    buttons[3].pszButtonText = _TR("&Cancel");
 
     DWORD flags =
         TDF_ALLOW_DIALOG_CANCELLATION | TDF_SIZE_TO_CONTENT | TDF_ENABLE_HYPERLINKS | TDF_POSITION_RELATIVE_TO_WINDOW;
@@ -2164,7 +2126,7 @@ SaveChoice ShouldSaveAnnotationsDialog(HWND hwndParent, const WCHAR* filePath) {
     dialogConfig.pszWindowTitle = _TR("Unsaved annotations");
     dialogConfig.pszMainInstruction = mainInstr;
     dialogConfig.pszContent = content;
-    dialogConfig.nDefaultButton = kBtnIdDiscard;
+    dialogConfig.nDefaultButton = IDCANCEL;
     dialogConfig.dwFlags = flags;
     dialogConfig.cxWidth = 0;
     dialogConfig.pfCallback = nullptr;
@@ -2187,45 +2149,48 @@ SaveChoice ShouldSaveAnnotationsDialog(HWND hwndParent, const WCHAR* filePath) {
             return SaveChoice::SaveExisting;
         case kBtnIdSaveToNew:
             return SaveChoice::SaveNew;
-        case IDCANCEL:
-            // closed window
+        case kBtnIdDiscard:
             return SaveChoice::Discard;
+        case IDCANCEL:
+            return SaveChoice::Cancel;
     }
     ReportIf(true);
-    return SaveChoice::Discard;
+    return SaveChoice::Cancel;
 }
 
-static void MaybeSaveAnnotations(TabInfo* tab) {
+// if returns true, can proceed with closing
+// if returns false, should cancel closing
+static bool MaybeSaveAnnotations(TabInfo* tab) {
     if (!tab) {
-        return;
+        return true;
     }
-    // TODO: hacky because CloseTab() can call CloseWindow() and
+    // TODO: hacky because CloseCurrentTab() can call CloseWindow() and
     // they both ask to save annotations
-    // Could determine in CloseTab() if will CloseWindow() and
+    // Could determine in CloseCurrentTab() if will CloseWindow() and
     // not ask
     if (tab->askedToSaveAnnotations) {
-        return;
+        return true;
     }
-    tab->askedToSaveAnnotations = true;
 
     DisplayModel* dm = tab->AsFixed();
     if (!dm) {
-        return;
+        return true;
     }
     EngineBase* engine = dm->GetEngine();
     // shouldn't really happen but did happen.
     // don't block stress testing if opening a document flags it hasving unsaved annotations
     if (IsStressTesting()) {
-        return;
+        return true;
     }
     bool shouldConfirm = EngineHasUnsavedAnnotations(engine);
     if (!shouldConfirm) {
-        return;
+        return true;
     }
+    tab->askedToSaveAnnotations = true;
     auto choice = ShouldSaveAnnotationsDialog(tab->win->hwndFrame, dm->GetFilePath());
     switch (choice) {
         case SaveChoice::Discard:
-            return;
+            return true;
         case SaveChoice::SaveNew:
             SaveAnnotationsToMaybeNewPdfFile(tab);
             break;
@@ -2238,15 +2203,19 @@ static void MaybeSaveAnnotations(TabInfo* tab) {
                 tab->win->ShowNotification(msg.AsView(), NotificationOptions::Warning);
             });
         } break;
+        case SaveChoice::Cancel:
+            tab->askedToSaveAnnotations = false;
+            return false;
         default:
             CrashIf(true);
     }
+    return true;
 }
 
 // closes the current tab, selecting the next one
 // if there's only a single tab left, the window is closed if there
 // are other windows, else the Frequently Read page is displayed
-void CloseTab(WindowInfo* win, bool quitIfLast) {
+void CloseCurrentTab(WindowInfo* win, bool quitIfLast) {
     CrashIf(!win);
     if (!win) {
         return;
@@ -2254,12 +2223,17 @@ void CloseTab(WindowInfo* win, bool quitIfLast) {
 
     AbortFinding(win, true);
     ClearFindBox(win);
-    MaybeSaveAnnotations(win->currentTab);
+
+    // TODO: maybe should have a way to over-ride this for unconditional close?
+    bool canClose = MaybeSaveAnnotations(win->currentTab);
+    if (!canClose) {
+        return;
+    }
 
     bool didSavePrefs = false;
     size_t tabCount = win->tabs.size();
     if (tabCount == 1 || (tabCount == 0 && quitIfLast)) {
-        if (MayCloseWindow(win)) {
+        if (CanCloseWindow(win)) {
             CloseWindow(win, quitIfLast, false);
             didSavePrefs = true; // in CloseWindow()
         }
@@ -2272,7 +2246,7 @@ void CloseTab(WindowInfo* win, bool quitIfLast) {
     }
 }
 
-bool MayCloseWindow(WindowInfo* win) {
+bool CanCloseWindow(WindowInfo* win) {
     CrashIf(!win);
     if (!win) {
         return false;
@@ -2320,8 +2294,6 @@ void CloseWindow(WindowInfo* win, bool quitIfLast, bool forceClose) {
     for (auto& tab : win->tabs) {
         if (tab->AsFixed()) {
             tab->AsFixed()->dontRenderFlag = true;
-        } else if (tab->AsEbook()) {
-            tab->AsEbook()->EnableMessageHandling(false);
         }
     }
 
@@ -2329,8 +2301,20 @@ void CloseWindow(WindowInfo* win, bool quitIfLast, bool forceClose) {
         ExitFullScreen(win);
     }
 
+    bool canCloseWindow = true;
     for (auto& tab : win->tabs) {
-        MaybeSaveAnnotations(tab);
+        bool canCloseTab = MaybeSaveAnnotations(tab);
+        if (!canCloseTab) {
+            canCloseWindow = false;
+        }
+    }
+
+    // TODO: should be more intelligent i.e. close the tabs we can and only
+    // leave those where user cancelled closing
+    // would have to remember a list of tabs to not close above
+    // if list not empty, only close the tabs not on the list
+    if (!canCloseWindow) {
+        return;
     }
 
     bool lastWindow = (1 == gWindows.size());
@@ -2379,24 +2363,6 @@ static bool AppendFileFilterForDoc(Controller* ctrl, str::WStr& fileFilter) {
         type = ctrl->AsFixed()->engineType;
     } else if (ctrl->AsChm()) {
         type = kindEngineChm;
-    } else if (ctrl->AsEbook()) {
-        switch (ctrl->AsEbook()->GetDocType()) {
-            case DocType::Epub:
-                type = kindEngineEpub;
-                break;
-            case DocType::Fb2:
-                type = kindEngineFb2;
-                break;
-            case DocType::Mobi:
-                type = kindEngineMobi;
-                break;
-            case DocType::Pdb:
-                type = kindEnginePdb;
-                break;
-            default:
-                type = nullptr;
-                break;
-        }
     }
 
     auto ext = ctrl->GetDefaultFileExt();
@@ -2407,7 +2373,7 @@ static bool AppendFileFilterForDoc(Controller* ctrl, str::WStr& fileFilter) {
     } else if (type == kindEngineComicBooks) {
         fileFilter.Append(_TR("Comic books"));
     } else if (type == kindEngineImage) {
-        fileFilter.AppendFmt(_TR("Image files (*.%s)"), ctrl->GetDefaultFileExt()+1);
+        fileFilter.AppendFmt(_TR("Image files (*.%s)"), ctrl->GetDefaultFileExt() + 1);
     } else if (type == kindEngineImageDir) {
         return false; // only show "All files"
     } else if (type == kindEnginePostScript) {
@@ -3020,8 +2986,7 @@ static void BrowseFolder(WindowInfo* win, bool forward) {
         WCHAR* path = files.at(i - 1);
         Kind kind = GuessFileTypeFromName(path);
         char* pathA = ToUtf8Temp(path);
-        if (!IsSupportedFileType(kind, gGlobalPrefs->ebookUI.useFixedPageUI) && !Doc::IsSupportedFileType(kind) &&
-            !gFileHistory.Find(pathA, nullptr)) {
+        if (!IsSupportedFileType(kind, true) && !DocIsSupportedFileType(kind) && !gFileHistory.Find(pathA, nullptr)) {
             free(files.PopAt(i - 1));
         }
     }
@@ -3033,7 +2998,7 @@ static void BrowseFolder(WindowInfo* win, bool forward) {
 
     int index = files.Find(tab->filePath);
     if (forward) {
-        index = (index + 1) % files.size();
+        index = (index + 1) % (int)files.size();
     } else {
         index = (int)(index + files.size() - 1) % files.size();
     }
@@ -3103,7 +3068,7 @@ static void RelayoutFrame(WindowInfo* win, bool updateToolbars = true, int sideb
             }
         }
     }
-    if (gGlobalPrefs->showToolbar && !win->presentation && !win->isFullScreen && !win->AsEbook()) {
+    if (gGlobalPrefs->showToolbar && !win->presentation && !win->isFullScreen) {
         if (updateToolbars) {
             Rect rcRebar = WindowRect(win->hwndReBar);
             dh.SetWindowPos(win->hwndReBar, nullptr, rc.x, rc.y, rc.dx, rcRebar.dy, SWP_NOZORDER);
@@ -3178,11 +3143,7 @@ static void RelayoutFrame(WindowInfo* win, bool updateToolbars = true, int sideb
     if (tocVisible && win->ctrl) {
         // the ToC selection may change due to resizing
         // (and SetSidebarVisibility relies on this for initialization)
-        if (win->ctrl->AsEbook()) {
-            UpdateTocSelection(win, win->ctrl->AsEbook()->CurrentTocPageNo());
-        } else {
-            UpdateTocSelection(win, win->ctrl->CurrentPageNo());
-        }
+        UpdateTocSelection(win, win->ctrl->CurrentPageNo());
     }
 }
 
@@ -3375,7 +3336,7 @@ static void OnMenuGoToPage(WindowInfo* win) {
     }
 
     // Don't show a dialog if we don't have to - use the Toolbar instead
-    if (gGlobalPrefs->showToolbar && !win->isFullScreen && !win->presentation && !win->AsEbook()) {
+    if (gGlobalPrefs->showToolbar && !win->isFullScreen && !win->presentation) {
         FocusPageNoEdit(win->hwndPageBox);
         return;
     }
@@ -3493,7 +3454,7 @@ void ExitFullScreen(WindowInfo* win) {
     if (win->tabsVisible) {
         win->tabsCtrl->SetIsVisible(true);
     }
-    if (gGlobalPrefs->showToolbar && !win->AsEbook()) {
+    if (gGlobalPrefs->showToolbar) {
         ShowWindow(win->hwndReBar, SW_SHOW);
     }
     if (!win->isMenuHidden) {
@@ -3545,8 +3506,7 @@ static int wrapIdx(int idx, int max) {
 void AdvanceFocus(WindowInfo* win) {
     // Tab order: Frame -> Page -> Find -> ToC -> Favorites -> Frame -> ...
 
-    bool hasToolbar =
-        !win->isFullScreen && !win->presentation && !win->AsEbook() && gGlobalPrefs->showToolbar && win->IsDocLoaded();
+    bool hasToolbar = !win->isFullScreen && !win->presentation && gGlobalPrefs->showToolbar && win->IsDocLoaded();
     int direction = IsShiftPressed() ? -1 : 1;
 
     const int MAX_WINDOWS = 5;
@@ -3730,11 +3690,6 @@ bool FrameOnKeydown(WindowInfo* win, WPARAM key, LPARAM lp, bool inTextfield) {
     } else if (VK_DIVIDE == key && dm) {
         dm->RotateBy(-90);
         gIsDivideKeyDown = true;
-#ifdef DEBUG
-    } else if (VK_F1 == key && win->AsEbook()) {
-        // TODO: this was in EbookWindow - is it still needed?
-        HwndSendCommand(win->hwndFrame, CmdDebugMui);
-#endif
     } else {
         return false;
     }
@@ -3769,7 +3724,7 @@ static void OnFrameKeyEsc(WindowInfo* win) {
         ClearSearchResult(win);
         return;
     }
-    if (gGlobalPrefs->escToExit && MayCloseWindow(win)) {
+    if (gGlobalPrefs->escToExit && CanCloseWindow(win)) {
         CloseWindow(win, true, false);
         return;
     }
@@ -3806,7 +3761,7 @@ static void OnFrameKeyB(WindowInfo* win) {
         } else if (!forward && currPage <= ctrl->CurrentPageNo()) {
             win->ctrl->GoToPrevPage();
         }
-    } else if (win->AsEbook() && !isSinglePage) {
+    } else if (false && !isSinglePage) {
         // "e-book view": flip a single page
         bool forward = !IsShiftPressed();
         int nextPage = ctrl->CurrentPageNo() + (forward ? 1 : -1);
@@ -3918,7 +3873,7 @@ static void FrameOnChar(WindowInfo* win, WPARAM key, LPARAM info = 0) {
         case 'q':
             // close the current document (it's too easy to press for discarding multiple tabs)
             // quit if this is the last window
-            CloseTab(win, true);
+            CloseCurrentTab(win, true);
             return;
         case 'r':
             ReloadDocument(win, false);
@@ -4107,7 +4062,6 @@ static void OnSidebarSplitterMove(SplitterMoveEvent* ev) {
     SplitterCtrl* splitter = ev->w;
     HWND hwnd = splitter->hwnd;
     WindowInfo* win = FindWindowInfoByHwnd(hwnd);
-    bool done = ev->done;
 
     Point pcur;
     GetCursorPosInHwnd(win->hwndFrame, pcur);
@@ -4125,16 +4079,13 @@ static void OnSidebarSplitterMove(SplitterMoveEvent* ev) {
         return;
     }
 
-    if (done || !win->AsEbook()) {
-        RelayoutFrame(win, false, sidebarDx);
-    }
+    RelayoutFrame(win, false, sidebarDx);
 }
 
 static void OnFavSplitterMove(SplitterMoveEvent* ev) {
     SplitterCtrl* splitter = ev->w;
     HWND hwnd = splitter->hwnd;
     WindowInfo* win = FindWindowInfoByHwnd(hwnd);
-    bool done = ev->done;
 
     Point pcur;
     GetCursorPosInHwnd(win->hwndTocBox, pcur);
@@ -4151,9 +4102,7 @@ static void OnFavSplitterMove(SplitterMoveEvent* ev) {
         return;
     }
     gGlobalPrefs->tocDy = tocDy;
-    if (done || !win->AsEbook()) {
-        RelayoutFrame(win, false, rToc.dx);
-    }
+    RelayoutFrame(win, false, rToc.dx);
 }
 
 void SetSidebarVisibility(WindowInfo* win, bool tocVisible, bool showFavorites) {
@@ -4197,11 +4146,11 @@ void SetSidebarVisibility(WindowInfo* win, bool tocVisible, bool showFavorites) 
 
     win::SetVisibility(win->sidebarSplitter->hwnd, tocVisible || showFavorites);
     win::SetVisibility(win->hwndTocBox, tocVisible);
-    win->sidebarSplitter->isLive = !win->AsEbook();
+    win->sidebarSplitter->isLive = true;
 
     win::SetVisibility(win->favSplitter->hwnd, tocVisible && showFavorites);
     win::SetVisibility(win->hwndFavBox, showFavorites);
-    win->favSplitter->isLive = !win->AsEbook();
+    win->favSplitter->isLive = true;
 
     RelayoutFrame(win, false);
 }
@@ -4278,12 +4227,6 @@ static void SaveAnnotationsAndCloseEditAnnowtationsWindow(TabInfo* tab) {
     CloseAndDeleteEditAnnotationsWindow(tab->editAnnotsWindow);
     tab->editAnnotsWindow = nullptr;
 }
-
-// To avoid including mui/Mui.h, which conflicts with wingui/Layout.h
-namespace mui {
-extern void SetDebugPaint(bool);
-extern bool IsDebugPaint();
-} // namespace mui
 
 #if 0
 static bool NeedsURLEncoding(WCHAR c) {
@@ -4388,7 +4331,7 @@ static void CopySelectionInTabToClipboard(TabInfo* tab) {
 }
 
 static void OnMenuCustomZoom(WindowInfo* win) {
-    if (!win->IsDocLoaded() || win->AsEbook()) {
+    if (!win->IsDocLoaded()) {
         return;
     }
 
@@ -4511,7 +4454,7 @@ static LRESULT FrameOnCommand(WindowInfo* win, HWND hwnd, UINT msg, WPARAM wp, L
             break;
 
         case CmdClose:
-            CloseTab(win);
+            CloseCurrentTab(win);
             break;
 
         case CmdExit:
@@ -4782,25 +4725,9 @@ static LRESULT FrameOnCommand(WindowInfo* win, HWND hwnd, UINT msg, WPARAM wp, L
             }
             break;
 
-        case CmdDebugEbookUI:
-            gGlobalPrefs->ebookUI.useFixedPageUI = !gGlobalPrefs->ebookUI.useFixedPageUI;
-            // use the same setting to also toggle the CHM UI
-            gGlobalPrefs->chmUI.useFixedPageUI = !gGlobalPrefs->chmUI.useFixedPageUI;
-            break;
-
         case CmdDebugDownloadSymbols:
             DownloadDebugSymbols();
             break;
-
-        case CmdDebugMui: {
-            mui::SetDebugPaint(!mui::IsDebugPaint());
-            bool isChecked = !mui::IsDebugPaint();
-            HMENU m = GetMenu(win->hwndFrame);
-            win::menu::SetChecked(m, CmdDebugMui, isChecked);
-            for (auto& w : gWindows) {
-                w->RedrawAll(true);
-            }
-        } break;
 
         case CmdDebugAnnotations:
             FrameOnChar(win, 'h');
@@ -5021,14 +4948,14 @@ LRESULT CALLBACK WndProcSumatraFrame(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) 
             if (win->AsChm()) {
                 return win->AsChm()->PassUIMsg(msg, wp, lp);
             }
-            CrashIf(!win->AsFixed() && !win->AsEbook());
+            CrashIf(!win->AsFixed());
             // Pass the message to the canvas' window procedure
             // (required since the canvas itself never has the focus and thus
             // never receives WM_MOUSEWHEEL messages)
             return SendMessageW(win->hwndCanvas, msg, wp, lp);
 
         case WM_CLOSE:
-            if (MayCloseWindow(win)) {
+            if (CanCloseWindow(win)) {
                 CloseWindow(win, true, false);
             }
             break;

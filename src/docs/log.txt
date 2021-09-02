@@ -1,5 +1,44 @@
 A daily log of changes and commentary. An experiment of sorts.
 
+2021-08-27 Fri
+
+- change MultiFormatArchive::OpenUnrarFallback to use RAR_OM_LIST instead of RAR_OM_EXTRACT (seems faster)
+
+2021-08-26 Thu
+
+- add 'Cancel' button to unsaved annotations confirmation dialog (fixes #2119)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2119
+- de-bounce re-rendering of document for 1 sec after changing contents of an annotation (fixes #2034)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2034
+- remove ebook UI (fixes #2143)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2143
+- add FixedPageUI.EbookFontName and EbookFontSize to restore control over font name / size (for #2143)
+
+2021-08-25 Wed
+
+- fix launching external viewers (fixes #2142)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2142
+
+2021-08-22 Sun
+
+- restore handling links in EngineEbook::HandleLink() (fixes #2136)
+
+2021-08-21 Sat
+
+- don't double-delete value returned by GetElementAtPos() (fixes #2135)
+
+2021-08-20 Fri
+
+- fix 'go to page' by text box in toolbar for epub (non-pdf) (fixes #2133)
+
+2021-08-17 Tue
+
+- re-enable 'Open Embedded File' via context menu on table of contents tree view (fixes #2122)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2122
+  should test with more files
+- simplify Calc[MD5|Sha1|Sha2]DigestWin by re-using common code
+- remove redundant md5/sha1/sha2 implementations using libmupdf
+- remove NO_LIBMUPDF, move FzImgReader.[cpp|h] out of src/utils => src/
 
 2021-08-11 Wed
 
@@ -755,7 +794,7 @@ Link to the commit on pre-release and daily build pages.
 Fixed a long-standing issue of loosing list of opened files
 if Sumatra crashes or get killed by Windows (e.g. due to restart).
 Took so long to fix becaue I believed the code is correct.
-Turns out prefs::Save() was haphzardly used. It's still
+Turns out prefs::Save() was haphazardly used. It's still
 not great but at least this specific error is fixed.
 To be even more robust we should periodically (every 5 min?)
 call prefs::Save(). We only do it after opening and closing a file,

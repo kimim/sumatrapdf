@@ -592,7 +592,7 @@ static const WCHAR* Md5OfAppExe() {
     }
 
     u8 md5[16] = {0};
-    CalcMD5DigestWin(d.data, d.size(), md5);
+    CalcMD5Digest(d.data, d.size(), md5);
 
     AutoFree md5HexA(_MemToHex(&md5));
     AutoFreeWstr md5Hex = strconv::Utf8ToWchar(md5HexA.AsView());
@@ -763,5 +763,5 @@ WCHAR* FormatFileSizeNoTrans(i64 size) {
     }
     AutoFreeWstr n1(FormatSizeSuccintNoTrans(size));
     AutoFreeWstr n2(str::FormatNumWithThousandSep(size));
-    return str::Format(L"%s (%s %s)", n1.Get(), n2.Get(), "Bytes");
+    return str::Format(L"%s (%s %s)", n1.Get(), n2.Get(), L"Bytes");
 }

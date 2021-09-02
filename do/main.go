@@ -14,13 +14,14 @@ import (
 
 var (
 	flgSkipSign bool
+	flgNoCache  bool
 )
 
 func regenPremake() {
 	premakePath := filepath.Join("bin", "premake5.exe")
 	{
 		cmd := exec.Command(premakePath, "vs2019")
-		u.RunCmdLoggedMust(cmd)
+		runCmdLoggedMust(cmd)
 	}
 }
 
@@ -54,7 +55,7 @@ func runCppCheck(all bool) {
 	// ... line with a problem
 	var cmd *exec.Cmd
 
-	// TODO: not sure if adding Windows SDK include  path helps.
+	// TODO: not sure if adding Windows SDK include path helps.
 	// It takes a lot of time and doesn't seem to provide value
 	//winSdkIncludeDir := `C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um`
 	// "-I", winSdkIncludeDir
@@ -121,7 +122,7 @@ func ensureBuildOptionsPreRequesites(opts *BuildOptions) {
 		verifyTranslationsMust()
 	}
 	if opts.doCleanCheck {
-		u.PanicIf(!isGitClean(), "git has unsaved changes\n")
+		panicIf(!isGitClean(), "git has unsaved changes\n")
 	}
 	if opts.releaseBuild {
 		verifyOnReleaseBranchMust()
@@ -155,6 +156,9 @@ func main() {
 		flgClangTidyFix           = false
 		flgBuildNo                = false
 		flgBuildLzsa              = false
+		flgOptimizeImages         = false
+		flgMakeSmallImages        = false
+		flgFindLargestFilesByExt  = false
 	)
 
 	var (
@@ -165,7 +169,8 @@ func main() {
 		flgBuildPreRelease         bool
 		flgBuildRelease            bool
 		flgWc                      bool
-		flgDownloadTranslations    bool
+		flgTransDownload           bool
+		flgTransCiUpdate           bool
 		flgClean                   bool
 		flgCrashes                 bool
 		flgCheckAccessKeys         bool
@@ -174,7 +179,6 @@ func main() {
 		flgWebsiteDeployCloudflare bool
 		flgWebsiteImportNotion     bool
 		flgWebsiteBuildCloudflare  bool
-		flgNoCache                 bool
 		flgClangFormat             bool
 		flgDiff                    bool
 		flgGenSettings             bool
@@ -201,7 +205,8 @@ func main() {
 		flag.BoolVar(&flgUpload, "upload", false, "upload the build to s3 and do spaces")
 		flag.BoolVar(&flgClangFormat, "format", false, "format source files with clang-format")
 		flag.BoolVar(&flgWc, "wc", false, "show loc stats (like wc -l)")
-		flag.BoolVar(&flgDownloadTranslations, "trans-dl", false, "download translations and re-generate C code")
+		flag.BoolVar(&flgTransDownload, "trans-dl", false, "download latest translations to src/docs/translations.txt")
+		flag.BoolVar(&flgTransCiUpdate, "ci-trans-update", false, "download and checkin latest translations to src/docs/translations.txt")
 		//flag.BoolVar(&flgGenTranslationsInfoCpp, "trans-gen-info", false, "generate src/TranslationsInfo.cpp")
 		flag.BoolVar(&flgClean, "clean", false, "clean the build (remove out/ files except for settings)")
 		flag.BoolVar(&flgCrashes, "crashes", false, "see crashes in a web ui")
@@ -230,6 +235,21 @@ func main() {
 	if false {
 		detectVersions()
 		//buildPreRelease()
+		return
+	}
+
+	if flgFindLargestFilesByExt {
+		findLargestFileByExt()
+		return
+	}
+
+	if flgOptimizeImages {
+		optimizeAllImages()
+		return
+	}
+
+	if flgMakeSmallImages {
+		makeSmallImages()
 		return
 	}
 
@@ -356,8 +376,29 @@ func main() {
 		return
 	}
 
-	if flgDownloadTranslations {
+	if flgTransDownload {
 		downloadTranslations()
+		return
+	}
+
+	if flgTransCiUpdate {
+		didChange := downloadTranslations()
+		if !didChange {
+			return
+		}
+		{
+			cmd := exec.Command("git", "add", filepath.Join("src", "docs", "translations.txt"))
+			cmdRunLoggedMust(cmd)
+		}
+		{
+			cmd := exec.Command("git", "commit", "-am", "update translations")
+			cmdRunLoggedMust(cmd)
+		}
+		{
+			cmd := exec.Command("git", "push")
+			cmdRunLoggedMust(cmd)
+		}
+
 		return
 	}
 
@@ -444,7 +485,7 @@ func main() {
 		buildJustPortableExe(rel64Dir, "Release", "x64")
 		//cmd := exec.Command("drmemory.exe", "-light", "-check_leaks", "-possible_leaks", "-count_leaks", "-suppress", "drmem-sup.txt", "--", ".\\out\\rel64\\SumatraPDF.exe")
 		cmd := exec.Command("drmemory.exe", "-leaks_only", "-suppress", "drmem-sup.txt", "--", ".\\out\\rel64\\SumatraPDF.exe")
-		u.RunCmdLoggedMust(cmd)
+		runCmdLoggedMust(cmd)
 		return
 	}
 
@@ -458,7 +499,7 @@ func main() {
 		}
 		cmd := exec.Command(".\\logview.exe")
 		cmd.Dir = dir
-		u.RunCmdLoggedMust(cmd)
+		runCmdLoggedMust(cmd)
 		return
 	}
 
@@ -467,7 +508,7 @@ func main() {
 		dir := filepath.Join("out", "rel64")
 		cmd := exec.Command(".\\test_util.exe")
 		cmd.Dir = dir
-		u.RunCmdLoggedMust(cmd)
+		runCmdLoggedMust(cmd)
 		return
 	}
 

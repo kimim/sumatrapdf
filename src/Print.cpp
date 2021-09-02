@@ -12,7 +12,7 @@
 #include "DisplayMode.h"
 #include "Controller.h"
 #include "EngineBase.h"
-#include "EngineCreate.h"
+#include "EngineAll.h"
 #include "SettingsStructs.h"
 #include "GlobalPrefs.h"
 #include "ChmModel.h"
@@ -30,42 +30,6 @@
 #include "SumatraDialogs.h"
 #include "SumatraProperties.h"
 #include "Translations.h"
-
-struct PrintData {
-    AutoFreeWstr printerName;
-    ScopedMem<DEVMODEW> devMode;
-    EngineBase* engine = nullptr;
-    Vec<PRINTPAGERANGE> ranges; // empty when printing a selection
-    Vec<SelectionOnPage> sel;   // empty when printing a page range
-    Print_Advanced_Data advData;
-    int rotation = 0;
-
-    PrintData(EngineBase* engine, PRINTER_INFO_2* printerInfo, DEVMODEW* devMode, Vec<PRINTPAGERANGE>& ranges,
-              Print_Advanced_Data& advData, int rotation = 0, Vec<SelectionOnPage>* sel = nullptr) {
-        this->advData = advData;
-        this->rotation = rotation;
-        if (engine) {
-            this->engine = engine->Clone();
-        }
-
-        if (printerInfo) {
-            printerName.SetCopy(printerInfo->pPrinterName);
-        }
-        if (devMode) {
-            this->devMode.Set((LPDEVMODE)memdup(devMode, devMode->dmSize + devMode->dmDriverExtra));
-        }
-
-        if (!sel) {
-            this->ranges = ranges;
-        } else {
-            this->sel = *sel;
-        }
-    }
-
-    ~PrintData() {
-        delete engine;
-    }
-};
 
 class AbortCookieManager {
     CRITICAL_SECTION cookieAccess;
@@ -98,6 +62,210 @@ class AbortCookieManager {
     }
 };
 
+struct PrintData {
+    Printer* printer{nullptr};
+    EngineBase* engine{nullptr};
+    Vec<PRINTPAGERANGE> ranges; // empty when printing a selection
+    Vec<SelectionOnPage> sel;   // empty when printing a page range
+    Print_Advanced_Data advData;
+    int rotation{0};
+    ProgressUpdateUI* progressUI{nullptr};
+    AbortCookieManager* abortCookie{nullptr};
+
+    PrintData(EngineBase* engine, Printer* printer, Vec<PRINTPAGERANGE>& ranges, Print_Advanced_Data& advData,
+              int rotation = 0, Vec<SelectionOnPage>* sel = nullptr) {
+        this->printer = printer;
+        this->advData = advData;
+        this->rotation = rotation;
+        if (engine) {
+            this->engine = engine->Clone();
+        }
+
+        if (!sel) {
+            this->ranges = ranges;
+        } else {
+            this->sel = *sel;
+        }
+    }
+
+    ~PrintData() {
+        delete printer;
+        delete engine;
+    }
+};
+
+void Printer::SetDevMode(DEVMODEW* dm) {
+    free((void*)devMode);
+    devMode = dm;
+}
+
+Printer::~Printer() {
+    str::Free(name);
+    free((void*)devMode);
+
+    for (int i = 0; i < nPaperSizes; i++) {
+        str::Free(paperNames[i]);
+    }
+
+    for (int i = 0; i < nBins; i++) {
+        str::Free(binNames[i]);
+    }
+
+    free((void*)papers);
+    free((void*)paperNames);
+    free((void*)paperSizes);
+
+    free((void*)bins);
+    free((void*)binNames);
+}
+
+// get all the important info about a printer
+Printer* NewPrinter(WCHAR* printerName) {
+    HANDLE hPrinter{nullptr};
+    LONG ret{0};
+    Printer* printer{nullptr};
+    BOOL ok = OpenPrinterW(printerName, &hPrinter, nullptr);
+    if (!ok) {
+        return nullptr;
+    }
+
+    LONG structSize = 0;
+    LPDEVMODE devMode = nullptr;
+
+    DWORD needed = 0;
+    GetPrinterW(hPrinter, 2, nullptr, 0, &needed);
+    PRINTER_INFO_2* info = (PRINTER_INFO_2*)AllocArray<BYTE>(needed);
+    if (info) {
+        ok = GetPrinterW(hPrinter, 2, (LPBYTE)info, needed, &needed);
+    }
+    if (!ok || !info || needed <= sizeof(PRINTER_INFO_2)) {
+        goto Exit;
+    }
+
+    /* ask for the size of DEVMODE struct */
+    structSize = DocumentPropertiesW(nullptr, hPrinter, printerName, nullptr, nullptr, 0);
+    if (structSize < sizeof(DEVMODEW)) {
+        // if (displayErrors) {
+        //    MessageBoxWarning(nullptr, _TR("Could not obtain Printer properties"), _TR("Printing problem."));
+        //}
+        goto Exit;
+    }
+    devMode = (DEVMODEW*)Allocator::AllocZero(nullptr, structSize);
+
+    // Get the default DevMode for the printer and modify it for your needs.
+    ret = DocumentPropertiesW(nullptr, hPrinter, printerName, devMode, nullptr, DM_OUT_BUFFER);
+    if (IDOK != ret) {
+        // if (displayErrors) {
+        //    MessageBoxWarning(nullptr, _TR("Could not obtain Printer properties"), _TR("Printing problem."));
+        //}
+        goto Exit;
+    }
+
+    printer = new Printer();
+    printer->name = str::Dup(printerName);
+    printer->devMode = devMode;
+    printer->info = info;
+
+    {
+        DWORD n = DeviceCapabilitiesW(printerName, nullptr, DC_PAPERS, nullptr, nullptr);
+        DWORD n2 = DeviceCapabilitiesW(printerName, nullptr, DC_PAPERNAMES, nullptr, nullptr);
+        DWORD n3 = DeviceCapabilitiesW(printerName, nullptr, DC_PAPERSIZE, nullptr, nullptr);
+        if (n != n2 || n != n3 || 0 == n || ((DWORD)-1 == n)) {
+            delete printer;
+            return nullptr;
+        }
+        printer->nPaperSizes = (int)n;
+        size_t paperNameSize = 64;
+        printer->papers = AllocArray<WORD>(n);
+        WCHAR* paperNamesSeq = AllocArray<WCHAR>(paperNameSize * (size_t)n + 1); // +1 is "just in case"
+        printer->paperSizes = AllocArray<POINT>(n);
+        printer->paperNames = AllocArray<WCHAR*>(n);
+
+        DeviceCapabilitiesW(printerName, nullptr, DC_PAPERS, (WCHAR*)printer->papers, nullptr);
+        DeviceCapabilitiesW(printerName, nullptr, DC_PAPERNAMES, paperNamesSeq, nullptr);
+        DeviceCapabilitiesW(printerName, nullptr, DC_PAPERSIZE, (WCHAR*)printer->paperSizes, nullptr);
+
+        WCHAR* paperName = paperNamesSeq;
+        for (int i = 0; i < (int)n; i++) {
+            printer->paperNames[i] = str::Dup(paperName);
+            paperName += paperNameSize;
+        }
+        str::Free(paperNamesSeq);
+    }
+
+    {
+        DWORD n = DeviceCapabilitiesW(printerName, nullptr, DC_BINS, nullptr, nullptr);
+        DWORD n2 = DeviceCapabilitiesW(printerName, nullptr, DC_BINNAMES, nullptr, nullptr);
+        if (n != n2 || ((DWORD)-1 == n)) {
+            delete printer;
+            return nullptr;
+        }
+        printer->nBins = n;
+        // it's ok for nBins to be 0, it means there's only one, default bin
+        if (n > 0) {
+            size_t binNameSize = 24;
+            printer->bins = AllocArray<WORD>(n);
+            printer->binNames = AllocArray<WCHAR*>(n);
+            WCHAR* binNamesSeq = AllocArray<WCHAR>(binNameSize * n + 1); // +1 is "just in case"
+            DeviceCapabilitiesW(printerName, nullptr, DC_BINS, (WCHAR*)printer->bins, nullptr);
+            DeviceCapabilitiesW(printerName, nullptr, DC_BINNAMES, binNamesSeq, nullptr);
+            WCHAR* binName = binNamesSeq;
+            for (int i = 0; i < (int)n; i++) {
+                printer->binNames[i] = str::Dup(binName);
+                binName += binNameSize;
+            }
+            str::Free(binNamesSeq);
+        }
+    }
+
+    {
+        DWORD n;
+
+        n = DeviceCapabilitiesW(printerName, nullptr, DC_COLLATE, nullptr, nullptr);
+        printer->canCallate = (n > 0);
+
+        n = DeviceCapabilitiesW(printerName, nullptr, DC_COLORDEVICE, nullptr, nullptr);
+        printer->isColor = (n > 0);
+
+        n = DeviceCapabilitiesW(printerName, nullptr, DC_DUPLEX, nullptr, nullptr);
+        printer->isDuplex = (n > 0);
+
+        n = DeviceCapabilitiesW(printerName, nullptr, DC_STAPLE, nullptr, nullptr);
+        printer->canStaple = (n > 0);
+
+        n = DeviceCapabilitiesW(printerName, nullptr, DC_ORIENTATION, nullptr, nullptr);
+        printer->orientation = n;
+    }
+
+Exit:
+    ClosePrinter(hPrinter);
+    return printer;
+}
+
+static void SetCustomPaperSize(Printer* printer, SizeF size) {
+    auto devMode = printer->devMode;
+    devMode->dmPaperSize = 0;
+    devMode->dmPaperWidth = size.dx;
+    devMode->dmPaperLength = size.dy;
+    devMode->dmFields |= DM_PAPERSIZE | DM_PAPERWIDTH | DM_PAPERLENGTH;
+}
+
+// Make sure dy > dx i.e. it's tall not wide
+static Size NormalizePaperSize(Size s) {
+    if (s.dy > s.dx) {
+        return Size(s.dx, s.dy);
+    }
+    return Size(s.dy, s.dx);
+}
+
+static void MessageBoxWarningCond(bool show, const WCHAR* msg, const WCHAR* title) {
+    logf(L"%s: %s\n", title, msg);
+    if (!show) {
+        return;
+    }
+    MessageBoxWarning(nullptr, msg, title);
+}
+
 static RectF BoundSelectionOnPage(const Vec<SelectionOnPage>& sel, int pageNo) {
     RectF bounds;
     for (size_t i = 0; i < sel.size(); i++) {
@@ -108,16 +276,18 @@ static RectF BoundSelectionOnPage(const Vec<SelectionOnPage>& sel, int pageNo) {
     return bounds;
 }
 
-static bool PrintToDevice(const PrintData& pd, ProgressUpdateUI* progressUI = nullptr,
-                          AbortCookieManager* abortCookie = nullptr) {
+static bool PrintToDevice(const PrintData& pd) {
     CrashIf(!pd.engine);
     if (!pd.engine) {
         return false;
     }
-    CrashIf(!pd.printerName);
-    if (!pd.printerName) {
+    CrashIf(!pd.printer);
+    if (!pd.printer) {
         return false;
     }
+
+    auto progressUI = pd.progressUI;
+    auto abortCookie = pd.abortCookie;
 
     EngineBase& engine = *pd.engine;
     AutoFreeWstr fileName;
@@ -157,12 +327,14 @@ static bool PrintToDevice(const PrintData& pd, ProgressUpdateUI* progressUI = nu
         progressUI->UpdateProgress(current, total);
     }
 
-    // cf. http://blogs.msdn.com/b/oldnewthing/archive/2012/11/09/10367057.aspx
-    AutoDeleteDC hdc(CreateDC(nullptr, pd.printerName, nullptr, pd.devMode));
+    auto devMode = pd.printer->devMode;
+    // http://blogs.msdn.com/b/oldnewthing/archive/2012/11/09/10367057.aspx
+    AutoDeleteDC hdc(CreateDCW(nullptr, pd.printer->name, nullptr, devMode));
     if (!hdc) {
         return false;
     }
 
+    // for PDF Printer, this shows a file dialog to pick file name for destination PDF
     if (StartDoc(hdc, &di) <= 0) {
         return false;
     }
@@ -179,8 +351,8 @@ static bool PrintToDevice(const PrintData& pd, ProgressUpdateUI* progressUI = nu
     float py = (float)GetDeviceCaps(hdc, LOGPIXELSY);
     float dpiFactor = std::min(px / fileDPI, py / fileDPI);
     bool bPrintPortrait = paperSize.dx < paperSize.dy;
-    if (pd.devMode && (pd.devMode.Get()->dmFields & DM_ORIENTATION)) {
-        bPrintPortrait = DMORIENT_PORTRAIT == pd.devMode.Get()->dmOrientation;
+    if (devMode && (devMode->dmFields & DM_ORIENTATION)) {
+        bPrintPortrait = DMORIENT_PORTRAIT == devMode->dmOrientation;
     }
     if (pd.advData.rotation == PrintRotationAdv::Portrait) {
         bPrintPortrait = true;
@@ -424,7 +596,11 @@ static DWORD WINAPI PrintThread(LPVOID data) {
     }
 
     HANDLE thread = threadData->thread = win->printThread;
-    PrintToDevice(*threadData->data, threadData, &threadData->cookie);
+
+    PrintData* pd = threadData->data;
+    pd->progressUI = threadData;
+    pd->abortCookie = &threadData->cookie;
+    PrintToDevice(*pd);
 
     uitask::Post([=] {
         if (WindowInfoStillValid(win) && thread == win->printThread) {
@@ -490,8 +666,10 @@ void OnMenuPrint(WindowInfo* win, bool waitForCompletion) {
     // we remember some printer settings per process
     static ScopedMem<DEVMODE> defaultDevMode;
     static PrintScaleAdv defaultScaleAdv = PrintScaleAdv::Shrink;
-
     static bool hasDefaults = false;
+
+    Printer* printer{nullptr};
+
     if (!hasDefaults) {
         hasDefaults = true;
         if (str::EqI(gGlobalPrefs->printerDefaults.printScale, "fit")) {
@@ -503,7 +681,7 @@ void OnMenuPrint(WindowInfo* win, bool waitForCompletion) {
 
     bool printSelection = false;
     Vec<PRINTPAGERANGE> ranges;
-    PRINTER_INFO_2W printerInfo{};
+    Vec<SelectionOnPage>* sel;
 
     if (!HasPermission(Perm::PrinterAccess)) {
         return;
@@ -519,16 +697,13 @@ void OnMenuPrint(WindowInfo* win, bool waitForCompletion) {
         win->AsChm()->PrintCurrentPage(showUI);
         return;
     }
-    if (win->AsEbook()) {
-        // TODO: use EngineEbook for printing?
-        return;
-    }
-
     CrashIf(!win->AsFixed());
     if (!win->AsFixed()) {
         return;
     }
     DisplayModel* dm = win->AsFixed();
+    int rotation = dm->GetRotation();
+    auto engine = dm->GetEngine();
 
 #ifndef DISABLE_DOCUMENT_RESTRICTIONS
     if (!dm->GetEngine()->AllowsPrinting()) {
@@ -554,43 +729,41 @@ void OnMenuPrint(WindowInfo* win, bool waitForCompletion) {
         return;
     }
 
-    PRINTDLGEXW pd{};
-    pd.lStructSize = sizeof(PRINTDLGEXW);
-    pd.hwndOwner = win->hwndFrame;
-    pd.Flags = PD_USEDEVMODECOPIESANDCOLLATE | PD_COLLATE;
+    PRINTDLGEXW pdex{};
+    pdex.lStructSize = sizeof(PRINTDLGEXW);
+    pdex.hwndOwner = win->hwndFrame;
+    pdex.Flags = PD_USEDEVMODECOPIESANDCOLLATE | PD_COLLATE;
     if (!win->currentTab->selectionOnPage) {
-        pd.Flags |= PD_NOSELECTION;
+        pdex.Flags |= PD_NOSELECTION;
     }
-    pd.nCopies = 1;
+    pdex.nCopies = 1;
     /* by default print all pages */
-    pd.nPageRanges = 1;
-    pd.nMaxPageRanges = MAXPAGERANGES;
+    pdex.nPageRanges = 1;
+    pdex.nMaxPageRanges = MAXPAGERANGES;
     PRINTPAGERANGE* ppr = AllocArray<PRINTPAGERANGE>(MAXPAGERANGES);
-    pd.lpPageRanges = ppr;
+    pdex.lpPageRanges = ppr;
     ppr->nFromPage = 1;
     ppr->nToPage = dm->PageCount();
-    pd.nMinPage = 1;
-    pd.nMaxPage = dm->PageCount();
-    pd.nStartPage = START_PAGE_GENERAL;
+    pdex.nMinPage = 1;
+    pdex.nMaxPage = dm->PageCount();
+    pdex.nStartPage = START_PAGE_GENERAL;
 
     Print_Advanced_Data advanced(PrintRangeAdv::All, defaultScaleAdv);
     ScopedMem<DLGTEMPLATE> dlgTemplate; // needed for RTL languages
     HPROPSHEETPAGE hPsp = CreatePrintAdvancedPropSheet(&advanced, dlgTemplate);
-    pd.lphPropertyPages = &hPsp;
-    pd.nPropertyPages = 1;
+    pdex.lphPropertyPages = &hPsp;
+    pdex.nPropertyPages = 1;
 
-    LPDEVNAMES devNames;
-    LPDEVMODE devMode;
-    bool failedEngineClone;
-    PrintData* data = nullptr;
-
+    bool failedEngineClone{false};
+    PrintData* pd{nullptr};
+    DEVMODE* devMode{nullptr};
     // restore remembered settings
     if (defaultDevMode) {
         DEVMODE* p = defaultDevMode.Get();
-        pd.hDevMode = GlobalMemDup(p, p->dmSize + p->dmDriverExtra);
+        pdex.hDevMode = GlobalMemDup(p, p->dmSize + p->dmDriverExtra);
     }
 
-    if (PrintDlgEx(&pd) != S_OK) {
+    if (PrintDlgEx(&pdex) != S_OK) {
         if (CommDlgExtendedError() != 0) {
             /* if PrintDlg was cancelled then
                CommDlgExtendedError is zero, otherwise it returns the
@@ -602,50 +775,64 @@ void OnMenuPrint(WindowInfo* win, bool waitForCompletion) {
         goto Exit;
     }
 
-    if (pd.dwResultAction == PD_RESULT_PRINT || pd.dwResultAction == PD_RESULT_APPLY) {
+    if (!pdex.hDevNames) {
+        MessageBoxWarning(win->hwndFrame, _TR("Couldn't get printer name"), _TR("Printing problem."));
+        goto Exit;
+    }
+
+    {
+        DEVNAMES* devNames = (DEVNAMES*)GlobalLock(pdex.hDevNames);
+        if (devNames) {
+            // printerInfo.pDriverName = (LPWSTR)devNames + devNames->wDriverOffset;
+            WCHAR* printerName = (WCHAR*)devNames + devNames->wDeviceOffset;
+            printer = NewPrinter(printerName);
+            // printerInfo.pPortName = (LPWSTR)devNames + devNames->wOutputOffset;
+            GlobalUnlock(pdex.hDevNames);
+        }
+    }
+
+    if (!printer) {
+        MessageBoxWarning(win->hwndFrame, _TR("Couldn't initialize printer"), _TR("Printing problem."));
+        goto Exit;
+    }
+
+    devMode = (DEVMODEW*)GlobalLock(pdex.hDevMode);
+
+    if (pdex.dwResultAction == PD_RESULT_PRINT || pdex.dwResultAction == PD_RESULT_APPLY) {
         // remember settings for this process
-        devMode = (LPDEVMODE)GlobalLock(pd.hDevMode);
         if (devMode) {
-            defaultDevMode.Set((LPDEVMODE)memdup(devMode, devMode->dmSize + devMode->dmDriverExtra));
-            GlobalUnlock(pd.hDevMode);
+            defaultDevMode.Set((DEVMODEW*)memdup(devMode, devMode->dmSize + devMode->dmDriverExtra));
         }
         defaultScaleAdv = advanced.scale;
     }
 
-    if (pd.dwResultAction != PD_RESULT_PRINT) {
+    if (devMode) {
+        auto dmCopy = (DEVMODEW*)memdup(devMode, devMode->dmSize + devMode->dmDriverExtra);
+        printer->SetDevMode(dmCopy);
+        GlobalUnlock(pdex.hDevMode);
+    }
+
+    if (pdex.dwResultAction != PD_RESULT_PRINT) {
         goto Exit;
     }
 
-    if (pd.Flags & PD_CURRENTPAGE) {
+    if (pdex.Flags & PD_CURRENTPAGE) {
         PRINTPAGERANGE pr = {(DWORD)dm->CurrentPageNo(), (DWORD)dm->CurrentPageNo()};
         ranges.Append(pr);
-    } else if (win->currentTab->selectionOnPage && (pd.Flags & PD_SELECTION)) {
+    } else if (win->currentTab->selectionOnPage && (pdex.Flags & PD_SELECTION)) {
         printSelection = true;
-    } else if (!(pd.Flags & PD_PAGENUMS)) {
+    } else if (!(pdex.Flags & PD_PAGENUMS)) {
         PRINTPAGERANGE pr = {1, (DWORD)dm->PageCount()};
         ranges.Append(pr);
     } else {
-        CrashIf(pd.nPageRanges <= 0);
-        for (DWORD i = 0; i < pd.nPageRanges; i++) {
-            ranges.Append(pd.lpPageRanges[i]);
+        CrashIf(pdex.nPageRanges <= 0);
+        for (DWORD i = 0; i < pdex.nPageRanges; i++) {
+            ranges.Append(pdex.lpPageRanges[i]);
         }
     }
 
-    devNames = (LPDEVNAMES)GlobalLock(pd.hDevNames);
-    devMode = (LPDEVMODE)GlobalLock(pd.hDevMode);
-    if (devNames) {
-        printerInfo.pDriverName = (LPWSTR)devNames + devNames->wDriverOffset;
-        printerInfo.pPrinterName = (LPWSTR)devNames + devNames->wDeviceOffset;
-        printerInfo.pPortName = (LPWSTR)devNames + devNames->wOutputOffset;
-    }
-    data = new PrintData(dm->GetEngine(), &printerInfo, devMode, ranges, advanced, dm->GetRotation(),
-                         printSelection ? win->currentTab->selectionOnPage : nullptr);
-    if (devNames) {
-        GlobalUnlock(pd.hDevNames);
-    }
-    if (devMode) {
-        GlobalUnlock(pd.hDevMode);
-    }
+    sel = printSelection ? win->currentTab->selectionOnPage : nullptr;
+    pd = new PrintData(engine, printer, ranges, advanced, rotation, sel);
 
     // if a file is missing and the engine can't thus be cloned,
     // we print using the original engine on the main thread
@@ -653,25 +840,25 @@ void OnMenuPrint(WindowInfo* win, bool waitForCompletion) {
     // unexpectedly deleted
     // TODO: instead prevent closing the document so that printing
     // can still happen on a separate thread and be interruptible
-    failedEngineClone = dm->GetEngine() && !data->engine;
+    failedEngineClone = dm->GetEngine() && !pd->engine;
     if (failedEngineClone) {
-        data->engine = dm->GetEngine();
+        pd->engine = dm->GetEngine();
     }
 
     if (!waitForCompletion && !failedEngineClone) {
-        PrintToDeviceOnThread(win, data);
+        PrintToDeviceOnThread(win, pd);
     } else {
-        PrintToDevice(*data);
+        PrintToDevice(*pd);
         if (failedEngineClone) {
-            data->engine = nullptr;
+            pd->engine = nullptr;
         }
-        delete data;
+        delete pd;
     }
 
 Exit:
     free(ppr);
-    GlobalFree(pd.hDevNames);
-    GlobalFree(pd.hDevMode);
+    GlobalFree(pdex.hDevNames);
+    GlobalFree(pdex.hDevMode);
 }
 
 static short GetPaperSize(EngineBase* engine) {
@@ -735,30 +922,26 @@ static short GetPaperByName(const WCHAR* papername) {
 }
 #endif
 
-static short GetPaperByName(const WCHAR* printerName, const WCHAR* paperName, LPDEVMODE devMode) {
+// wantedName can be a paper name, like "A6" or number for DMPAPER_* contstants like DMPAPER_LETTER
+static short GetPaperByName(Printer* printer, const WCHAR* wantedName) {
+    auto devMode = printer->devMode;
     CrashIf(!(devMode->dmFields & DM_PAPERSIZE));
     if (!(devMode->dmFields & DM_PAPERSIZE)) {
         return devMode->dmPaperSize;
     }
-    DWORD count = DeviceCapabilities(printerName, nullptr, DC_PAPERS, nullptr, nullptr);
-    DWORD count2 = DeviceCapabilities(printerName, nullptr, DC_PAPERNAMES, nullptr, nullptr);
-    if (count != count2 || 0 == count || ((DWORD)-1 == count)) {
-        return devMode->dmPaperSize;
-    }
-    // try to determine the paper names by name
-    ScopedMem<WORD> papers(AllocArray<WORD>(count));
-    AutoFreeWstr paperNames(AllocArray<WCHAR>(64 * (size_t)count + 1));
-    DeviceCapabilitiesW(printerName, nullptr, DC_PAPERS, (WCHAR*)papers.Get(), nullptr);
-    DeviceCapabilitiesW(printerName, nullptr, DC_PAPERNAMES, paperNames.Get(), nullptr);
-    for (DWORD i = 0; i < count; i++) {
-        const WCHAR* currName = paperNames.Get() + (64 * i);
-        if (str::EqIS(currName, paperName)) {
-            return papers.Get()[i];
+
+    int n = printer->nPaperSizes;
+    for (int i = 0; i < n; i++) {
+        auto paperName = printer->paperNames[i];
+        if (str::EqIS(wantedName, paperName)) {
+            return printer->papers[i];
         }
     }
+
     // alternatively allow indicating the paper directly by number
-    if (str::Parse(paperName, L"%u%$", &count)) {
-        return (short)count;
+    DWORD paperId{0};
+    if (str::Parse(wantedName, L"%u%$", &paperId)) {
+        return (short)paperId;
     }
     return devMode->dmPaperSize;
 }
@@ -771,27 +954,23 @@ static short GetPaperKind(const WCHAR* kindName) {
     return DMPAPER_USER;
 }
 
-static short GetPaperSourceByName(const WCHAR* printerName, const WCHAR* binName, LPDEVMODE devMode) {
+static short GetPaperSourceByName(Printer* printer, const WCHAR* binName) {
+    auto devMode = printer->devMode;
     CrashIf(!(devMode->dmFields & DM_DEFAULTSOURCE));
     if (!(devMode->dmFields & DM_DEFAULTSOURCE)) {
         return devMode->dmDefaultSource;
     }
-    DWORD count = DeviceCapabilities(printerName, nullptr, DC_BINS, nullptr, nullptr);
-    DWORD count2 = DeviceCapabilities(printerName, nullptr, DC_BINNAMES, nullptr, nullptr);
-    if (count != count2 || 0 == count || ((DWORD)-1 == count)) {
+    int n = printer->nBins;
+    if (n == 0) {
         return devMode->dmDefaultSource;
     }
-    // try to determine the paper bin number by name
-    ScopedMem<WORD> bins(AllocArray<WORD>(count));
-    AutoFreeWstr binNames(AllocArray<WCHAR>(24 * count + 1));
-    DeviceCapabilitiesW(printerName, nullptr, DC_BINS, (WCHAR*)bins.Get(), nullptr);
-    DeviceCapabilitiesW(printerName, nullptr, DC_BINNAMES, binNames.Get(), nullptr);
-    for (DWORD i = 0; i < count; i++) {
-        const WCHAR* currName = binNames.Get() + (24 * i);
+    for (int i = 0; i < n; i++) {
+        WCHAR* currName = printer->binNames[i];
         if (str::EqIS(currName, binName)) {
-            return bins.Get()[i];
+            return printer->bins[i];
         }
     }
+    DWORD count{0};
     // alternatively allow indicating the paper bin directly by number
     if (str::Parse(binName, L"%u%$", &count)) {
         return (short)count;
@@ -799,8 +978,11 @@ static short GetPaperSourceByName(const WCHAR* printerName, const WCHAR* binName
     return devMode->dmDefaultSource;
 }
 
-static void ApplyPrintSettings(const WCHAR* printerName, const WCHAR* settings, int pageCount,
-                               Vec<PRINTPAGERANGE>& ranges, Print_Advanced_Data& advanced, LPDEVMODE devMode) {
+static void ApplyPrintSettings(Printer* printer, const WCHAR* settings, int pageCount, Vec<PRINTPAGERANGE>& ranges,
+                               Print_Advanced_Data& advanced) {
+    auto devMode = printer->devMode;
+    auto printerName = printer->name;
+
     WStrVec rangeList;
     if (settings) {
         rangeList.Split(settings, L",", true);
@@ -850,10 +1032,10 @@ static void ApplyPrintSettings(const WCHAR* printerName, const WCHAR* settings, 
             devMode->dmColor = DMCOLOR_MONOCHROME;
             devMode->dmFields |= DM_COLOR;
         } else if (str::StartsWithI(s, L"bin=")) {
-            devMode->dmDefaultSource = GetPaperSourceByName(printerName, s + 4, devMode);
+            devMode->dmDefaultSource = GetPaperSourceByName(printer, s + 4);
             devMode->dmFields |= DM_DEFAULTSOURCE;
         } else if (str::StartsWithI(s, L"paper=")) {
-            devMode->dmPaperSize = GetPaperByName(printerName, s + 6, devMode);
+            devMode->dmPaperSize = GetPaperByName(printer, s + 6);
             devMode->dmFields |= DM_PAPERSIZE;
         } else if (str::StartsWithI(s, L"paperkind=")) {
             // alternatively allow indicating the paper kind directly by number
@@ -868,49 +1050,36 @@ static void ApplyPrintSettings(const WCHAR* printerName, const WCHAR* settings, 
     }
 }
 
-static short DetectPrinterPaperSize(EngineBase* engine, const WCHAR* printerName) {
+static short DetectPrinterPaperSize(EngineBase* engine, Printer* printer) {
     // get size of first page in tenths of a millimeter in portrait mode
     RectF mediabox = engine->PageMediabox(1);
     SizeF size = engine->Transform(mediabox, 1, 254.0f / engine->GetFileDPI(), 0).Size();
-    Size sizeP = size.dx <= size.dy ? Size(size.dx, size.dy) : Size(size.dy, size.dx);
+    Size sizeP = NormalizePaperSize(Size(size.dx, size.dy));
 
-    // get list of papers and paper sizes supported by printer
-    DWORD count = DeviceCapabilities(printerName, nullptr, DC_PAPERS, nullptr, nullptr);
-    DWORD count2 = DeviceCapabilities(printerName, nullptr, DC_PAPERSIZE, nullptr, nullptr);
-    if (count != count2 || 0 == count || ((DWORD)-1 == count)) {
-        return 0;
-    }
-    ScopedMem<WORD> papers(AllocArray<WORD>(count));
-    ScopedMem<POINT> papersizes(AllocArray<POINT>(count));
-    DeviceCapabilitiesW(printerName, nullptr, DC_PAPERS, (WCHAR*)papers.Get(), nullptr);
-    DeviceCapabilitiesW(printerName, nullptr, DC_PAPERSIZE, (WCHAR*)papersizes.Get(), nullptr);
+    int n = printer->nPaperSizes;
+    auto sizes = printer->paperSizes;
     // find equivalent paper size with 1mm tolerance
-    for (DWORD i = 0; i < count; i++) {
-        Size paperSizeP = papersizes[i].x <= papersizes[i].y ? Size(papersizes[i].x, papersizes[i].y)
-                                                             : Size(papersizes[i].y, papersizes[i].x);
-        if (abs(sizeP.dx - paperSizeP.dx) <= 10 && abs(sizeP.dy - paperSizeP.dy) <= 10) {
-            return papers[i];
+    for (int i = 0; i < n; i++) {
+        POINT sz = sizes[i];
+        Size pSizeP = NormalizePaperSize(Size(sz.x, sz.y));
+        if (abs(sizeP.dx - pSizeP.dx) <= 10 && abs(sizeP.dy - pSizeP.dy) <= 10) {
+            return printer->papers[i];
         }
     }
-
     return 0;
 }
 
-static void SetPrinterCustomPaperSize(EngineBase* engine, LPDEVMODE devMode) {
+static void SetPrinterCustomPaperSizeForEngine(EngineBase* engine, Printer* printer) {
     // get size of first page in tenths of a millimeter
     RectF mediabox = engine->PageMediabox(1);
     SizeF size = engine->Transform(mediabox, 1, 254.0f / engine->GetFileDPI(), 0).Size();
-
-    // set custom paper size
-    devMode->dmPaperSize = 0;
-    devMode->dmPaperWidth = size.dx;
-    devMode->dmPaperLength = size.dy;
-    devMode->dmFields |= DM_PAPERSIZE | DM_PAPERWIDTH | DM_PAPERLENGTH;
+    SetCustomPaperSize(printer, size);
 }
 
 bool PrintFile(EngineBase* engine, WCHAR* printerName, bool displayErrors, const WCHAR* settings) {
     bool ok = false;
-    LONG ret;
+    Printer* printer{nullptr};
+
     if (!HasPermission(Perm::PrinterAccess)) {
         return false;
     }
@@ -922,105 +1091,64 @@ bool PrintFile(EngineBase* engine, WCHAR* printerName, bool displayErrors, const
 #endif
 
     if (!engine) {
-        if (displayErrors) {
-            MessageBoxWarning(nullptr, _TR("Cannot print this file"), _TR("Printing problem."));
-        }
+        MessageBoxWarningCond(displayErrors, _TR("Cannot print this file"), _TR("Printing problem."));
         return false;
     }
 
-    AutoFreeWstr defaultPrinter;
-    if (!printerName) {
-        defaultPrinter.Set(GetDefaultPrinterName());
-        printerName = defaultPrinter;
+    if (printerName) {
+        printer = NewPrinter(printerName);
+    } else {
+        auto defName = GetDefaultPrinterName();
+        if (!defName) {
+            logf("PrintFile: GetDefaultPrinterName() failed\n");
+            return false;
+        }
+        printer = NewPrinter(defName);
+        str::Free(defName);
     }
 
-    HANDLE printer;
-    BOOL res = OpenPrinterW(printerName, &printer, nullptr);
-    if (!res) {
-        if (displayErrors) {
-            MessageBoxWarning(nullptr, _TR("Printer with given name doesn't exist"), _TR("Printing problem."));
-        }
+    if (!printer) {
+        MessageBoxWarningCond(displayErrors, _TR("Printer with given name doesn't exist"), _TR("Printing problem."));
         return false;
     }
-
-    LONG structSize = 0;
-    LPDEVMODE devMode = nullptr;
-
-    DWORD needed = 0;
-    GetPrinterW(printer, 2, nullptr, 0, &needed);
-    ScopedMem<PRINTER_INFO_2> infoData((PRINTER_INFO_2*)AllocArray<BYTE>(needed));
-    if (infoData) {
-        res = GetPrinterW(printer, 2, (LPBYTE)infoData.Get(), needed, &needed);
-    }
-    if (!res || !infoData || needed <= sizeof(PRINTER_INFO_2)) {
-        goto Exit;
-    }
-
-    /* ask for the size of DEVMODE struct */
-    structSize = DocumentPropertiesW(nullptr, printer, printerName, nullptr, nullptr, 0);
-    if (structSize < sizeof(DEVMODEW)) {
-        if (displayErrors) {
-            MessageBoxWarning(nullptr, _TR("Could not obtain Printer properties"), _TR("Printing problem."));
-        }
-        goto Exit;
-    }
-    devMode = (DEVMODEW*)Allocator::AllocZero(nullptr, structSize);
-
-    // Get the default DevMode for the printer and modify it for your needs.
-    ret = DocumentPropertiesW(nullptr, printer, printerName, devMode, nullptr, DM_OUT_BUFFER);
-    if (IDOK != ret) {
-        if (displayErrors) {
-            MessageBoxWarning(nullptr, _TR("Could not obtain Printer properties"), _TR("Printing problem."));
-        }
-        goto Exit;
-    }
-
-    ClosePrinter(printer);
-    printer = nullptr;
 
     // set paper size to match the size of the document's first page
     // (will be overridden by any paper= value in -print-settings)
+    auto devMode = printer->devMode;
     devMode->dmPaperSize = GetPaperSize(engine);
-
     {
         Print_Advanced_Data advanced;
         Vec<PRINTPAGERANGE> ranges;
 
-        ApplyPrintSettings(printerName, settings, engine->PageCount(), ranges, advanced, devMode);
+        ApplyPrintSettings(printer, settings, engine->PageCount(), ranges, advanced);
 
         if (advanced.rotation == PrintRotationAdv::Auto && devMode->dmPaperSize == 0) {
-            if (devMode->dmPaperSize = DetectPrinterPaperSize(engine, printerName)) {
+            if (devMode->dmPaperSize = DetectPrinterPaperSize(engine, printer)) {
                 devMode->dmFields |= DM_PAPERSIZE;
             } else {
-                SetPrinterCustomPaperSize(engine, devMode);
+                SetPrinterCustomPaperSizeForEngine(engine, printer);
             }
         }
 
-        PrintData pd(engine, infoData, devMode, ranges, advanced);
+        PrintData pd(engine, printer, ranges, advanced);
         ok = PrintToDevice(pd);
-        if (!ok && displayErrors) {
-            MessageBoxWarning(nullptr, _TR("Couldn't initialize printer"), _TR("Printing problem."));
+        if (!ok) {
+            MessageBoxWarningCond(displayErrors, _TR("Couldn't initialize printer"), _TR("Printing problem."));
         }
     }
 
-Exit:
-    free(devMode);
-    if (printer) {
-        ClosePrinter(printer);
-    }
+    delete printer;
     return ok;
 }
 
 bool PrintFile(const WCHAR* fileName, WCHAR* printerName, bool displayErrors, const WCHAR* settings) {
     logf(L"PrintFile: file: '%s', printer: '%s'\n", fileName, printerName);
     WCHAR* fileName2 = path::Normalize(fileName);
-    EngineBase* engine = CreateEngine(fileName2);
+    EngineBase* engine = CreateEngine(fileName2, nullptr, true);
     if (!engine) {
-        if (displayErrors) {
-            WCHAR* msg = str::Format(L"Couldn't open file '%s' for printing", fileName);
-            MessageBoxWarning(nullptr, msg, L"Error");
-            free(msg);
-        }
+        WCHAR* msg = str::Format(L"Couldn't open file '%s' for printing", fileName);
+        MessageBoxWarningCond(displayErrors, msg, L"Error");
+        free(msg);
         return false;
     }
     bool ok = PrintFile(engine, printerName, displayErrors, settings);

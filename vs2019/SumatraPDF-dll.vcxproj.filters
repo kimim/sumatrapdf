@@ -78,15 +78,6 @@
     <ClInclude Include="..\src\DisplayModel.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Doc.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\EbookController.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\EbookControls.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\EditAnnotations.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -105,6 +96,9 @@
     <ClInclude Include="..\src\Flags.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\FzImgReader.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\GlobalPrefs.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -114,13 +108,7 @@
     <ClInclude Include="..\src\Menu.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\MuiEbookPageDef.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Notifications.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\PagesLayoutDef.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\src\PdfSync.h">
@@ -204,45 +192,6 @@
     <ClInclude Include="..\src\mui\Mui.h">
       <Filter>src\mui</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\mui\MuiBase.h">
-      <Filter>src\mui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mui\MuiButton.h">
-      <Filter>src\mui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mui\MuiControl.h">
-      <Filter>src\mui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mui\MuiCss.h">
-      <Filter>src\mui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mui\MuiDefs.h">
-      <Filter>src\mui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mui\MuiEventMgr.h">
-      <Filter>src\mui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mui\MuiFromText.h">
-      <Filter>src\mui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mui\MuiGrid.h">
-      <Filter>src\mui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mui\MuiHwndWrapper.h">
-      <Filter>src\mui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mui\MuiLayout.h">
-      <Filter>src\mui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mui\MuiPainter.h">
-      <Filter>src\mui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mui\MuiScrollBar.h">
-      <Filter>src\mui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mui\SvgPath.h">
-      <Filter>src\mui</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\mui\TextRender.h">
       <Filter>src\mui</Filter>
     </ClInclude>
@@ -317,15 +266,6 @@
     <ClCompile Include="..\src\DisplayModel.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Doc.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\EbookController.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\EbookControls.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\EditAnnotations.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -342,6 +282,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Flags.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FzImgReader.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\GlobalPrefs.cpp">
@@ -362,13 +305,7 @@
     <ClCompile Include="..\src\MuPDF_Exports.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\MuiEbookPageDef.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Notifications.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\PagesLayoutDef.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\PdfSync.cpp">
@@ -459,45 +396,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\mui\Mui.cpp">
-      <Filter>src\mui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mui\MuiBase.cpp">
-      <Filter>src\mui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mui\MuiButton.cpp">
-      <Filter>src\mui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mui\MuiControl.cpp">
-      <Filter>src\mui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mui\MuiCss.cpp">
-      <Filter>src\mui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mui\MuiDefs.cpp">
-      <Filter>src\mui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mui\MuiEventMgr.cpp">
-      <Filter>src\mui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mui\MuiFromText.cpp">
-      <Filter>src\mui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mui\MuiGrid.cpp">
-      <Filter>src\mui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mui\MuiHwndWrapper.cpp">
-      <Filter>src\mui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mui\MuiLayout.cpp">
-      <Filter>src\mui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mui\MuiPainter.cpp">
-      <Filter>src\mui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mui\MuiScrollBar.cpp">
-      <Filter>src\mui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mui\SvgPath.cpp">
       <Filter>src\mui</Filter>
     </ClCompile>
     <ClCompile Include="..\src\mui\TextRender.cpp">

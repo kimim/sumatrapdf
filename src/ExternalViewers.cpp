@@ -11,7 +11,7 @@
 #include "DisplayMode.h"
 #include "Controller.h"
 #include "EngineBase.h"
-#include "EngineCreate.h"
+#include "EngineAll.h"
 #include "SettingsStructs.h"
 #include "GlobalPrefs.h"
 #include "SumatraPDF.h"
@@ -376,7 +376,7 @@ bool ViewWithExternalViewer(TabInfo* tab, size_t idx) {
     if (!file::Exists(exePath)) {
         return false;
     }
-    const WCHAR* cmdLine = args.nArgs > 1 ? args.at(1) : nullptr;
+    const WCHAR* cmdLine = args.ParamsTemp();
     AutoFreeWstr params = FormatParams(cmdLine, tab);
     return LaunchFile(exePath, params);
 }

@@ -323,10 +323,8 @@ static void RestoreTabOnStartup(WindowInfo* win, TabState* state) {
     if (displayMode != DisplayMode::Automatic) {
         SwitchToDisplayMode(win, displayMode);
     }
-    // TODO: make EbookController::GoToPage not crash
-    if (!tab->AsEbook()) {
-        tab->ctrl->GoToPage(state->pageNo, true);
-    }
+    tab->ctrl->GoToPage(state->pageNo, true);
+
     float zoom = ZoomFromString(state->zoom, INVALID_ZOOM);
     if (zoom != INVALID_ZOOM) {
         if (tab->AsFixed()) {
@@ -380,7 +378,7 @@ static bool SetupPluginMode(Flags& i) {
     }
     // use fixed page UI for all document types (so that the context menu always
     // contains all plugin specific entries and the main window is never closed)
-    gGlobalPrefs->ebookUI.useFixedPageUI = gGlobalPrefs->chmUI.useFixedPageUI = true;
+    gGlobalPrefs->chmUI.useFixedPageUI = true;
 
     // extract some command line arguments from the URL's hash fragment where available
     // see http://www.adobe.com/devnet/acrobat/pdfs/pdf_open_parameters.pdf#nameddest=G4.1501531
@@ -1061,6 +1059,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, __unused HINSTANCE hPrevInstance, __un
     system("pause");
     goto Exit;
 #endif
+
+    if (false) {
+        // LoadFile();
+        LoadRar();
+        return 0;
+    }
 
     if (i.showConsole) {
         RedirectIOToConsole();

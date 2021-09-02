@@ -234,6 +234,35 @@ static NO_INLINE RectF FzGetRectF(fz_link* link, fz_outline* outline) {
     return {};
 }
 
+// copy of pdf_resolve_link in pdf-link.c without ctx and doc
+// returns page number and location on the page
+static int ResolveLink(const char* uri, float* xp, float* yp, float* zoomp) {
+    if (!uri || uri[0] != '#') {
+        return -1;
+    }
+    int page = atoi(uri + 1) - 1;
+    if (xp || yp) {
+        const char *x, *y, *zoom = nullptr;
+        x = strchr(uri, ',');
+        y = x ? strchr(x + 1, ',') : nullptr;
+        if (x && y) {
+            if (xp) {
+                *xp = (float)atoi(x + 1);
+            }
+            if (yp) {
+                *yp = (float)atoi(y + 1);
+            }
+            zoom = strchr(y + 1, ',');
+            if (zoom && zoomp) {
+                *zoomp = (float)atof(zoom + 1);
+            }
+        }
+        // logf("resolve_link OUT: page=%d x=%f y=%f zoom=%f\n", page, (xp && x) ? (*xp) : INFINITY, (yp && y) ? (*yp) :
+        // INFINITY, (zoomp && zoom) ? (*zoomp) : INFINITY);
+    }
+    return page;
+}
+
 static int FzGetPageNo(fz_link* link, fz_outline* outline) {
     if (outline) {
         return outline->page + 1;
@@ -1008,6 +1037,7 @@ static TocItem* NewTocItemWithDestination(TocItem* parent, WCHAR* title, IPageDe
     return res;
 }
 
+// don't delete the result
 static IPageElement* FzGetElementAtPos(FzPageInfo* pageInfo, PointF pt) {
     if (!pageInfo) {
         return nullptr;
@@ -2176,7 +2206,7 @@ bool EngineMupdf::FinishLoading() {
     return true;
 }
 
-static IPageDestination* DestFromAttachment(EngineMupdf* engine, fz_outline* outline) {
+static NO_INLINE IPageDestination* DestFromAttachment(EngineMupdf* engine, fz_outline* outline) {
     PageDestination* dest = new PageDestination();
     dest->kind = kindDestinationLaunchEmbedded;
     // WCHAR* path = strconv::Utf8ToWstr(outline->uri);
@@ -2684,6 +2714,7 @@ RenderedBitmap* EngineMupdf::RenderPage(RenderPageArgs& args) {
     return bitmap;
 }
 
+// don't delete the result
 IPageElement* EngineMupdf::GetElementAtPos(int pageNo, PointF pt) {
     FzPageInfo* pageInfo = GetFzPageInfoFast(pageNo);
     return FzGetElementAtPos(pageInfo, pt);
@@ -2730,12 +2761,6 @@ bool EngineMupdf::HandleLink(IPageDestination* dest, ILinkHandler* linkHandler) 
     Kind k = dest->GetKind();
     if (k == kindDestinationMupdf) {
         HandleLinkMupdf(this, dest, linkHandler);
-        return true;
-    }
-    if (k == kindDestinationLaunchURL) {
-        auto d = (PageDestinationURL*)dest;
-        char* urlA = ToUtf8Temp(d->url);
-        linkHandler->LaunchURL(urlA);
         return true;
     }
     linkHandler->GotoLink(dest);
@@ -2985,7 +3010,7 @@ WCHAR* EngineMupdf::ExtractFontList() {
 
         auto fontInfo = ToWstrTemp(info.LendData());
         if (fontInfo.Get() && !fonts.Contains(fontInfo)) {
-            fonts.Append(fontInfo.Get());
+            fonts.Append(str::Dup(fontInfo.Get()));
         }
     }
     if (fonts.size() == 0) {
@@ -2993,7 +3018,8 @@ WCHAR* EngineMupdf::ExtractFontList() {
     }
 
     fonts.SortNatural();
-    return fonts.Join(L"\n");
+    WCHAR* res = fonts.Join(L"\n");
+    return res;
 }
 
 static const char* DocumentPropertyToMupdfMetadataKey(DocumentProperty prop) {
@@ -3275,7 +3301,8 @@ WCHAR* EngineMupdf::GetPageLabel(int pageNo) const {
 
 int EngineMupdf::GetPageByLabel(const WCHAR* label) const {
     if (!pdfdoc) {
-        return 0;
+        // non-pdf documents don't have labels so label is just a page number as string
+        return EngineBase::GetPageByLabel(label);
     }
     int pageNo = 0;
     if (pageLabels) {

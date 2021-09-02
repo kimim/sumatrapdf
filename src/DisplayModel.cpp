@@ -52,7 +52,7 @@
 #include "DisplayMode.h"
 #include "Controller.h"
 #include "EngineBase.h"
-#include "EngineCreate.h"
+#include "EngineAll.h"
 #include "SettingsStructs.h"
 #include "DisplayModel.h"
 #include "GlobalPrefs.h"
@@ -184,6 +184,14 @@ bool DisplayModel::NeedHScroll() const {
 
 bool DisplayModel::NeedVScroll() const {
     return viewPort.dy < canvasSize.dy;
+}
+
+bool DisplayModel::CanScrollRight() const {
+    return viewPort.x + viewPort.dx < canvasSize.dx;
+}
+
+bool DisplayModel::CanScrollLeft() const {
+    return viewPort.x > 0;
 }
 
 Size DisplayModel::GetCanvasSize() const {
@@ -1034,8 +1042,9 @@ RectF DisplayModel::CvtFromScreen(Rect r, int pageNo) {
     return RectF::FromXY(TL, BR);
 }
 
-/* Given position 'x'/'y' in the draw area, returns a structure describing
-   a link or nullptr if there is no link at this position. */
+// Given position 'x'/'y' in the draw area, returns a structure describing
+// a link or nullptr if there is no link at this position.
+// don't delete the result
 IPageElement* DisplayModel::GetElementAtPos(Point pt, int* pageNoOut) {
     int pageNo = GetPageNoByPoint(pt);
     if (!ValidPageNo(pageNo)) {

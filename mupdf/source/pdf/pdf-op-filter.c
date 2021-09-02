@@ -1,3 +1,25 @@
+// Copyright (C) 2004-2021 Artifex Software, Inc.
+//
+// This file is part of MuPDF.
+//
+// MuPDF is free software: you can redistribute it and/or modify it under the
+// terms of the GNU Affero General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option)
+// any later version.
+//
+// MuPDF is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+// details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with MuPDF. If not, see <https://www.gnu.org/licenses/agpl-3.0.en.html>
+//
+// Alternative licensing terms are available from the licensor.
+// For commercial licensing, see <https://www.artifex.com/> or contact
+// Artifex Software, Inc., 1305 Grant Avenue - Suite 200, Novato,
+// CA 94945, U.S.A., +1(415)492-9861, for further information.
+
 #include "mupdf/fitz.h"
 #include "mupdf/pdf.h"
 
@@ -1452,6 +1474,11 @@ pdf_filter_squote(fz_context *ctx, pdf_processor *proc, char *str, size_t len)
 {
 	/* Note, we convert all T' operators to (maybe) a T* and a Tj */
 	pdf_filter_processor *p = (pdf_filter_processor*)proc;
+
+	/* need to flush text state and clear adjustment before we emit a newline */
+	p->Tm_adjust = 0;
+	filter_flush(ctx, p, FLUSH_ALL);
+
 	pdf_tos_newline(&p->tos, p->gstate->pending.text.leading);
 	/* If Tm_pending, then just adjusting the matrix (as
 	 * pdf_tos_newline has done) is enough. Otherwise we
@@ -1467,6 +1494,11 @@ pdf_filter_dquote(fz_context *ctx, pdf_processor *proc, float aw, float ac, char
 	/* Note, we convert all T" operators to (maybe) a T*,
 	 * (maybe) Tc, (maybe) Tw and a Tj. */
 	pdf_filter_processor *p = (pdf_filter_processor*)proc;
+
+	/* need to flush text state and clear adjustment before we emit a newline */
+	p->Tm_adjust = 0;
+	filter_flush(ctx, p, FLUSH_ALL);
+
 	p->gstate->pending.text.word_space = aw;
 	p->gstate->pending.text.char_space = ac;
 	pdf_tos_newline(&p->tos, p->gstate->pending.text.leading);

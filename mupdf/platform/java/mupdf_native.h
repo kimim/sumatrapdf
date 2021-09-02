@@ -2234,6 +2234,14 @@ JNIEXPORT jboolean JNICALL Java_com_artifex_mupdf_fitz_PDFDocument_canBeSavedInc
 
 /*
  * Class:     com_artifex_mupdf_fitz_PDFDocument
+ * Method:    isRedacted
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_artifex_mupdf_fitz_PDFDocument_isRedacted
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_artifex_mupdf_fitz_PDFDocument
  * Method:    save
  * Signature: (Ljava/lang/String;Ljava/lang/String;)V
  */
@@ -3332,6 +3340,14 @@ JNIEXPORT void JNICALL Java_com_artifex_mupdf_fitz_PDFWidget_clearSignature
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_com_artifex_mupdf_fitz_PDFWidget_isSigned
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_artifex_mupdf_fitz_PDFWidget
+ * Method:    layoutTextWidget
+ * Signature: ()Lcom/artifex/mupdf/fitz/PDFWidget/TextWidgetLayout;
+ */
+JNIEXPORT jobject JNICALL Java_com_artifex_mupdf_fitz_PDFWidget_layoutTextWidget
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus

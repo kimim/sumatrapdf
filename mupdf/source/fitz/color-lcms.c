@@ -1,3 +1,25 @@
+// Copyright (C) 2004-2021 Artifex Software, Inc.
+//
+// This file is part of MuPDF.
+//
+// MuPDF is free software: you can redistribute it and/or modify it under the
+// terms of the GNU Affero General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option)
+// any later version.
+//
+// MuPDF is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+// details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with MuPDF. If not, see <https://www.gnu.org/licenses/agpl-3.0.en.html>
+//
+// Alternative licensing terms are available from the licensor.
+// For commercial licensing, see <https://www.artifex.com/> or contact
+// Artifex Software, Inc., 1305 Grant Avenue - Suite 200, Novato,
+// CA 94945, U.S.A., +1(415)492-9861, for further information.
+
 #include "mupdf/fitz.h"
 
 #include "color-imp.h"
@@ -266,7 +288,8 @@ fz_new_icc_link(fz_context *ctx,
 	fz_colorspace *prf,
 	fz_color_params rend,
 	int format,
-	int copy_spots)
+	int copy_spots,
+	int premult)
 {
 	GLOINIT
 	cmsHPROFILE src_pro = src->u.icc.profile;
@@ -314,6 +337,9 @@ fz_new_icc_link(fz_context *ctx,
 
 	if (copy_spots)
 		flags |= cmsFLAGS_COPY_ALPHA;
+
+	if (premult)
+		flags |= cmsFLAGS_PREMULT;
 
 	if (prf_pro == NULL)
 	{
@@ -445,7 +471,9 @@ fz_icc_transform_pixmap(fz_context *ctx, fz_icc_link *link, const fz_pixmap *src
 
 	inputpos = src->samples;
 	outputpos = dst->samples;
-	if (sa)
+	/* LCMS can only handle premultiplied data if the number of 'extra'
+	 * channels is the same. If not, do it by steam. */
+	if (sa && cmm_extras != (int)T_EXTRA(dst_format))
 	{
 		buffer = fz_malloc(ctx, ss);
 		for (; h > 0; h--)
@@ -471,13 +499,11 @@ fz_icc_transform_pixmap(fz_context *ctx, fz_icc_link *link, const fz_pixmap *src
 		fz_free(ctx, buffer);
 	}
 	else
+	for (; h > 0; h--)
 	{
-		for (; h > 0; h--)
-		{
-			cmsDoTransform(GLO link->handle, inputpos, outputpos, sw);
-			inputpos += ss;
-			outputpos += ds;
-		}
+		cmsDoTransform(GLO link->handle, inputpos, outputpos, sw);
+		inputpos += ss;
+		outputpos += ds;
 	}
 }
 

@@ -1,3 +1,25 @@
+// Copyright (C) 2004-2021 Artifex Software, Inc.
+//
+// This file is part of MuPDF.
+//
+// MuPDF is free software: you can redistribute it and/or modify it under the
+// terms of the GNU Affero General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option)
+// any later version.
+//
+// MuPDF is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+// details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with MuPDF. If not, see <https://www.gnu.org/licenses/agpl-3.0.en.html>
+//
+// Alternative licensing terms are available from the licensor.
+// For commercial licensing, see <https://www.artifex.com/> or contact
+// Artifex Software, Inc., 1305 Grant Avenue - Suite 200, Novato,
+// CA 94945, U.S.A., +1(415)492-9861, for further information.
+
 #include "mupdf/fitz.h"
 #include "mupdf/pdf.h"
 
@@ -283,6 +305,26 @@ static void field_setValue(js_State *J)
 		(void)pdf_set_field_value(js->ctx, js->doc, field, value, 0);
 	fz_catch(js->ctx)
 		rethrow(js);
+}
+
+static void field_getType(js_State *J)
+{
+	pdf_js *js = js_getcontext(J);
+	pdf_obj *field = js_touserdata(J, 0, "Field");
+	const char *type;
+
+	fz_try(js->ctx)
+		type = pdf_field_type_string(js->ctx, field);
+	fz_catch(js->ctx)
+		rethrow(js);
+
+	js_pushstring(J, type);
+}
+
+static void field_setType(js_State *J)
+{
+	pdf_js *js = js_getcontext(J);
+	fz_warn(js->ctx, "Unexpected call to field_setType");
 }
 
 static void doc_getField(js_State *J)
@@ -700,6 +742,7 @@ static void declare_dom(pdf_js *js)
 	js_newobject(J);
 	{
 		addproperty(J, "Field.value", field_getValue, field_setValue);
+		addproperty(J, "Field.type", field_getType, field_setType);
 		addproperty(J, "Field.borderStyle", field_getBorderStyle, field_setBorderStyle);
 		addproperty(J, "Field.textColor", field_getTextColor, field_setTextColor);
 		addproperty(J, "Field.fillColor", field_getFillColor, field_setFillColor);

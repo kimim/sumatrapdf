@@ -20,6 +20,7 @@
 #include "wingui/TreeModel.h"
 #include "DisplayMode.h"
 #include "Controller.h"
+#include "FzImgReader.h"
 #include "EngineBase.h"
 #include "EngineAll.h"
 #include "EbookBase.h"
@@ -51,6 +52,11 @@ static float GetDefaultFontSize() {
 
 void SetDefaultEbookFont(const WCHAR* name, float size) {
     // intentionally don't validate the input
+    if (str::Eq(name, L"default")) {
+        // "default" is used for mupdf engine to indicate
+        // we should use the font as given in css
+        name = L"Georgia";
+    }
     gDefaultFontName.SetCopy(name);
     // use a somewhat smaller size than in the EbookUI, since fit page/width
     // is likely to be above 100% for the paperback page dimensions
@@ -98,10 +104,13 @@ class EngineEbook : public EngineBase {
 
     Vec<IPageElement*> GetElements(int pageNo) override;
     IPageElement* GetElementAtPos(int pageNo, PointF pt) override;
-    bool HandleLink(IPageDestination*, ILinkHandler*) override {
-        CrashIf(true);
-        // TODO: implement me
-        return false;
+    bool HandleLink(IPageDestination* dest, ILinkHandler* linkHandler) override {
+        ReportIf(!dest || !linkHandler);
+        if (!dest || !linkHandler) {
+            return false;
+        }
+        linkHandler->GotoLink(dest);
+        return true;
     }
 
     IPageDestination* GetNamedDest(const WCHAR* name) override;
@@ -177,7 +186,7 @@ EngineEbook::EngineEbook() {
     // "B Format" paperback
     pageRect = RectF(0, 0, 5.12f * GetFileDPI(), 7.8f * GetFileDPI());
     pageBorder = 0.4f * GetFileDPI();
-    preferredLayout = preferredLayout = PageLayout(PageLayout::Type::Book);
+    preferredLayout = preferredLayout = PageLayout(PageLayout::Type::Single);
     InitializeCriticalSection(&pagesAccess);
 }
 
@@ -492,6 +501,7 @@ RenderedBitmap* EngineEbook::GetImageForPageElement(IPageElement* iel) {
     return getImageFromData(i.GetImage());
 }
 
+// don't delete the result
 IPageElement* EngineEbook::GetElementAtPos(int pageNo, PointF pt) {
     auto els = GetElements(pageNo);
 

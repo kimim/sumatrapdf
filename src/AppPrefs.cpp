@@ -7,6 +7,7 @@
 #include "utils/UITask.h"
 #include "utils/ScopedWin.h"
 #include "utils/WinUtil.h"
+#include "utils/Timer.h"
 
 #include "wingui/TreeModel.h"
 #include "DisplayMode.h"
@@ -29,6 +30,8 @@
 #include "Favorites.h"
 #include "Toolbar.h"
 #include "Translations.h"
+
+#include "utils/Log.h"
 
 // SumatraPDF.cpp
 extern void RememberDefaultWindowPosition(WindowInfo* win);
@@ -67,6 +70,12 @@ WCHAR* GetSettingsPath() {
 bool Load() {
     CrashIf(gGlobalPrefs);
 
+    auto timeStart = TimeGet();
+    defer {
+        auto dur = TimeSinceInMs(timeStart);
+        logf("prefs::Load() took %.2f ms\n", dur);
+    };
+
     AutoFreeWstr path = GetSettingsPath();
     AutoFree prefsData = file::ReadFile(path.Get());
 
@@ -80,17 +89,6 @@ bool Load() {
 #if defined(DEBUG) || defined(PRE_RELEASE_VER)
     if (!gprefs->restoreSession && prefsData.data && str::Find(prefsData.data, "\nRestoreSession = auto")) {
         gprefs->restoreSession = true;
-    }
-#endif
-
-#ifdef DISABLE_EBOOK_UI
-    if (!prefsData || !str::Find(prefsData, "UseFixedPageUI =")) {
-        gprefs->ebookUI.useFixedPageUI = gprefs->chmUI.useFixedPageUI = true;
-    }
-#endif
-#ifdef DISABLE_TABS
-    if (!prefsData || !str::Find(prefsData, "UseTabs =")) {
-        gprefs->useTabs = false;
     }
 #endif
 
@@ -123,8 +121,8 @@ bool Load() {
 
     // TODO: verify that all states have a non-nullptr file path?
     gFileHistory.UpdateStatesSource(gprefs->fileStates);
-    auto fontName = ToWstrTemp(gprefs->ebookUI.fontName);
-    SetDefaultEbookFont(fontName.Get(), gprefs->ebookUI.fontSize);
+    auto fontName = ToWstrTemp(gprefs->fixedPageUI.ebookFontName);
+    SetDefaultEbookFont(fontName.Get(), gprefs->fixedPageUI.ebookFontSize);
 
     if (!file::Exists(path.Get())) {
         Save();
@@ -160,10 +158,6 @@ static void RememberSessionState() {
             FileState* fs = NewDisplayState(fp);
             if (tab->ctrl) {
                 tab->ctrl->GetDisplayState(fs);
-            }
-            // TODO: pageNo should be good enough, as canvas size is restored as well
-            if (tab->AsEbook() && tab->ctrl) {
-                fs->pageNo = tab->ctrl->CurrentPageNo();
             }
             fs->showToc = tab->showToc;
             *fs->tocState = tab->tocState;

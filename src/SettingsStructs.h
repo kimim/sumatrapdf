@@ -47,24 +47,10 @@ struct FixedPageUI {
     bool invertColors;
     // if true, hides the scrollbars but retains ability to scroll
     bool hideScrollbars;
-};
-
-// customization options for eBooks (EPUB, Mobi, FictionBook) UI. If
-// UseFixedPageUI is true, FixedPageUI settings apply instead
-struct EbookUI {
-    // name of the font. takes effect after re-opening the document
-    char* fontName;
-    // size of the font. takes effect after re-opening the document
-    float fontSize;
-    // color for text
-    char* textColor;
-    ParsedColor textColorParsed;
-    // color of the background (page)
-    char* backgroundColor;
-    ParsedColor backgroundColorParsed;
-    // if true, the UI used for PDF documents will be used for ebooks as
-    // well (enables printing and searching, disables automatic reflow)
-    bool useFixedPageUI;
+    // name of the font for ebook formats
+    char* ebookFontName;
+    // size of the font for ebook formats
+    float ebookFontSize;
 };
 
 // customization options for Comic Book and images UI
@@ -291,9 +277,6 @@ struct GlobalPrefs {
     int tabWidth;
     // customization options for PDF, XPS, DjVu and PostScript UI
     FixedPageUI fixedPageUI;
-    // customization options for eBooks (EPUB, Mobi, FictionBook) UI. If
-    // UseFixedPageUI is true, FixedPageUI settings apply instead
-    EbookUI ebookUI;
     // customization options for Comic Book and images UI
     ComicBookUI comicBookUI;
     // customization options for CHM UI. If UseFixedPageUI is true,
@@ -434,20 +417,12 @@ static const FieldInfo gFixedPageUIFields[] = {
     {offsetof(FixedPageUI, pageSpacing), SettingType::Compact, (intptr_t)&gSizeInfo},
     {offsetof(FixedPageUI, gradientColors), SettingType::ColorArray, 0},
     {offsetof(FixedPageUI, hideScrollbars), SettingType::Bool, false},
+    {offsetof(FixedPageUI, ebookFontName), SettingType::String, (intptr_t) "default"},
+    {offsetof(FixedPageUI, ebookFontSize), SettingType::Float, (intptr_t) "10"},
 };
-static const StructInfo gFixedPageUIInfo = {
-    sizeof(FixedPageUI), 7, gFixedPageUIFields,
-    "TextColor\0BackgroundColor\0SelectionColor\0WindowMargin\0PageSpacing\0GradientColors\0HideScrollbars"};
-
-static const FieldInfo gEbookUIFields[] = {
-    {offsetof(EbookUI, fontName), SettingType::String, (intptr_t) "Georgia"},
-    {offsetof(EbookUI, fontSize), SettingType::Float, (intptr_t) "12.5"},
-    {offsetof(EbookUI, textColor), SettingType::Color, (intptr_t) "#5f4b32"},
-    {offsetof(EbookUI, backgroundColor), SettingType::Color, (intptr_t) "#fbf0d9"},
-    {offsetof(EbookUI, useFixedPageUI), SettingType::Bool, false},
-};
-static const StructInfo gEbookUIInfo = {sizeof(EbookUI), 5, gEbookUIFields,
-                                        "FontName\0FontSize\0TextColor\0BackgroundColor\0UseFixedPageUI"};
+static const StructInfo gFixedPageUIInfo = {sizeof(FixedPageUI), 9, gFixedPageUIFields,
+                                            "TextColor\0BackgroundColor\0SelectionColor\0WindowMargin\0PageSpacing\0Gra"
+                                            "dientColors\0HideScrollbars\0EbookFontName\0EbookFontSize"};
 
 static const FieldInfo gWindowMargin_1_Fields[] = {
     {offsetof(WindowMargin, top), SettingType::Int, 0},
@@ -623,7 +598,6 @@ static const FieldInfo gGlobalPrefsFields[] = {
     {offsetof(GlobalPrefs, tabWidth), SettingType::Int, 300},
     {(size_t)-1, SettingType::Comment, 0},
     {offsetof(GlobalPrefs, fixedPageUI), SettingType::Struct, (intptr_t)&gFixedPageUIInfo},
-    {offsetof(GlobalPrefs, ebookUI), SettingType::Struct, (intptr_t)&gEbookUIInfo},
     {offsetof(GlobalPrefs, comicBookUI), SettingType::Struct, (intptr_t)&gComicBookUIInfo},
     {offsetof(GlobalPrefs, chmUI), SettingType::Struct, (intptr_t)&gChmUIInfo},
     {offsetof(GlobalPrefs, selectionHandlers), SettingType::Array, (intptr_t)&gSelectionHandlerInfo},
@@ -674,13 +648,13 @@ static const FieldInfo gGlobalPrefsFields[] = {
      (intptr_t) "Settings after this line have not been recognized by the current version"},
 };
 static const StructInfo gGlobalPrefsInfo = {
-    sizeof(GlobalPrefs), 56, gGlobalPrefsFields,
-    "\0\0MainWindowBackground\0EscToExit\0ReuseInstance\0UseSysColors\0RestoreSession\0TabWidth\0\0FixedPageUI\0EbookUI"
-    "\0ComicBookUI\0ChmUI\0SelectionHandlers\0ExternalViewers\0ShowMenubar\0ReloadModifiedDocuments\0FullPathInTitle\0Z"
-    "oomLevels\0ZoomIncrement\0\0PrinterDefaults\0ForwardSearch\0Annotations\0DefaultPasswords\0CustomScreenDPI\0\0Reme"
-    "mberStatePerDocument\0UiLanguage\0ShowToolbar\0ShowFavorites\0AssociatedExtensions\0AssociateSilently\0CheckForUpd"
-    "ates\0VersionToSkip\0RememberOpenedFiles\0InverseSearchCmdLine\0EnableTeXEnhancements\0DefaultDisplayMode\0Default"
-    "Zoom\0WindowState\0WindowPos\0ShowToc\0SidebarDx\0TocDy\0TreeFontSize\0ShowStartPage\0UseTabs\0\0FileStates\0Sessi"
-    "onData\0ReopenOnce\0TimeOfLastUpdateCheck\0OpenCountWeek\0\0"};
+    sizeof(GlobalPrefs), 55, gGlobalPrefsFields,
+    "\0\0MainWindowBackground\0EscToExit\0ReuseInstance\0UseSysColors\0RestoreSession\0TabWidth\0\0FixedPageUI\0ComicBo"
+    "okUI\0ChmUI\0SelectionHandlers\0ExternalViewers\0ShowMenubar\0ReloadModifiedDocuments\0FullPathInTitle\0ZoomLevels"
+    "\0ZoomIncrement\0\0PrinterDefaults\0ForwardSearch\0Annotations\0DefaultPasswords\0CustomScreenDPI\0\0RememberState"
+    "PerDocument\0UiLanguage\0ShowToolbar\0ShowFavorites\0AssociatedExtensions\0AssociateSilently\0CheckForUpdates\0Ver"
+    "sionToSkip\0RememberOpenedFiles\0InverseSearchCmdLine\0EnableTeXEnhancements\0DefaultDisplayMode\0DefaultZoom\0Win"
+    "dowState\0WindowPos\0ShowToc\0SidebarDx\0TocDy\0TreeFontSize\0ShowStartPage\0UseTabs\0\0FileStates\0SessionData\0R"
+    "eopenOnce\0TimeOfLastUpdateCheck\0OpenCountWeek\0\0"};
 
 #endif

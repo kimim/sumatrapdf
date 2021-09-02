@@ -4,7 +4,6 @@
 #include "utils/BaseUtil.h"
 #include "utils/Archive.h"
 #include "utils/ScopedWin.h"
-
 #include "utils/FileUtil.h"
 #include "utils/GuessFileType.h"
 #include "utils/GdiPlusUtil.h"
@@ -17,51 +16,30 @@
 #include "utils/Log.h"
 
 #include "wingui/TreeModel.h"
+#include "FzImgReader.h"
 #include "DisplayMode.h"
 #include "Controller.h"
 #include "EngineBase.h"
 #include "EngineAll.h"
 #include "PdfCreator.h"
 
-// using namespace Gdiplus;
-
 using Gdiplus::ARGB;
 using Gdiplus::Bitmap;
-using Gdiplus::Brush;
 using Gdiplus::Color;
-using Gdiplus::CombineModeReplace;
 using Gdiplus::CompositingQualityHighQuality;
-using Gdiplus::Font;
-using Gdiplus::FontFamily;
-using Gdiplus::FontStyle;
-using Gdiplus::FontStyleBold;
-using Gdiplus::FontStyleRegular;
-using Gdiplus::FontStyleStrikeout;
-using Gdiplus::FontStyleUnderline;
 using Gdiplus::FrameDimensionPage;
 using Gdiplus::FrameDimensionTime;
 using Gdiplus::Graphics;
-using Gdiplus::GraphicsPath;
-using Gdiplus::Image;
 using Gdiplus::ImageAttributes;
-using Gdiplus::LinearGradientBrush;
-using Gdiplus::LinearGradientMode;
 using Gdiplus::Matrix;
 using Gdiplus::MatrixOrderAppend;
 using Gdiplus::Ok;
 using Gdiplus::OutOfMemory;
-using Gdiplus::Pen;
-using Gdiplus::PenAlignmentInset;
 using Gdiplus::PropertyItem;
-using Gdiplus::Region;
 using Gdiplus::SmoothingModeAntiAlias;
 using Gdiplus::SolidBrush;
 using Gdiplus::Status;
-using Gdiplus::StringFormat;
-using Gdiplus::StringFormatFlagsDirectionRightToLeft;
-using Gdiplus::TextRenderingHintClearTypeGridFit;
 using Gdiplus::UnitPixel;
-using Gdiplus::Win32Error;
 using Gdiplus::WrapModeTileFlipXY;
 
 Kind kindEngineImage = "engineImage";
@@ -136,6 +114,8 @@ class EngineImages : public EngineBase {
 
     ImagePage* GetPage(int pageNo, bool tryOnly = false);
     void DropPage(ImagePage* page, bool forceRemove);
+
+    RectF PageContentBox(int pageNo, RenderTarget) override;
 };
 
 EngineImages::EngineImages() {
@@ -217,7 +197,8 @@ RenderedBitmap* EngineImages::RenderPage(RenderPageArgs& args) {
     Rect pageRcI = PageMediabox(pageNo).Round();
     ImageAttributes imgAttrs;
     imgAttrs.SetWrapMode(WrapModeTileFlipXY);
-    Status ok = g.DrawImage(page->bmp, ToGdipRect(pageRcI), 0, 0, pageRcI.dx, pageRcI.dy, UnitPixel, &imgAttrs);
+    Status ok =
+        g.DrawImage(page->bmp, ToGdipRect(pageRcI), pageRcI.x, pageRcI.y, pageRcI.dx, pageRcI.dy, UnitPixel, &imgAttrs);
 
     DropPage(page, false);
     DeleteDC(hDC);
@@ -276,6 +257,7 @@ Vec<IPageElement*> EngineImages::GetElements(int pageNo) {
     return pi->allElements;
 }
 
+// don't delete the result
 IPageElement* EngineImages::GetElementAtPos(int pageNo, PointF pt) {
     if (!PageMediabox(pageNo).Contains(pt)) {
         return nullptr;
@@ -346,7 +328,6 @@ ImagePage* EngineImages::GetPage(int pageNo, bool tryOnly) {
 
     if (!result) {
         // TODO: drop most memory intensive pages first
-        // (i.e. formats which aren't IsGdiPlusNativeFormat)?
         if (pageCache.size() >= MAX_IMAGE_PAGE_CACHE) {
             CrashIf(pageCache.size() != MAX_IMAGE_PAGE_CACHE);
             DropPage(pageCache.Last(), true);
@@ -386,6 +367,116 @@ void EngineImages::DropPage(ImagePage* page, bool forceRemove) {
         }
         delete page;
     }
+}
+
+// Get content box for image by cropping out margins of similar color
+RectF EngineImages::PageContentBox(int pageNo, RenderTarget target) {
+    // try to load bitmap for the image
+    auto page = GetPage(pageNo, true);
+    if (!page)
+        return RectF{};
+    defer {
+        DropPage(page, false);
+    };
+
+    auto bmp = page->bmp;
+    if (!bmp)
+        return RectF{};
+
+    const int w = bmp->GetWidth(), h = bmp->GetHeight();
+    // don't need pixel-perfect margin, so scan 200 points at most
+    const int deltaX = std::max(1, w / 200), deltaY = std::max(1, h / 200);
+
+    Rect r(0, 0, w, h);
+
+    auto fmt = bmp->GetPixelFormat();
+    // getPixel can work with the following formats, otherwise convert it to 24bppRGB
+    switch (fmt) {
+        case PixelFormat24bppRGB:
+        case PixelFormat32bppRGB:
+        case PixelFormat32bppARGB:
+        case PixelFormat32bppPARGB:
+            break;
+        default:
+            fmt = PixelFormat24bppRGB;
+    }
+    const int bytesPerPixel = ((fmt >> 8) & 0xff) / 8; // either 3 or 4
+
+    Gdiplus::BitmapData bmpData;
+    // lock bitmap
+    {
+        Gdiplus::Rect bmpRect(0, 0, w, h);
+        Gdiplus::Status lock = bmp->LockBits(&bmpRect, Gdiplus::ImageLockModeRead, fmt, &bmpData);
+        if (lock != Gdiplus::Ok)
+            return RectF{};
+    }
+
+    auto getPixel = [&bmpData, bytesPerPixel](int x, int y) -> uint32_t {
+        CrashIf(x < 0 || x >= (int)bmpData.Width || y < 0 || y >= (int)bmpData.Height);
+        auto data = static_cast<const uint8_t*>(bmpData.Scan0);
+        unsigned idx = bytesPerPixel * x + bmpData.Stride * y;
+        uint32_t rgb = (data[idx + 2] << 16) | (data[idx + 1] << 8) | data[idx];
+        // ignore the lowest 3 bits (7=0b111) of each color component
+        return rgb & (~0x070707U);
+    };
+
+    uint32_t marginColor;
+    // crop the page, but no more than 25% from each side
+
+    // left margin
+    marginColor = getPixel(0, h / 2);
+    for (; r.x < w / 4 && r.dx > w / 2; r.x += deltaX, r.dx -= deltaX) {
+        bool ok = true;
+        for (int y = 0; y <= h - deltaY; y += deltaY) {
+            ok = getPixel(r.x + deltaX, y) == marginColor;
+            if (!ok)
+                break;
+        }
+        if (!ok)
+            break;
+    }
+
+    // right margin
+    marginColor = getPixel(w - 1, h / 2);
+    for (; r.dx > w / 2; r.dx -= deltaX) {
+        bool ok = true;
+        for (int y = 0; y <= h - deltaY; y += deltaY) {
+            ok = getPixel((r.x + r.dx) - 1 - deltaX, y) == marginColor;
+            if (!ok)
+                break;
+        }
+        if (!ok)
+            break;
+    }
+
+    // top margin
+    marginColor = getPixel(w / 2, 0);
+    for (; r.y < h / 4 && r.dy > h / 2; r.y += deltaY, r.dy -= deltaY) {
+        bool ok = true;
+        for (int x = r.x; x <= r.x + r.dx - deltaX; x += deltaX) {
+            ok = getPixel(x, r.y + deltaY) == marginColor;
+            if (!ok)
+                break;
+        }
+        if (!ok)
+            break;
+    }
+
+    // bottom margin
+    marginColor = getPixel(w / 2, h - 1);
+    for (; r.dy > h / 2; r.dy -= deltaY) {
+        bool ok = true;
+        for (int x = r.x; x <= r.x + r.dx - deltaX; x += deltaX) {
+            ok = getPixel(x, (r.y + r.dy) - 1 - deltaY) == marginColor;
+            if (!ok)
+                break;
+        }
+        if (!ok)
+            break;
+    }
+    bmp->UnlockBits(&bmpData);
+
+    return ToRectF(r);
 }
 
 ///// ImageEngine handles a single image file /////
@@ -475,12 +566,7 @@ bool EngineImage::LoadFromStream(IStream* stream) {
     defaultExt = fileExt;
 
     AutoFree data = GetDataFromStream(stream, nullptr);
-    if (IsGdiPlusNativeFormat(data.AsSpan())) {
-        image = Bitmap::FromStream(stream);
-    } else {
-        image = BitmapFromData(data.AsSpan());
-    }
-
+    image = BitmapFromData(data.AsSpan());
     return FinishLoading();
 }
 
@@ -661,7 +747,7 @@ static Kind imageEngineKinds[] = {
 };
 
 bool IsEngineImageSupportedFileType(Kind kind) {
-    logf("IsEngineImageSupportedFileType(%s)\n", kind);
+    // logf("IsEngineImageSupportedFileType(%s)\n", kind);
     int n = dimof(imageEngineKinds);
     return KindInArray(imageEngineKinds, n, kind);
 }
@@ -1095,11 +1181,13 @@ bool EngineCbx::FinishLoading() {
         tocTree = new TocTree(realRoot);
     }
 
+    auto timeStart2 = TimeGet();
     for (int i = 0; i < pageCount; i++) {
         size_t fileId = files[i]->fileId;
         ByteSlice img = cbxFile->GetFileDataById(fileId);
         images.Append(img);
     }
+    logf("EngineCbx::FinishLoading(): loaded %d files in %.2f\n", (int)pageCount, TimeSinceInMs(timeStart2));
 
     delete cbxFile;
     cbxFile = nullptr;
@@ -1274,6 +1362,7 @@ RectF EngineCbx::LoadMediabox(int pageNo) {
 }
 
 EngineBase* EngineCbx::CreateFromFile(const WCHAR* path) {
+    auto timeStart = TimeGet();
     // we sniff the type from content first because the
     // files can be mis-named e.g. .cbr archive with .cbz ext
     Kind kind = GuessFileTypeFromContent(path);
@@ -1295,6 +1384,7 @@ EngineBase* EngineCbx::CreateFromFile(const WCHAR* path) {
     if (!archive) {
         return nullptr;
     }
+    logf("EngineCbx::CreateFromFile(): opening archive took %.2f\n", TimeSinceInMs(timeStart));
 
     auto* engine = new EngineCbx(archive);
     if (engine->LoadFromFile(path)) {

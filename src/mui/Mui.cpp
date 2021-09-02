@@ -4,6 +4,8 @@
 #include "utils/BaseUtil.h"
 #include "utils/HtmlParserLookup.h"
 #include "utils/GdiPlusUtil.h"
+#include "utils/WinUtil.h"
+
 #include "Mui.h"
 
 #include "utils/Log.h"
@@ -37,187 +39,243 @@ messages and paints child windows on WM_PAINT.
 Event handling is loosly coupled.
 */
 
+using Gdiplus::Bitmap;
+using Gdiplus::CompositingQualityHighQuality;
+using Gdiplus::Font;
+using Gdiplus::Image;
+using Gdiplus::Ok;
+using Gdiplus::SmoothingModeAntiAlias;
+using Gdiplus::Status;
+using Gdiplus::TextRenderingHintClearTypeGridFit;
+using Gdiplus::UnitPixel;
+
 namespace mui {
 
-// if true, shows the bounding box of each control with red outline
-static bool gDebugPaint = false;
+// a critical section for everything that needs protecting in mui
+// we use only one for simplicity as long as contention is not a problem
+static CRITICAL_SECTION gMuiCs;
+
+static void EnterMuiCriticalSection() {
+    EnterCriticalSection(&gMuiCs);
+}
+
+static void LeaveMuiCriticalSection() {
+    LeaveCriticalSection(&gMuiCs);
+}
+
+class ScopedMuiCritSec {
+  public:
+    ScopedMuiCritSec() {
+        EnterMuiCriticalSection();
+    }
+
+    ~ScopedMuiCritSec() {
+        LeaveMuiCriticalSection();
+    }
+};
+
+class FontListItem {
+  public:
+    FontListItem(const WCHAR* name, float sizePt, FontStyle style, Font* font, HFONT hFont) : next(nullptr) {
+        cf.name = str::Dup(name);
+        cf.sizePt = sizePt;
+        cf.style = style;
+        cf.font = font;
+        cf.hFont = hFont;
+    }
+    ~FontListItem() {
+        str::Free(cf.name);
+        ::delete cf.font;
+        DeleteObject(cf.hFont);
+        delete next;
+    }
+
+    CachedFont cf;
+    FontListItem* next;
+};
+
+// Global, thread-safe font cache. Font objects live forever.
+static FontListItem* gFontsCache = nullptr;
+
+// Graphics objects cannot be used across threads. We have a per-thread
+// cache so that it's easy to grab Graphics object to be used for
+// measuring text
+struct GraphicsCacheEntry {
+    enum {
+        bmpDx = 32,
+        bmpDy = 4,
+        stride = bmpDx * 4,
+    };
+
+    DWORD threadId;
+    int refCount;
+
+    Graphics* gfx;
+    Bitmap* bmp;
+    BYTE data[bmpDx * bmpDy * 4];
+
+    bool Create();
+    void Free() const;
+};
+
+static Vec<GraphicsCacheEntry>* gGraphicsCache = nullptr;
+
+// set consistent mode for our graphics objects so that we get
+// the same results when measuring text
+void InitGraphicsMode(Graphics* g) {
+    g->SetCompositingQuality(CompositingQualityHighQuality);
+    g->SetSmoothingMode(SmoothingModeAntiAlias);
+    // g.SetSmoothingMode(SmoothingModeHighQuality);
+    g->SetTextRenderingHint(TextRenderingHintClearTypeGridFit);
+    g->SetPageUnit(UnitPixel);
+}
+
+bool GraphicsCacheEntry::Create() {
+    memset(data, 0, sizeof(data));
+    refCount = 1;
+    threadId = GetCurrentThreadId();
+    // using a small bitmap under assumption that Graphics used only
+    // for measuring text doesn't need the actual bitmap
+    bmp = ::new Bitmap(bmpDx, bmpDy, stride, PixelFormat32bppARGB, data);
+    if (!bmp) {
+        return false;
+    }
+    gfx = ::new Graphics((Image*)bmp);
+    if (!gfx) {
+        return false;
+    }
+    InitGraphicsMode(gfx);
+    return true;
+}
+
+void GraphicsCacheEntry::Free() const {
+    CrashIf(0 != refCount);
+    ::delete gfx;
+    ::delete bmp;
+}
 
 void Initialize() {
-    InitializeBase();
-    css::Initialize();
+    InitializeCriticalSection(&gMuiCs);
+    gGraphicsCache = new Vec<GraphicsCacheEntry>();
+    // allocate the first entry in gGraphicsCache for UI thread, ref count
+    // ensures it stays alive forever
+    AllocGraphicsForMeasureText();
 }
 
 void Destroy() {
-    FreeControlCreators();
-    FreeLayoutCreators();
-    css::Destroy();
-    DestroyBase();
+    FreeGraphicsForMeasureText(gGraphicsCache->at(0).gfx);
+    for (GraphicsCacheEntry& e : *gGraphicsCache) {
+        e.Free();
+    }
+    delete gGraphicsCache;
+    delete gFontsCache;
+    DeleteCriticalSection(&gMuiCs);
 }
 
-// the caller needs to manually invalidate all windows
-// for this to take place
-void SetDebugPaint(bool debug) {
-    gDebugPaint = debug;
+bool CachedFont::SameAs(const WCHAR* otherName, float otherSizePt, FontStyle otherStyle) const {
+    if (sizePt != otherSizePt) {
+        return false;
+    }
+    if (style != otherStyle) {
+        return false;
+    }
+    return str::Eq(name, otherName);
 }
 
-bool IsDebugPaint() {
-    return gDebugPaint;
+HFONT CachedFont::GetHFont() {
+    LOGFONTW lf;
+    EnterMuiCriticalSection();
+    if (!hFont) {
+        // TODO: Graphics is probably only used for metrics,
+        // so this might not be 100% correct (e.g. 2 monitors with different DPIs?)
+        // but previous code wasn't much better
+        Graphics* gfx = AllocGraphicsForMeasureText();
+        Status status = font->GetLogFontW(gfx, &lf);
+        FreeGraphicsForMeasureText(gfx);
+        CrashIf(status != Ok);
+        hFont = CreateFontIndirectW(&lf);
+        CrashIf(!hFont);
+    }
+    LeaveMuiCriticalSection();
+    return hFont;
 }
 
-HwndWrapper* GetRootHwndWnd(const Control* c) {
-    while (c->parent) {
-        c = c->parent;
+// convenience function: given cached style, get a Font object matching the font
+// properties.
+// Caller should not delete the font - it's cached for performance and deleted at exit
+CachedFont* GetCachedFont(const WCHAR* name, float sizePt, FontStyle style) {
+    ScopedMuiCritSec muiCs;
+
+    for (FontListItem* item = gFontsCache; item; item = item->next) {
+        if (item->cf.SameAs(name, sizePt, style) && item->cf.font != nullptr) {
+            return &item->cf;
+        }
     }
-    if (!c->hwndParent) {
-        return nullptr;
+
+    Font* font = ::new Font(name, sizePt, style);
+    if (font->GetLastStatus() != Status::Ok) {
+        delete font;
+        font = ::new Font(L"Times New Roman", sizePt, style);
+        if (font->GetLastStatus() != Status::Ok) {
+            // if no font is available, return the last successfully created one
+            delete font;
+            if (gFontsCache) {
+                return &gFontsCache->cf;
+            }
+            return nullptr;
+        }
     }
-    return (HwndWrapper*)c;
+
+    FontListItem* item = new FontListItem(name, sizePt, style, font, nullptr);
+    ListInsert(&gFontsCache, item);
+    return &item->cf;
 }
 
-// traverse tree upwards to find HWND that is ultimately backing
-// this window
-HWND GetHwndParent(const Control* c) {
-    HwndWrapper* wHwnd = GetRootHwndWnd(c);
-    if (wHwnd) {
-        return wHwnd->hwndParent;
+Graphics* AllocGraphicsForMeasureText() {
+    ScopedMuiCritSec muiCs;
+
+    DWORD threadId = GetCurrentThreadId();
+    for (GraphicsCacheEntry& e : *gGraphicsCache) {
+        if (e.threadId == threadId) {
+            e.refCount++;
+            return e.gfx;
+        }
     }
-    return nullptr;
+    GraphicsCacheEntry ce;
+    ce.Create();
+    gGraphicsCache->Append(ce);
+    if (gGraphicsCache->size() < 64) {
+        return ce.gfx;
+    }
+
+    // try to limit the size of cache by evicting the oldest entries, but don't remove
+    // first (for ui thread) or last (one we just added) entries
+    for (size_t i = 1; i < gGraphicsCache->size() - 1; i++) {
+        GraphicsCacheEntry e = gGraphicsCache->at(i);
+        if (0 == e.refCount) {
+            e.Free();
+            gGraphicsCache->RemoveAt(i);
+            return ce.gfx;
+        }
+    }
+    // We shouldn't get here - indicates ref counting problem
+    CrashIf(true);
+    return ce.gfx;
 }
 
-void CollectWindowsBreathFirst(Control* c, int offX, int offY, WndFilter* wndFilter, Vec<CtrlAndOffset>* ctrls) {
-    if (wndFilter->skipInvisibleSubtrees && !c->IsVisible()) {
-        return;
-    }
+void FreeGraphicsForMeasureText(Graphics* gfx) {
+    ScopedMuiCritSec muiCs;
 
-    offX += c->pos.x;
-    offY += c->pos.y;
-    if (wndFilter->Matches(c, offX, offY)) {
-        CtrlAndOffset coff = {c, offX, offY};
-        ctrls->Append(coff);
+    DWORD threadId = GetCurrentThreadId();
+    for (GraphicsCacheEntry& e : *gGraphicsCache) {
+        if (e.gfx == gfx) {
+            CrashIf(e.threadId != threadId);
+            e.refCount--;
+            CrashIf(e.refCount < 0);
+            return;
+        }
     }
-
-    size_t children = c->GetChildCount();
-    for (size_t i = 0; i < children; i++) {
-        CollectWindowsBreathFirst(c->GetChild(i), offX, offY, wndFilter, ctrls);
-    }
+    CrashIf(true);
 }
 
-// Find all windows containing a given point (x, y) and interested in at least
-// one of the input evens in wantedInputMask. We have to traverse all windows
-// because children are not guaranteed to be bounded by their parent.
-// It's very likely to return more than one window because our window hierarchy
-// is a tree. Because we traverse the tree breadth-first, parent windows will be
-// in windows array before child windows. In most cases caller can use the last
-// window in returned array (but can use a custom logic as well).
-// Returns number of matched windows as a convenience.
-size_t CollectWindowsAt(Control* wndRoot, int x, int y, u16 wantedInputMask, Vec<CtrlAndOffset>* controls) {
-    WndInputWantedFilter filter(x, y, wantedInputMask);
-    controls->Reset();
-    CollectWindowsBreathFirst(wndRoot, 0, 0, &filter, controls);
-    return controls->size();
-}
-
-static void DrawLine(Graphics* gfx, const Point p1, const Point p2, float width, Brush* br) {
-    if (0 == width) {
-        return;
-    }
-    Pen p(br, width);
-    gfx->DrawLine(&p, ToGdipPoint(p1), ToGdipPoint(p2));
-}
-
-void DrawBorder(Graphics* gfx, const Rect r, CachedStyle* s) {
-    Point p1, p2;
-    float width;
-
-    Gdiplus::RectF rf = ToGdipRectF(r);
-    // top
-    p1.x = r.x;
-    p1.y = r.y;
-    p2.x = r.x + r.dx;
-    p2.y = p1.y;
-    width = s->borderWidth.top;
-    Brush* br = BrushFromColorData(s->borderColors.top, rf);
-    DrawLine(gfx, p1, p2, width, br);
-
-    // right
-    p1 = p2;
-    p2.x = p1.x;
-    p2.y = p1.y + r.dy;
-    width = s->borderWidth.right;
-    br = BrushFromColorData(s->borderColors.right, rf);
-    DrawLine(gfx, p1, p2, width, br);
-
-    // bottom
-    p1 = p2;
-    p2.x = r.x;
-    p2.y = p1.y;
-    width = s->borderWidth.bottom;
-    br = BrushFromColorData(s->borderColors.bottom, rf);
-    DrawLine(gfx, p1, p2, width, br);
-
-    // left
-    p1 = p2;
-    p2.x = p1.x;
-    p2.y = r.y;
-    width = s->borderWidth.left;
-    br = BrushFromColorData(s->borderColors.left, rf);
-    DrawLine(gfx, p1, p2, width, br);
-}
-
-static void InvalidateAtOff(HWND hwnd, const Rect r, int offX, int offY) {
-    RECT rc = ToRECT(r);
-    rc.left += offX;
-    rc.right += offX;
-    rc.top += offY;
-    rc.bottom += offY;
-    InvalidateRect(hwnd, &rc, FALSE);
-}
-
-// r1 and r2 are relative to w. If both are nullptr, we invalidate the whole w
-void RequestRepaint(Control* c, const Rect* r1, const Rect* r2) {
-    // we might be called when the control hasn't yet been
-    // placed in the window hierarchy
-    if (!c->parent && !c->hwndParent) {
-        return;
-    }
-
-    Rect wRect(0, 0, c->pos.dx, c->pos.dy);
-
-    int offX = 0, offY = 0;
-    c->MapMyToRootPos(offX, offY);
-    while (c->parent) {
-        c = c->parent;
-    }
-    HWND hwnd = c->hwndParent;
-    CrashIf(!hwnd);
-    HwndWrapper* wnd = GetRootHwndWnd(c);
-    if (wnd) {
-        wnd->MarkForRepaint();
-    }
-
-    // if we have r1 or r2, invalidate those, else invalidate w
-    bool didInvalidate = false;
-    if (r1) {
-        InvalidateAtOff(hwnd, *r1, offX, offY);
-        didInvalidate = true;
-    }
-
-    if (r2) {
-        InvalidateAtOff(hwnd, *r2, offX, offY);
-        didInvalidate = true;
-    }
-
-    if (didInvalidate) {
-        return;
-    }
-
-    InvalidateAtOff(hwnd, wRect, offX, offY);
-}
-
-void RequestLayout(Control* c) {
-    HwndWrapper* wnd = GetRootHwndWnd(c);
-    if (wnd) {
-        wnd->RequestLayout();
-    }
-}
 } // namespace mui

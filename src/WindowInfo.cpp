@@ -24,14 +24,12 @@
 #include "DisplayMode.h"
 #include "Controller.h"
 #include "EngineBase.h"
-#include "EngineCreate.h"
-#include "Doc.h"
+#include "EngineAll.h"
 #include "SettingsStructs.h"
 #include "GlobalPrefs.h"
 #include "AppColors.h"
 #include "ChmModel.h"
 #include "DisplayModel.h"
-#include "EbookController.h"
 #include "ProgressUpdateUI.h"
 #include "TextSelection.h"
 #include "TextSearch.h"
@@ -174,7 +172,6 @@ WindowInfo::~WindowInfo() {
 }
 
 void ClearMouseState(WindowInfo* win) {
-    delete win->linkOnLastButtonDown;
     win->linkOnLastButtonDown = nullptr;
     delete win->annotationOnLastButtonDown;
     win->annotationOnLastButtonDown = nullptr;
@@ -192,11 +189,9 @@ bool WindowInfo::IsDocLoaded() const {
 DisplayModel* WindowInfo::AsFixed() const {
     return ctrl ? ctrl->AsFixed() : nullptr;
 }
+
 ChmModel* WindowInfo::AsChm() const {
     return ctrl ? ctrl->AsChm() : nullptr;
-}
-EbookController* WindowInfo::AsEbook() const {
-    return ctrl ? ctrl->AsEbook() : nullptr;
 }
 
 // Notify both display model and double-buffer (if they exist)
@@ -244,9 +239,6 @@ Size WindowInfo::GetViewPortSize() const {
 
 void WindowInfo::RedrawAll(bool update) const {
     InvalidateRect(this->hwndCanvas, nullptr, false);
-    if (this->AsEbook()) {
-        this->AsEbook()->RequestRepaint();
-    }
     if (update) {
         UpdateWindow(this->hwndCanvas);
     }
@@ -254,9 +246,6 @@ void WindowInfo::RedrawAll(bool update) const {
 
 void WindowInfo::RedrawAllIncludingNonClient(bool update) const {
     InvalidateRect(this->hwndCanvas, nullptr, false);
-    if (this->AsEbook()) {
-        this->AsEbook()->RequestRepaint();
-    }
     if (update) {
         RedrawWindow(this->hwndCanvas, nullptr, nullptr, RDW_FRAME | RDW_INVALIDATE);
     }
@@ -372,6 +361,12 @@ void LinkHandler::GotoLink(IPageDestination* dest) {
         ScrollTo(dest);
         return;
     }
+    if (kindDestinationLaunchURL == kind) {
+        auto d = (PageDestinationURL*)dest;
+        char* urlA = ToUtf8Temp(d->url);
+        LaunchURL(urlA);
+        return;
+    }
     if (kindDestinationLaunchFile == kind) {
         PageDestinationFile* pdf = (PageDestinationFile*)dest;
         // LaunchFile only opens files inside SumatraPDF
@@ -395,13 +390,12 @@ void LinkHandler::GotoLink(IPageDestination* dest) {
 }
 
 void LinkHandler::ScrollTo(IPageDestination* dest) {
-    CrashIf(!win || win->linkHandler != this);
-    if (!dest || !win || !win->IsDocLoaded()) {
+    ReportIf(!win || !win->ctrl || win->linkHandler != this);
+    if (!dest || !win || !win->ctrl || !win->IsDocLoaded()) {
         return;
     }
-
     int pageNo = dest->GetPageNo();
-    if (pageNo <= 0) {
+    if (!win->ctrl->ValidPageNo(pageNo)) {
         return;
     }
     RectF rect = dest->GetRect();
@@ -471,7 +465,7 @@ void LinkHandler::LaunchFile(const WCHAR* pathOrig, IPageDestination* link) {
     }
 
     if (!newWin->IsDocLoaded()) {
-        CloseTab(newWin);
+        CloseCurrentTab(newWin);
         // OpenFileExternally rejects files we'd otherwise
         // have to show a notification to be sure (which we
         // consider bad UI and thus simply don't)
@@ -585,17 +579,6 @@ void UpdateTreeCtrlColors(WindowInfo* win) {
     COLORREF treeTxtCol = GetAppColor(AppColor::DocumentText);
     COLORREF splitterCol = GetSysColor(COLOR_BTNFACE);
     bool flatTreeWnd = false;
-
-    if (win->AsEbook()) {
-        labelBgCol = GetAppColor(AppColor::DocumentBg, true);
-        labelTxtCol = GetAppColor(AppColor::DocumentText, true);
-        treeTxtCol = labelTxtCol;
-        treeBgCol = labelBgCol;
-        float factor = 14.f;
-        int sign = GetLightness(labelBgCol) + factor > 255 ? 1 : -1;
-        splitterCol = AdjustLightness2(labelBgCol, sign * factor);
-        flatTreeWnd = true;
-    }
 
     {
         auto tocTreeCtrl = win->tocTreeCtrl;

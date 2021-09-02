@@ -5,8 +5,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-
-	"github.com/kjk/u"
 )
 
 // Format of auto-update file:
@@ -44,7 +42,7 @@ func validateVer(ver string) {
 
 func updateAutoUpdateVer(ver string) {
 	validateVer(ver)
-	// TODO: verify it's bigger than the current vresion
+	// TODO: verify it's bigger than the current version
 	// TODO: add download links
 	s := fmt.Sprintf(`[SumatraPDF]
 Latest %s
@@ -63,6 +61,6 @@ Latest %s
 	}
 
 	path := filepath.Join("website", "update-check-rel.txt")
-	u.WriteFileMust(path, []byte(s))
+	writeFileMust(path, []byte(s))
 	fmt.Printf("Don't forget to checkin file '%s' and deploy website\n", path)
 }

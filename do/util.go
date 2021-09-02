@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"fmt"
+	"io/fs"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -17,11 +18,15 @@ import (
 )
 
 var (
-	must    = u.Must
 	logf    = u.Logf
-	fatalIf = u.PanicIf
-	panicIf = u.PanicIf
+	fatalIf = panicIf
 )
+
+func must(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
 
 func absPathMust(path string) string {
 	res, err := filepath.Abs(path)
@@ -39,7 +44,7 @@ func runExeMust(c string, args ...string) []byte {
 
 func runExeLoggedMust(c string, args ...string) []byte {
 	cmd := exec.Command(c, args...)
-	out := u.RunCmdLoggedMust(cmd)
+	out := runCmdLoggedMust(cmd)
 	return []byte(out)
 }
 
@@ -54,7 +59,7 @@ func makePrintDuration(name string) func() {
 
 // run a .bat script and capture environment variables after
 func getEnvAfterScript(path string) []string {
-	if !u.FileExists(path) {
+	if !fileExists(path) {
 		return nil
 	}
 	dir, script := filepath.Split(path)
@@ -67,7 +72,7 @@ func getEnvAfterScript(path string) []string {
 	must(err)
 	res := string(resBytes)
 	parts := strings.Split(res, "\n")
-	u.PanicIf(len(parts) == 1, "split failed\nres:\n%s\n", res)
+	panicIf(len(parts) == 1, "split failed\nres:\n%s\n", res)
 	for idx, env := range parts {
 		parts[idx] = strings.TrimSpace(env)
 	}
@@ -86,7 +91,7 @@ func removeDirMust(dir string) {
 }
 
 func removeFileMust(path string) {
-	if !u.FileExists(path) {
+	if !fileExists(path) {
 		return
 	}
 	err := os.Remove(path)
@@ -192,7 +197,7 @@ func httpDlMust(uri string) []byte {
 }
 
 func httpDlToFileMust(uri string, path string, sha1Hex string) {
-	if u.FileExists(path) {
+	if fileExists(path) {
 		sha1File, err := fileSha1Hex(path)
 		must(err)
 		fatalIf(sha1File != sha1Hex, "file '%s' exists but has sha1 of %s and we expected %s", path, sha1File, sha1Hex)
@@ -226,11 +231,8 @@ func validateRune(c rune) byte {
 	if c >= '0' && c <= '9' {
 		return byte(c)
 	}
-	if c == '-' || c == '_' {
+	if c == '-' || c == '_' || c == '.' {
 		return byte(c)
-	}
-	if c == '.' {
-		return '-'
 	}
 	if c == ' ' {
 		return '-'
@@ -252,15 +254,15 @@ func charCanRepeat(c byte) bool {
 }
 
 // urlify generates safe url from tile by removing hazardous characters
-func urlify(title string) string {
-	s := strings.TrimSpace(title)
+func urlify(s string) string {
+	s = strings.TrimSpace(s)
 	var res []byte
 	for _, r := range s {
 		c := validateRune(r)
 		if c == 0 {
 			continue
 		}
-		// eliminute duplicate consequitive characters
+		// eliminate duplicate consecutive characters
 		var prev byte
 		if len(res) > 0 {
 			prev = res[len(res)-1]
@@ -277,15 +279,6 @@ func urlify(title string) string {
 	return s
 }
 
-func dumpEnv() {
-	env := os.Environ()
-	logf("\nEnv:\n")
-	for _, s := range env {
-		logf("env: %s\n", s)
-	}
-	logf("\n")
-}
-
 // return true if file in path1 is newer than file in path2
 // also returns true if one or both files don't exist
 func fileNewerThan(path1, path2 string) bool {
@@ -295,4 +288,97 @@ func fileNewerThan(path1, path2 string) bool {
 		return true
 	}
 	return stat1.ModTime().After(stat2.ModTime())
+}
+
+func cmdRunLoggedMust(cmd *exec.Cmd) {
+	fmt.Printf("> %s\n", cmd.String())
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
+	err := cmd.Run()
+	must(err)
+}
+
+func readFileMust(path string) []byte {
+	d, err := ioutil.ReadFile(path)
+	must(err)
+	return d
+}
+
+func writeFileMust(path string, data []byte) {
+	err := ioutil.WriteFile(path, data, 0644)
+	must(err)
+}
+
+func panicIf(cond bool, args ...interface{}) {
+	if !cond {
+		return
+	}
+	s := "condition failed"
+	if len(args) > 0 {
+		s = fmt.Sprintf("%s", args[0])
+		if len(args) > 1 {
+			s = fmt.Sprintf(s, args[1:]...)
+		}
+	}
+	panic(s)
+}
+
+func findLargestFileByExt() {
+	drive := "x:\\" // on laptop
+	drive = "v:\\"  // on desktop
+	isWantedExt := func(ext string) bool {
+		for _, s := range []string{".pdf", ".cbr", ".cbz", ".epub", "mobi", ".xps", ".djvu", ".pdb", ".prc", ".xps"} {
+			if s == ext {
+				return true
+			}
+		}
+		return false
+	}
+
+	extToSize := map[string]int64{}
+	dirs := []string{"comics", "comics read", "books"}
+	nFiles := 0
+	for _, d := range dirs {
+		startDir := filepath.Join(drive, d)
+		filepath.WalkDir(startDir, func(path string, d fs.DirEntry, err error) error {
+			if !d.Type().IsRegular() {
+				return nil
+			}
+			if false && (nFiles == 0 || nFiles%128 == 0) {
+				logf("%s\n", path)
+			}
+			nFiles++
+			ext := strings.ToLower(filepath.Ext(path))
+			if !isWantedExt(ext) {
+				return nil
+			}
+			fi, err := d.Info()
+			if err != nil {
+				return nil
+			}
+			size := fi.Size()
+			if size > extToSize[ext] {
+				logf("%s of size %s\n", path, u.FmtSizeHuman(size))
+				extToSize[ext] = size
+			}
+			return nil
+		})
+	}
+	logf("processed %d files\n", nFiles)
+}
+
+func fileExists(path string) bool {
+	st, err := os.Stat(path)
+	return err == nil && !st.IsDir() && st.Mode().IsRegular()
+}
+
+func runCmdLoggedMust(cmd *exec.Cmd) string {
+	logf("> %s\n", cmd.String())
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
+	err := cmd.Run()
+	must(err)
+	return ""
 }

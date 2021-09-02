@@ -22,12 +22,10 @@
 #include "DisplayMode.h"
 #include "Controller.h"
 #include "EngineBase.h"
-#include "EngineCreate.h"
-#include "Doc.h"
+#include "EngineAll.h"
 
 #include "SettingsStructs.h"
 #include "DisplayModel.h"
-#include "EbookController.h"
 #include "Theme.h"
 #include "GlobalPrefs.h"
 #include "RenderCache.h"
@@ -274,7 +272,6 @@ void CancelDrag(WindowInfo* win) {
     auto [x, y] = pt;
     StopMouseDrag(win, x, y, true);
     win->mouseAction = MouseAction::Idle;
-    delete win->linkOnLastButtonDown;
     win->linkOnLastButtonDown = nullptr;
     SetCursorCached(IDC_ARROW);
 }
@@ -315,7 +312,6 @@ static void OnMouseMove(WindowInfo* win, int x, int y, WPARAM) {
             return;
         }
         win->dragStartPending = false;
-        delete win->linkOnLastButtonDown;
         win->linkOnLastButtonDown = nullptr;
     }
 
@@ -1178,14 +1174,32 @@ static u32 LowerU64(ULONGLONG v) {
     return res;
 }
 
+const char* GiFlagsToStr(DWORD flags) {
+    switch (flags) {
+        case 0:
+            return "";
+        case GF_BEGIN:
+            return "GF_BEGIN";
+        case GF_INERTIA:
+            return "GF_INERTIA";
+        case GF_END:
+            return "GF_END";
+        case GF_INERTIA | GF_END:
+            return "GF_INERTIA  | GF_END";
+    }
+    return "unknown";
+}
+
 static LRESULT OnGesture(WindowInfo* win, UINT msg, WPARAM wp, LPARAM lp) {
     if (!touch::SupportsGestures()) {
         return DefWindowProc(win->hwndFrame, msg, wp, lp);
     }
+    DisplayModel* dm = win->AsFixed();
 
     HGESTUREINFO hgi = (HGESTUREINFO)lp;
     GESTUREINFO gi = {0};
     gi.cbSize = sizeof(GESTUREINFO);
+    TouchState& touchState = win->touchState;
 
     BOOL ok = touch::GetGestureInfo(hgi, &gi);
     if (!ok) {
@@ -1196,52 +1210,89 @@ static LRESULT OnGesture(WindowInfo* win, UINT msg, WPARAM wp, LPARAM lp) {
     switch (gi.dwID) {
         case GID_ZOOM:
             if (gi.dwFlags != GF_BEGIN && win->AsFixed()) {
-                float zoom = (float)LowerU64(gi.ullArguments) / (float)win->touchState.startArg;
+                float zoom = (float)LowerU64(gi.ullArguments) / (float)touchState.startArg;
                 ZoomToSelection(win, zoom, false, true);
             }
-            win->touchState.startArg = LowerU64(gi.ullArguments);
+            touchState.startArg = LowerU64(gi.ullArguments);
             break;
 
         case GID_PAN:
+            if (!dm) {
+                goto Exit;
+            }
             // Flicking left or right changes the page,
             // panning moves the document in the scroll window
             if (gi.dwFlags == GF_BEGIN) {
-                win->touchState.panStarted = true;
-                win->touchState.panPos = gi.ptsLocation;
-                win->touchState.panScrollOrigX = GetScrollPos(win->hwndCanvas, SB_HORZ);
-            } else if (win->touchState.panStarted) {
-                int deltaX = win->touchState.panPos.x - gi.ptsLocation.x;
-                int deltaY = win->touchState.panPos.y - gi.ptsLocation.y;
-                win->touchState.panPos = gi.ptsLocation;
+                touchState.panStarted = true;
+                touchState.panPos = gi.ptsLocation;
+                touchState.panScrollOrigX = GetScrollPos(win->hwndCanvas, SB_HORZ);
+                // logf("OnGesture: GID_PAN, GF_BEGIN, scrollX: %d\n", touchState.panScrollOrigX);
+            } else if (touchState.panStarted) {
+                int deltaX = touchState.panPos.x - gi.ptsLocation.x;
+                int deltaY = touchState.panPos.y - gi.ptsLocation.y;
+                touchState.panPos = gi.ptsLocation;
 
                 // on left / right flick, go to next / prev page
-                // unless this is PDF and horizontal scrollbar is visible,
-                // in which case we want to pan/scroll the document
-                bool isFlick = (gi.dwFlags & GF_INERTIA) && abs(deltaX) > abs(deltaY);
-                DisplayModel* dm = win->AsFixed();
-                bool enableFlick = !dm || !dm->NeedHScroll();
-                if (isFlick && enableFlick) {
+                // unless we can pan/scroll the document
+                bool isFlickX = (gi.dwFlags & GF_INERTIA) && (abs(deltaX) > abs(deltaY)) && (abs(deltaX) > 26);
+                // logf("OnGesture: GID_PAN, flags: %d (%s), dx: %d, dy: %d, isFlick: %d\n", gi.dwFlags,
+                // GiFlagsToStr(gi.dwFlags), deltaX, deltaY, (int)isFlickX);
+                bool flipPage = false;
+                if (!dm->NeedHScroll()) {
+                    // if the page is fully visible
+                    flipPage = true;
+                    // logf("flipPage becaues !dm->NeedHScroll()");
+                }
+                if (deltaX > 0 && !dm->CanScrollRight()) {
+                    flipPage = true;
+                    // logf("flipPage becaues deltaX > 0 && !dm->CanScrollRight()");
+                }
+                if (deltaX < 0 && !dm->CanScrollLeft()) {
+                    flipPage = true;
+                    // logf("flipPage becaues deltaX < 0 && !dm->CanScrollLeft()");
+                }
+
+                if (isFlickX && flipPage) {
                     if (deltaX < 0) {
                         win->ctrl->GoToPrevPage();
+                        // TODO: scroll to show the right-hand part
+                        int x = dm->canvasSize.dx - dm->viewPort.dx;
+                        // logf("x: %d\n");
+                        dm->ScrollXTo(x);
                     } else if (deltaX > 0) {
                         win->ctrl->GoToNextPage();
+                        dm->ScrollXTo(0);
                     }
-                    // When we switch pages, go back to the initial scroll position
-                    // and prevent further pan movement caused by the inertia
-                    if (dm) {
-                        dm->ScrollXTo(win->touchState.panScrollOrigX);
-                    }
-                    win->touchState.panStarted = false;
-                } else if (dm) {
+                    // When we switch pages prevent further pan movement
+                    // caused by the inertia
+                    touchState.panStarted = false;
+                } else {
                     // pan / scroll
+                    bool canScrollRightBefore = dm->CanScrollRight();
+                    bool canScrollLeftBefore = dm->CanScrollLeft();
                     win->MoveDocBy(deltaX, deltaY);
+
+                    // if pan to the rigth edge, we want to "sticK" to it
+                    // and only flip page on the next flick motion
+                    bool stopPanning = false;
+                    if (canScrollRightBefore != dm->CanScrollRight()) {
+                        stopPanning = true;
+                        // logf("stopPanning because canScrollRightBefore != dm->CanScrollRight()\n");
+                    }
+                    if (canScrollLeftBefore != dm->CanScrollLeft()) {
+                        stopPanning = true;
+                        // logf("stopPanning because canScrollLeftBefore != dm->CanScrollLeft()\n");
+                    }
+                    if (stopPanning) {
+                        touchState.panStarted = false;
+                    }
                 }
             }
             break;
 
         case GID_ROTATE:
             // Rotate the PDF 90 degrees in one direction
-            if (gi.dwFlags == GF_END && win->AsFixed()) {
+            if (gi.dwFlags == GF_END && dm) {
                 // This is in radians
                 double rads = GID_ROTATE_ANGLE_FROM_ARGUMENT(LowerU64(gi.ullArguments));
                 // The angle from the rotate is the opposite of the Sumatra rotate, thus the negative
@@ -1250,11 +1301,11 @@ static LRESULT OnGesture(WindowInfo* win, UINT msg, WPARAM wp, LPARAM lp) {
                 // Playing with the app, I found that I often didn't go quit a full 90 or 180
                 // degrees. Allowing rotate without a full finger rotate seemed more natural.
                 if (degrees < -120 || degrees > 120) {
-                    win->AsFixed()->RotateBy(180);
+                    dm->RotateBy(180);
                 } else if (degrees < -45) {
-                    win->AsFixed()->RotateBy(-90);
+                    dm->RotateBy(-90);
                 } else if (degrees > 45) {
-                    win->AsFixed()->RotateBy(90);
+                    dm->RotateBy(90);
                 }
             }
             break;
@@ -1275,7 +1326,7 @@ static LRESULT OnGesture(WindowInfo* win, UINT msg, WPARAM wp, LPARAM lp) {
             // A gesture was not recognized
             break;
     }
-
+Exit:
     touch::CloseGestureInfoHandle(hgi);
     return 0;
 }
@@ -1400,58 +1451,6 @@ static LRESULT WndProcCanvasChmUI(WindowInfo* win, HWND hwnd, UINT msg, WPARAM w
     }
 }
 
-///// methods needed for EbookUI canvases /////
-
-// NO_INLINE to help in debugging https://github.com/sumatrapdfreader/sumatrapdf/issues/292
-static NO_INLINE LRESULT CanvasOnMouseWheelEbook(WindowInfo* win, UINT msg, WPARAM wp, LPARAM lp) {
-    // Scroll the ToC sidebar, if it's visible and the cursor is in it
-    if (win->tocVisible && IsCursorOverWindow(win->tocTreeCtrl->hwnd)) {
-        // Note: hwndTocTree's window procedure doesn't always handle
-        //       WM_MOUSEWHEEL and when it's bubbling up, we'd return
-        //       here recursively - prevent that
-        LRESULT res = 0;
-        if (!gWheelMsgRedirect) {
-            gWheelMsgRedirect = true;
-            res = SendMessageW(win->tocTreeCtrl->hwnd, msg, wp, lp);
-            gWheelMsgRedirect = false;
-        }
-        return res;
-    }
-
-    short delta = GET_WHEEL_DELTA_WPARAM(wp);
-    if (delta > 0) {
-        win->ctrl->GoToPrevPage();
-    } else {
-        win->ctrl->GoToNextPage();
-    }
-    return 0;
-}
-
-static LRESULT WndProcCanvasEbookUI(WindowInfo* win, HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
-    bool wasHandled;
-    LRESULT res = win->AsEbook()->HandleMessage(msg, wp, lp, wasHandled);
-    if (wasHandled) {
-        return res;
-    }
-
-    switch (msg) {
-        case WM_SETCURSOR:
-            // TODO: make (re)loading a document always clear the infotip
-            win->HideToolTip();
-            return DefWindowProc(hwnd, msg, wp, lp);
-
-        case WM_MOUSEWHEEL:
-        case WM_MOUSEHWHEEL:
-            return CanvasOnMouseWheelEbook(win, msg, wp, lp);
-
-        case WM_GESTURE:
-            return OnGesture(win, msg, wp, lp);
-
-        default:
-            return DefWindowProc(hwnd, msg, wp, lp);
-    }
-}
-
 ///// methods needed for FixedPageUI canvases with loading error /////
 
 static void OnPaintError(WindowInfo* win) {
@@ -1555,15 +1554,6 @@ static void OnTimer(WindowInfo* win, HWND hwnd, WPARAM timerId) {
                 ReloadDocument(win, true);
             }
             break;
-
-        case EBOOK_LAYOUT_TIMER_ID:
-            KillTimer(hwnd, EBOOK_LAYOUT_TIMER_ID);
-            for (TabInfo* tab : win->tabs) {
-                if (tab->AsEbook()) {
-                    tab->AsEbook()->TriggerLayout();
-                }
-            }
-            break;
     }
 }
 
@@ -1664,10 +1654,6 @@ LRESULT CALLBACK WndProcCanvas(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 
             if (win->AsChm()) {
                 return WndProcCanvasChmUI(win, hwnd, msg, wp, lp);
-            }
-
-            if (win->AsEbook()) {
-                return WndProcCanvasEbookUI(win, hwnd, msg, wp, lp);
             }
 
             if (win->IsAboutWindow()) {

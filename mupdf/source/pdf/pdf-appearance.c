@@ -1,3 +1,25 @@
+// Copyright (C) 2004-2021 Artifex Software, Inc.
+//
+// This file is part of MuPDF.
+//
+// MuPDF is free software: you can redistribute it and/or modify it under the
+// terms of the GNU Affero General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option)
+// any later version.
+//
+// MuPDF is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+// details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with MuPDF. If not, see <https://www.gnu.org/licenses/agpl-3.0.en.html>
+//
+// Alternative licensing terms are available from the licensor.
+// For commercial licensing, see <https://www.artifex.com/> or contact
+// Artifex Software, Inc., 1305 Grant Avenue - Suite 200, Novato,
+// CA 94945, U.S.A., +1(415)492-9861, for further information.
+
 #include "mupdf/fitz.h"
 #include "pdf-annot-imp.h"
 #include "mupdf/ucdn.h"
@@ -2624,10 +2646,12 @@ static void pdf_update_appearance(fz_context *ctx, pdf_annot *annot)
 	pdf_obj *ap_n;
 	int pop_local_xref = 1;
 
+retry_after_repair:
 	/* Must have any local xref in place in order to check if it's dirty. */
 	pdf_annot_push_local_xref(ctx, annot);
 
 	pdf_begin_implicit_operation(ctx, annot->page->doc);
+	fz_start_throw_on_repair(ctx);
 
 	fz_var(pop_local_xref);
 
@@ -2753,6 +2777,7 @@ static void pdf_update_appearance(fz_context *ctx, pdf_annot *annot)
 				}
 				fz_catch(ctx)
 				{
+					fz_rethrow_if(ctx, FZ_ERROR_REPAIRED);
 					fz_warn(ctx, "cannot create appearance stream");
 				}
 			}
@@ -2772,10 +2797,21 @@ static void pdf_update_appearance(fz_context *ctx, pdf_annot *annot)
 	{
 		if (pop_local_xref)
 			pdf_annot_pop_local_xref(ctx, annot);
+		fz_end_throw_on_repair(ctx);
 		pdf_end_operation(ctx, annot->page->doc);
 	}
 	fz_catch(ctx)
+	{
+		/* If we hit a repair while synthesising, we need to give it another
+		 * go. Do that directly here, rather than waiting for the next time
+		 * we are called, because we don't want to risk discarding any
+		 * local_xrefs on the second pass through the list of annotations.
+		 * Repairs only ever happen once for a document, so no infinite
+		 * loop potential here. */
+		if (fz_caught(ctx) == FZ_ERROR_REPAIRED)
+			goto retry_after_repair;
 		fz_rethrow(ctx);
+	}
 }
 
 static void *

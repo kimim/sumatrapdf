@@ -6,7 +6,7 @@
 #include "utils/CmdLineArgsIter.h"
 #include "utils/FileUtil.h"
 #include "utils/GdiPlusUtil.h"
-#include "mui/MiniMui.h"
+#include "mui/Mui.h"
 #include "utils/TgaReader.h"
 #include "utils/WinUtil.h"
 
@@ -15,7 +15,7 @@
 #include "Controller.h"
 #include "EngineBase.h"
 #include "EngineDjVu.h"
-#include "EngineCreate.h"
+#include "EngineAll.h"
 #include "PdfCreator.h"
 
 void _submitDebugReportIfFunc(__unused bool cond, __unused const char* condStr) {
@@ -533,7 +533,7 @@ int main(__unused int argc, __unused char** argv) {
     }
 
     ScopedGdiPlus gdiPlus;
-    ScopedMiniMui miniMui;
+    ScopedMui miniMui;
 
     WIN32_FIND_DATA fdata;
     HANDLE hfind = FindFirstFile(filePath, &fdata);

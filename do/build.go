@@ -43,11 +43,12 @@ func isNum(s string) bool {
 // Version must be in format x.y.z
 func verifyCorrectVersionMust(ver string) {
 	parts := strings.Split(ver, ".")
-	u.PanicIf(len(parts) == 0 || len(parts) > 3, "%s is not a valid version number", ver)
+	panicIf(len(parts) == 0 || len(parts) > 3, "%s is not a valid version number", ver)
 	for _, part := range parts {
-		u.PanicIf(!isNum(part), "%s is not a valid version number", ver)
+		panicIf(!isNum(part), "%s is not a valid version number", ver)
 	}
 }
+
 func getFileNamesWithPrefix(prefix string) [][]string {
 	files := [][]string{
 		{"SumatraPDF.exe", fmt.Sprintf("%s.exe", prefix)},
@@ -67,7 +68,7 @@ func copyBuiltFiles(dstDir string, srcDir string, prefix string) {
 		dstName := f[1]
 		dstPath := filepath.Join(dstDir, dstName)
 		u.CreateDirForFileMust(dstPath)
-		if u.FileExists(srcPath) {
+		if fileExists(srcPath) {
 			u.CopyFileMust(dstPath, srcPath)
 		} else {
 			logf("Skipping copying '%s'\n", srcPath)
@@ -202,7 +203,7 @@ func clean() {
 func runTestUtilMust(dir string) {
 	cmd := exec.Command(`.\test_util.exe`)
 	cmd.Dir = dir
-	u.RunCmdLoggedMust(cmd)
+	runCmdLoggedMust(cmd)
 }
 
 func buildLzsa() {
@@ -229,7 +230,7 @@ func buildSmoke() {
 	clean()
 
 	lzsa := absPathMust(filepath.Join("bin", "MakeLZSA.exe"))
-	u.PanicIf(!u.FileExists(lzsa), "file '%s' doesn't exist", lzsa)
+	panicIf(!fileExists(lzsa), "file '%s' doesn't exist", lzsa)
 
 	msbuildPath := detectMsbuildPath()
 	runExeLoggedMust(msbuildPath, `vs2019\SumatraPDF.sln`, `/t:SumatraPDF-dll:Rebuild;test_util:Rebuild`, `/p:Configuration=Release;Platform=x64`, `/m`)
@@ -239,7 +240,7 @@ func buildSmoke() {
 	{
 		cmd := exec.Command(lzsa, "SumatraPDF.pdb.lzsa", "libmupdf.pdb:libmupdf.pdb", "SumatraPDF-dll.pdb:SumatraPDF-dll.pdb")
 		cmd.Dir = outDir
-		u.RunCmdLoggedMust(cmd)
+		runCmdLoggedMust(cmd)
 	}
 	signFilesMust(outDir)
 }
@@ -261,7 +262,7 @@ func setBuildConfigPreRelease() {
 	s := getBuildConfigCommon()
 	preRelVer := getPreReleaseVer()
 	s += fmt.Sprintf("#define PRE_RELEASE_VER %s\n", preRelVer)
-	u.WriteFileMust(buildConfigPath(), []byte(s))
+	writeFileMust(buildConfigPath(), []byte(s))
 }
 
 func setBuildConfigRelease() {
@@ -313,7 +314,7 @@ func createExeZipWithGoWithNameMust(dir, nameInZip string) {
 func createExeZipWithPigz(dir string) {
 	srcFile := "SumatraPDF.exe"
 	srcPath := filepath.Join(dir, srcFile)
-	fatalIf(!u.FileExists(srcPath), "file '%s' doesn't exist\n", srcPath)
+	fatalIf(!fileExists(srcPath), "file '%s' doesn't exist\n", srcPath)
 
 	// this is the file that pigz.exe will create
 	dstFileTmp := "SumatraPDF.exe.zip"
@@ -328,7 +329,7 @@ func createExeZipWithPigz(dir string) {
 	wd, err := os.Getwd()
 	must(err)
 	pigzExePath := filepath.Join(wd, "bin", "pigz.exe")
-	fatalIf(!u.FileExists(pigzExePath), "file '%s' doesn't exist\n", pigzExePath)
+	fatalIf(!fileExists(pigzExePath), "file '%s' doesn't exist\n", pigzExePath)
 	cmd := exec.Command(pigzExePath, "-11", "--keep", "--zip", srcFile)
 	// in pigz we don't control the name of the file created inside so
 	// so when we run pigz the current directory is the same as
@@ -336,7 +337,7 @@ func createExeZipWithPigz(dir string) {
 	cmd.Dir = dir
 	u.RunCmdMust(cmd)
 
-	fatalIf(!u.FileExists(dstPathTmp), "file '%s' doesn't exist\n", dstPathTmp)
+	fatalIf(!fileExists(dstPathTmp), "file '%s' doesn't exist\n", dstPathTmp)
 	err = os.Rename(dstPathTmp, dstPath)
 	must(err)
 }
@@ -364,7 +365,7 @@ func createPdbLzsaMust(dir string) {
 	makeLzsaPath := filepath.Join(curDir, "bin", "MakeLZSA.exe")
 	cmd := exec.Command(makeLzsaPath, args...)
 	cmd.Dir = dir
-	u.RunCmdLoggedMust(cmd)
+	runCmdLoggedMust(cmd)
 }
 
 // manifest is build for pre-release builds and contains information about file sizes
@@ -398,7 +399,7 @@ func createManifestMust() {
 	artifactsDir := filepath.Join("out", "artifacts")
 	u.CreateDirMust(artifactsDir)
 	path := filepath.Join(artifactsDir, "manifest.txt")
-	u.WriteFileMust(path, []byte(s))
+	writeFileMust(path, []byte(s))
 }
 
 // https://lucasg.github.io/2018/01/15/Creating-an-appx-package/
@@ -411,7 +412,7 @@ func makeAppx() {
 }
 
 func signFilesMust(dir string) {
-	if u.FileExists(filepath.Join(dir, "SumatraPDF.exe")) {
+	if fileExists(filepath.Join(dir, "SumatraPDF.exe")) {
 		signMust(filepath.Join(dir, "SumatraPDF.exe"))
 	}
 	signMust(filepath.Join(dir, "libmupdf.dll"))
@@ -449,7 +450,7 @@ func buildPreRelease() {
 	createManifestMust()
 
 	dstDir := filepath.Join("out", "final-prerel")
-	prefix := fmt.Sprintf("SumatraPDF-prerel-%s", ver)
+	prefix := "SumatraPDF-prerel"
 	copyBuiltFiles(dstDir, rel32Dir, prefix)
 	copyBuiltFiles(dstDir, rel64Dir, prefix+"-64")
 	copyBuiltManifest(dstDir, prefix)
