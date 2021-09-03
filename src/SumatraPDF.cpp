@@ -161,6 +161,7 @@ static void UpdatePageInfoHelper(WindowInfo*, NotificationWnd* wnd = nullptr, in
 static void OnSidebarSplitterMove(SplitterMoveEvent*);
 static void OnFavSplitterMove(SplitterMoveEvent*);
 static void DownloadDebugSymbols();
+static void SaveAnnotationsAndCloseEditAnnowtationsWindow(TabInfo*);
 
 void SetCurrentLang(const char* langCode) {
     if (!langCode) {
@@ -3997,48 +3998,34 @@ static void FrameOnChar(WindowInfo* win, WPARAM key, LPARAM info = 0) {
         case 'm':
             ShowCursorPositionInDoc(win);
             break;
+        case '`':
+        case 's':
+        case 'u':
         case 'a': {
-            auto annots = MakeAnnotationFromSelection(win->currentTab, AnnotationType::Highlight);
-            if (!annots.empty()) {
-                for (auto annot : annots) {
-                    PdfColor col = GetAnnotationHighlightColor();
-                    SetColor(annot, col);
-                }
-                WindowInfoRerender(win);
-                if (isShift) {
-                    StartEditAnnotations(win->currentTab, annots);
-                } else {
-                    auto w = win->currentTab->editAnnotsWindow;
-                    if (w) {
-                        for (auto annot : annots) {
-                            AddAnnotationToEditWindow(w, annot);
-                        }
-                    } else {
-                        DeleteVecMembers(annots);
-                    }
-                }
+            auto annotType = AnnotationType::Unknown;
+            switch (key) {
+                case '`': annotType = AnnotationType::Squiggly; break;
+                case 's': annotType = AnnotationType::StrikeOut; break;
+                case 'u': annotType = AnnotationType::Underline; break;
+                case 'a': annotType = AnnotationType::Highlight; break;
             }
-        } break;
-        case '`': {
-            auto annots = MakeAnnotationFromSelection(win->currentTab, AnnotationType::Squiggly);
+            auto annots = MakeAnnotationFromSelection(win->currentTab, annotType);
             if (!annots.empty()) {
-                //for (auto annot : annots) {
-                //    PdfColor col = GetAnnotationHighlightColor();
-                //    SetColor(annot, col);
-                //}
-                WindowInfoRerender(win);
-                if (isShift) {
-                    StartEditAnnotations(win->currentTab, annots);
+              WindowInfoRerender(win);
+              if (isShift) {
+                StartEditAnnotations(win->currentTab, annots);
+              } else {
+                auto w = win->currentTab->editAnnotsWindow;
+                if (w) {
+                  for (auto annot : annots) {
+                    AddAnnotationToEditWindow(w, annot);
+                  }
                 } else {
-                    auto w = win->currentTab->editAnnotsWindow;
-                    if (w) {
-                        for (auto annot : annots) {
-                            AddAnnotationToEditWindow(w, annot);
-                        }
-                    } else {
-                        DeleteVecMembers(annots);
-                    }
+                  DeleteVecMembers(annots);
                 }
+                // save annot automatically
+                SaveAnnotationsAndCloseEditAnnowtationsWindow(win->currentTab);
+              }
             }
         } break;
     }
