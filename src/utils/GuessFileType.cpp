@@ -35,6 +35,7 @@ Kind kindFileRar = "fileRar";
 Kind kindFile7Z = "file7Z";
 Kind kindFileTar = "fileTar";
 Kind kindFileFb2 = "fileFb2";
+Kind kindFileFb2z = "fileFb2z"; // fb2 but inside .zip file
 Kind kindDirectory = "directory";
 Kind kindFileEpub = "fileEpub";
 // TODO: introduce kindFileTealDoc?
@@ -43,6 +44,7 @@ Kind kindFilePalmDoc = "filePalmDoc";
 Kind kindFileHTML = "fileHTML";
 Kind kindFileTxt = "fileTxt";
 Kind kindFileSvg = "fileSvg";
+Kind kindFileHeic = "fileHeic";
 
 // http://en.wikipedia.org/wiki/.nfo
 // http://en.wikipedia.org/wiki/FILE_ID.DIZ
@@ -65,9 +67,10 @@ Kind kindFileSvg = "fileSvg";
     V(".ps.gz\0", kindFilePS)       \
     V(".eps\0", kindFilePS)         \
     V(".fb2\0", kindFileFb2)        \
-    V(".fb2z\0", kindFileFb2)       \
-    V(".zfb2\0", kindFileFb2)       \
-    V(".fb2.zip\0", kindFileFb2)    \
+    V(".fb2z\0", kindFileFb2z)      \
+    V(".fbz\0", kindFileFb2z)       \
+    V(".zfb2\0", kindFileFb2z)      \
+    V(".fb2.zip\0", kindFileFb2z)   \
     V(".cbz\0", kindFileCbz)        \
     V(".cbr\0", kindFileCbr)        \
     V(".cb7\0", kindFileCb7)        \
@@ -104,6 +107,7 @@ Kind kindFileSvg = "fileSvg";
     V(".zip\0", kindFileZip)        \
     V(".rar\0", kindFileRar)        \
     V(".7z\0", kindFile7Z)          \
+    V(".heic\0", kindFileHeic)      \
     V(".tar\0", kindFileTar)
 
 #define EXT(ext, kind) ext
@@ -240,6 +244,27 @@ static bool IsPSFileContent(ByteSlice d) {
     return isPJL;
 }
 
+// https://github.com/file/file/blob/7449263e1d6167233b3b6abfc3e4c13407d6432c/magic/Magdir/animation#L265
+// https://nokiatech.github.io/heif/technical.html
+// TODO: need to figure out heif vs. heic
+static bool IsHeicContent(ByteSlice d) {
+    if (d.size() < 0x18) {
+        return false;
+    }
+    char* s = (char*)d.data();
+    char* hdr = s + 4;
+    bool isheic = str::StartsWith(hdr, "ftypheic");
+    bool ismif = str::StartsWith(hdr, "ftypmif1");
+    if (!(isheic || ismif)) {
+        return false;
+    }
+    hdr = s + 16;
+    if (!str::StartsWith(hdr, "mif1heic")) {
+        return false;
+    }
+    return true;
+}
+
 // detect file type based on file content
 Kind GuessFileTypeFromContent(ByteSlice d) {
     // TODO: sniff .fb2 content
@@ -256,6 +281,10 @@ Kind GuessFileTypeFromContent(ByteSlice d) {
         if ((len > sigMaxLen) && memeq(dat, sig, sigLen)) {
             return gFileSigs[i].kind;
         }
+    }
+
+    if (IsHeicContent(d)) {
+        return kindFileHeic;
     }
 
     if (IsPdfFileContent(d)) {
@@ -415,4 +444,43 @@ Kind GuessFileType(const WCHAR* path, bool sniff) {
         return GuessFileTypeFromName(path);
     }
     return GuessFileTypeFromName(path);
+}
+
+static const Kind gImageKinds[] = {kindFilePng, kindFileJpeg, kindFileGif,  kindFileBmp, kindFileTiff,
+                                   kindFileTga, kindFileJxr,  kindFileWebp, kindFileJp2, kindFileHeic};
+
+static const WCHAR* gImageFormatExts =
+    L".png\0"
+    L".jpg\0"
+    L".gif\0"
+    L".bmp\0"
+    L".tif\0"
+    L".tga\0"
+    L".jxr\0"
+    L".webp\0"
+    L".jp2\0"
+    L".heic\0"
+    L"\0";
+
+static int FindImageKindIdx(Kind kind) {
+    int n = (int)dimof(gImageKinds);
+    for (int i = 0; i < n; i++) {
+        if (kind == gImageKinds[i]) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+const WCHAR* GfxFileExtFromKind(Kind kind) {
+    int idx = FindImageKindIdx(kind);
+    if (idx >= 0) {
+        return seqstrings::IdxToStr(gImageFormatExts, idx);
+    }
+    return nullptr;
+}
+
+const WCHAR* GfxFileExtFromData(ByteSlice d) {
+    Kind kind = GuessFileTypeFromContent(d);
+    return GfxFileExtFromKind(kind);
 }

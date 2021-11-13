@@ -1853,11 +1853,13 @@ pdf_load_obj_stm(fz_context *ctx, pdf_document *doc, int num, pdf_lexbuf *buf, i
 	pdf_xref_entry *ret_entry = NULL;
 	int xref_len;
 	int found;
+	fz_stream *sub = NULL;
 
 	fz_var(numbuf);
 	fz_var(ofsbuf);
 	fz_var(objstm);
 	fz_var(stm);
+	fz_var(sub);
 
 	fz_try(ctx)
 	{
@@ -1915,10 +1917,20 @@ pdf_load_obj_stm(fz_context *ctx, pdf_document *doc, int num, pdf_lexbuf *buf, i
 		for (i = 0; i < found; i++)
 		{
 			pdf_xref_entry *entry;
+			uint64_t length;
+			int64_t offset;
 
-			fz_seek(ctx, stm, first + ofsbuf[i], SEEK_SET);
+			offset = first + ofsbuf[i];
+			if (i+1 < found)
+				length = ofsbuf[i+1] - ofsbuf[i];
+			else
+				length = UINT64_MAX;
 
-			obj = pdf_parse_stm_obj(ctx, doc, stm, buf);
+			sub = fz_open_null_filter(ctx, stm, length, offset);
+
+			obj = pdf_parse_stm_obj(ctx, doc, sub, buf);
+			fz_drop_stream(ctx, sub);
+			sub = NULL;
 
 			entry = pdf_get_xref_entry(ctx, doc, numbuf[i]);
 
@@ -1956,6 +1968,7 @@ pdf_load_obj_stm(fz_context *ctx, pdf_document *doc, int num, pdf_lexbuf *buf, i
 	fz_always(ctx)
 	{
 		fz_drop_stream(ctx, stm);
+		fz_drop_stream(ctx, sub);
 		fz_free(ctx, ofsbuf);
 		fz_free(ctx, numbuf);
 		pdf_unmark_obj(ctx, objstm);
@@ -2767,7 +2780,7 @@ pdf_new_document(fz_context *ctx, fz_stream *file)
 	doc->super.needs_password = (fz_document_needs_password_fn*)pdf_needs_password;
 	doc->super.authenticate_password = (fz_document_authenticate_password_fn*)pdf_authenticate_password;
 	doc->super.has_permission = (fz_document_has_permission_fn*)pdf_has_permission;
-	doc->super.load_outline = (fz_document_load_outline_fn*)pdf_load_outline;
+	doc->super.outline_iterator = (fz_document_outline_iterator_fn*)pdf_new_outline_iterator;
 	doc->super.resolve_link = pdf_resolve_link_imp;
 	doc->super.count_pages = pdf_count_pages_imp;
 	doc->super.load_page = pdf_load_page_imp;
@@ -4748,4 +4761,32 @@ pdf_debug_doc_changes(fz_context *ctx, pdf_document *doc)
 		}
 	}
 
+}
+
+pdf_obj *
+pdf_metadata(fz_context *ctx, pdf_document *doc)
+{
+	int initial = doc->xref_base;
+	pdf_obj *obj = NULL;
+
+	fz_var(obj);
+
+	fz_try(ctx)
+	{
+		do
+		{
+			pdf_obj *root = pdf_dict_get(ctx, pdf_trailer(ctx, doc), PDF_NAME(Root));
+			obj = pdf_dict_get(ctx, root, PDF_NAME(Metadata));
+			if (obj)
+				break;
+			doc->xref_base++;
+		}
+		while (doc->xref_base <= doc->num_xref_sections);
+	}
+	fz_always(ctx)
+		doc->xref_base = initial;
+	fz_catch(ctx)
+		fz_rethrow(ctx);
+
+	return obj;
 }

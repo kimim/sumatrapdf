@@ -41,6 +41,8 @@ bool IsSupportedFileType(Kind kind, bool enableEngineEbooks) {
         return true;
     } else if (kind == kindFileFb2) {
         return true;
+    } else if (kind == kindFileFb2z) {
+        return true;
     } else if (kind == kindFileMobi) {
         return true;
     } else if (kind == kindFilePalmDoc) {
@@ -97,7 +99,12 @@ static EngineBase* CreateEngineForKind(Kind kind, const WCHAR* path, PasswordUI*
     }
     if (gEnableEpubWithPdfEngine && IsEngineMupdfSupportedFileType(kind)) {
         engine = CreateEngineMupdfFromFile(path, dpi, pwdUI);
-        return engine;
+        // https://github.com/sumatrapdfreader/sumatrapdf/issues/2212
+        // if failed to open with EngineMupdf, will also try to open
+        // with my engine
+        if (engine) {
+            return engine;
+        }
     }
 #if 0
     if (kind == kindFileTxt) {
@@ -110,7 +117,7 @@ static EngineBase* CreateEngineForKind(Kind kind, const WCHAR* path, PasswordUI*
         engine = CreateEngineEpubFromFile(path);
         return engine;
     }
-    if (kind == kindFileFb2) {
+    if (kind == kindFileFb2 || kind == kindFileFb2z) {
         engine = CreateEngineFb2FromFile(path);
         return engine;
     }

@@ -138,6 +138,9 @@ def test(path):
 
     colorspace = mupdf.Colorspace(mupdf.Colorspace.Fixed_RGB)
     log(f'{colorspace.m_internal.key_storable.storable.refs}')
+    if 0:
+        c = colorspace.clamp_color([3.14])
+        log('colorspace.clamp_color returned c={c}')
     pixmap = mupdf.Pixmap(document, page_number, scale, colorspace, 0)
     log(f'Have created pixmap: {pixmap.m_internal.w} {pixmap.m_internal.h} {pixmap.m_internal.stride} {pixmap.m_internal.n}')
 
@@ -204,16 +207,51 @@ def test(path):
     for i in link:
         log(f'    {i.m_internal.refs} {i.m_internal.uri}')
 
-    # Check iteration over Outlines.
+    # Check iteration over Outlines. We do depth-first iteration.
     #
     log(f'Outlines.')
-    outline = mupdf.Outline(document)
-    log(f'outline.m_internal={outline.m_internal}')
-    if outline.m_internal:
-        log(f'{outline.uri()} {outline.page()} {outline.x()} {outline.y()} {outline.is_open()} {outline.title()}')
-        log(f'items in outline tree are:')
-    for o in outline:
-        log(f'    {o.uri()} {o.page()} {o.x()} {o.y()} {o.is_open()} {o.title()}')
+    def olog(text):
+        if 0:
+            log(text)
+    num_outline_items = 0
+    depth = 0
+    it = mupdf.OutlineIterator(document)
+    while 1:
+        item = it.outline_iterator_item()
+        olog(f'depth={depth} valid={item.valid()}')
+        if item.valid():
+            log(f'{" "*depth*4}uri={item.uri()} is_open={item.is_open()} title={item.title()}')
+            num_outline_items += 1
+        else:
+            olog(f'{" "*depth*4}<null>')
+        r = it.outline_iterator_down()
+        olog(f'depth={depth} down => {r}')
+        if r >= 0:
+            depth += 1
+        if r < 0:
+            r = it.outline_iterator_next()
+            olog(f'depth={depth} next => {r}')
+            assert r
+            if r:
+                # No more items at current depth, so repeatedly go up until we
+                # can go right.
+                end = 0
+                while 1:
+                    r = it.outline_iterator_up()
+                    olog(f'depth={depth} up => {r}')
+                    if r < 0:
+                        # We are at EOF. Need to break out of top-level loop.
+                        end = 1
+                        break
+                    depth -= 1
+                    r = it.outline_iterator_next()
+                    olog(f'depth={depth} next => {r}')
+                    if r == 0:
+                        # There are items at this level.
+                        break
+                if end:
+                    break
+    log(f'num_outline_items={num_outline_items}')
 
     # Check iteration over StextPage.
     #

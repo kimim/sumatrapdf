@@ -298,64 +298,17 @@ static Bitmap* WICDecodeImageFromStream(IStream* stream) {
     return bmp.Clone(0, 0, w, h, PixelFormat32bppARGB);
 }
 
-static const Kind gImageKinds[] = {
-    kindFilePng, kindFileJpeg, kindFileGif,  kindFileBmp, kindFileTiff,
-    kindFileTga, kindFileJxr,  kindFileWebp, kindFileJp2,
-};
-
-static const WCHAR* gImageFormatExts =
-    L".png\0"
-    L".jpg\0"
-    L".gif\0"
-    L".bmp\0"
-    L".tif\0"
-    L".tga\0"
-    L".jxr\0"
-    L".webp\0"
-    L".jp2\0"
-    L"\0";
-
-static int FindImageKindIdx(Kind kind) {
-    int n = (int)dimof(gImageKinds);
-    for (int i = 0; i < n; i++) {
-        if (kind == gImageKinds[i]) {
-            return i;
-        }
+static Bitmap* DecodeWithWIC(ByteSlice bmpData) {
+    auto strm = CreateStreamFromData(bmpData);
+    ScopedComPtr<IStream> stream(strm);
+    if (!stream) {
+        return nullptr;
     }
-    return -1;
+    auto bmp = WICDecodeImageFromStream(stream);
+    return bmp;
 }
 
-const WCHAR* GfxFileExtFromData(ByteSlice d) {
-    Kind kind = GuessFileTypeFromContent(d);
-    int idx = FindImageKindIdx(kind);
-    if (idx >= 0) {
-        return seqstrings::IdxToStr(gImageFormatExts, idx);
-    }
-    return nullptr;
-}
-
-// see http://stackoverflow.com/questions/4598872/creating-hbitmap-from-memory-buffer/4616394#4616394
-Bitmap* BitmapFromDataWin(ByteSlice bmpData) {
-    Kind format = GuessFileTypeFromContent(bmpData);
-    if (kindFileTga == format) {
-        return tga::ImageFromData(bmpData);
-    }
-    if (kindFileWebp == format) {
-        return webp::ImageFromData(bmpData);
-    }
-
-    {
-        auto strm = CreateStreamFromData(bmpData);
-        ScopedComPtr<IStream> stream(strm);
-        if (!stream) {
-            return nullptr;
-        }
-        auto bmp = WICDecodeImageFromStream(stream);
-        if (bmp) {
-            return bmp;
-        }
-    }
-
+static Bitmap* DecodeWithGdiplus(ByteSlice bmpData) {
     auto strm = CreateStreamFromData(bmpData);
     ScopedComPtr<IStream> stream(strm);
     if (!stream) {
@@ -368,6 +321,34 @@ Bitmap* BitmapFromDataWin(ByteSlice bmpData) {
     if (bmp->GetLastStatus() != Gdiplus::Ok) {
         delete bmp;
         return nullptr;
+    }
+    return bmp;
+}
+
+Bitmap* BitmapFromDataWin(ByteSlice bmpData) {
+    Kind format = GuessFileTypeFromContent(bmpData);
+    if (kindFileTga == format) {
+        return tga::ImageFromData(bmpData);
+    }
+    if (kindFileWebp == format) {
+        return webp::ImageFromData(bmpData);
+    }
+
+    // those are potentially multi-image formats and WICDecodeImageFromStream
+    // doesn't support that
+    // TODO: more formats? webp?
+    bool tryGdiplusFirst = (kindFileTiff == format) || (kindFileGif == format);
+
+    Bitmap* bmp{nullptr};
+    if (tryGdiplusFirst) {
+        bmp = DecodeWithGdiplus(bmpData);
+        ;
+    }
+    if (!bmp) {
+        bmp = DecodeWithWIC(bmpData);
+    }
+    if (!bmp && !tryGdiplusFirst) {
+        bmp = DecodeWithGdiplus(bmpData);
     }
     return bmp;
 }

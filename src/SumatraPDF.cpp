@@ -156,7 +156,7 @@ static WStrVec gAllowedFileTypes;
 // if this flag is set, CloseWindow will not save prefs before closing the window.
 static bool gDontSavePrefs = false;
 
-static void CloseDocumentInTab(WindowInfo*, bool keepUIEnabled = false, bool deleteModel = false);
+static void CloseDocumentInCurrentTab(WindowInfo*, bool keepUIEnabled = false, bool deleteModel = false);
 static void UpdatePageInfoHelper(WindowInfo*, NotificationWnd* wnd = nullptr, int pageNo = -1);
 static void OnSidebarSplitterMove(SplitterMoveEvent*);
 static void OnFavSplitterMove(SplitterMoveEvent*);
@@ -337,17 +337,15 @@ WindowInfo* FindWindowInfoByFile(const WCHAR* file, bool focusTab) {
     AutoFreeWstr normFile(path::Normalize(file));
 
     for (WindowInfo* win : gWindows) {
-        if (!win->IsAboutWindow() && path::IsSame(win->currentTab->filePath, normFile)) {
-            return win;
-        }
-        if (focusTab && win->tabs.size() > 1) {
-            // bring a background tab to the foreground
-            for (TabInfo* tab : win->tabs) {
-                if (tab != win->currentTab && path::IsSame(tab->filePath, normFile)) {
-                    TabsSelect(win, win->tabs.Find(tab));
-                    return win;
-                }
+        for (TabInfo* tab : win->tabs) {
+            WCHAR* fp = tab->filePath;
+            if (!fp || !path::IsSame(tab->filePath, normFile)) {
+                continue;
             }
+            if (focusTab && tab != win->currentTab) {
+                TabsSelect(win, win->tabs.Find(tab));
+            }
+            return win;
         }
     }
     return nullptr;
@@ -1449,6 +1447,9 @@ void DeleteWindowInfo(WindowInfo* win) {
 }
 
 static void RenameFileInHistory(const WCHAR* oldPath, const WCHAR* newPath) {
+    if (path::IsSame(oldPath, newPath)) {
+        return;
+    }
     char* newPathA = ToUtf8Temp(newPath);
     FileState* fs = gFileHistory.Find(newPathA, nullptr);
     bool oldIsPinned = false;
@@ -1652,7 +1653,7 @@ WindowInfo* LoadDocument(LoadArgs& args) {
         if (openNewTab) {
             SaveCurrentTabInfo(args.win);
         }
-        CloseDocumentInTab(win, true, args.forceReuse);
+        CloseDocumentInCurrentTab(win, true, args.forceReuse);
     }
     if (!args.forceReuse) {
         // insert a new tab for the loaded document
@@ -1723,7 +1724,7 @@ void LoadModelIntoTab(TabInfo* tab) {
         return;
     }
     WindowInfo* win = tab->win;
-    CloseDocumentInTab(win, true);
+    CloseDocumentInCurrentTab(win, true);
 
     win->currentTab = tab;
     win->ctrl = tab->ctrl;
@@ -1987,7 +1988,7 @@ static void OnMenuExit() {
 // about window (set keepUIEnabled if a new document will be loaded
 // into the tab right afterwards and LoadDocIntoCurrentTab would revert
 // the UI disabling afterwards anyway)
-static void CloseDocumentInTab(WindowInfo* win, bool keepUIEnabled, bool deleteModel) {
+static void CloseDocumentInCurrentTab(WindowInfo* win, bool keepUIEnabled, bool deleteModel) {
     bool wasntFixed = !win->AsFixed();
     if (win->AsChm()) {
         win->AsChm()->RemoveParentHwnd();
@@ -2057,8 +2058,8 @@ bool SaveAnnotationsToMaybeNewPdfFile(TabInfo* tab) {
 
     // TODO: automatically construct "foo.pdf" => "foo Copy.pdf"
     EngineBase* engine = tab->AsFixed()->GetEngine();
-    const WCHAR* name = engine->FileName();
-    str::BufSet(dstFileName, dimof(dstFileName), name);
+    const WCHAR* srcFileName = engine->FileName();
+    str::BufSet(dstFileName, dimof(dstFileName), srcFileName);
 
     ofn.lStructSize = sizeof(ofn);
     ofn.hwndOwner = tab->win->hwndFrame;
@@ -2082,12 +2083,27 @@ bool SaveAnnotationsToMaybeNewPdfFile(TabInfo* tab) {
         msg.AppendFmt(_TRA("Saving of '%s' failed with: '%s'"), dstFilePath.Get(), mupdfErr.data());
         tab->win->ShowNotification(msg.AsView(), NotificationOptions::Warning);
     });
-    if (ok) {
-        str::Str msg;
-        msg.AppendFmt(_TRA("Saved annotations to '%s'"), dstFilePath.Get());
-        tab->win->ShowNotification(msg.AsView());
+    if (!ok) {
+        return false;
     }
-    return ok;
+
+    auto win = tab->win;
+    UpdateTabFileDisplayStateForTab(tab);
+    CloseDocumentInCurrentTab(win, true, true);
+    SetFocus(win->hwndFrame);
+
+    AutoFreeWstr newPath(path::Normalize(dstFileName));
+    // TODO: this should be 'duplicate FileInHistory"
+    RenameFileInHistory(srcFileName, newPath);
+
+    LoadArgs args(dstFileName, win);
+    args.forceReuse = true;
+    LoadDocument(args);
+
+    str::Str msg;
+    msg.AppendFmt(_TRA("Saved annotations to '%s'"), dstFilePath.Get());
+    tab->win->ShowNotification(msg.AsView());
+    return true;
 }
 
 enum class SaveChoice {
@@ -2100,7 +2116,7 @@ enum class SaveChoice {
 SaveChoice ShouldSaveAnnotationsDialog(HWND hwndParent, const WCHAR* filePath) {
     auto fileName = path::GetBaseNameTemp(filePath);
     auto mainInstr = str::Format(_TR("Unsaved annotations in '%s'"), fileName);
-    auto content = _TR("Save annoations?");
+    auto content = _TR("Save annotations?");
 
     constexpr int kBtnIdDiscard = 100;
     constexpr int kBtnIdSaveToExisting = 101;
@@ -2339,7 +2355,7 @@ void CloseWindow(WindowInfo* win, bool quitIfLast, bool forceClose) {
         DeleteWindowInfo(win);
     } else if (lastWindow && !quitIfLast) {
         /* last window - don't delete it */
-        CloseDocumentInTab(win);
+        CloseDocumentInCurrentTab(win);
         SetFocus(win->hwndFrame);
         CrashIf(!gWindows.Contains(win));
     } else {
@@ -2491,7 +2507,11 @@ static void OnMenuSaveAs(WindowInfo* win) {
     ofn.nMaxFile = dimof(dstFileName);
     ofn.lpstrFilter = fileFilter.Get();
     ofn.nFilterIndex = 1;
-    ofn.lpstrDefExt = defExt + 1;
+    // defExt can be null, we want to skip '.'
+    if (str::Len(defExt) > 0 && defExt[0] == L'.') {
+        defExt++;
+    }
+    ofn.lpstrDefExt = defExt;
     ofn.Flags = OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
     // note: explicitly not setting lpstrInitialDir so that the OS
     // picks a reasonable default (in particular, we don't want this
@@ -2663,7 +2683,7 @@ static void OnMenuRenameFile(WindowInfo* win) {
     }
 
     UpdateTabFileDisplayStateForTab(win->currentTab);
-    CloseDocumentInTab(win, true, true);
+    CloseDocumentInCurrentTab(win, true, true);
     SetFocus(win->hwndFrame);
 
     DWORD flags = MOVEFILE_COPY_ALLOWED | MOVEFILE_REPLACE_EXISTING;
@@ -3381,8 +3401,8 @@ void EnterFullScreen(WindowInfo* win, bool presentation) {
             win->windowStateBeforePresentation = WIN_STATE_NORMAL;
         }
         win->presentation = PM_ENABLED;
-
-        SetTimer(win->hwndCanvas, HIDE_CURSOR_TIMER_ID, HIDE_CURSOR_DELAY_IN_MS, nullptr);
+        // hack: this tells OnMouseMove() to hide cursor immediately
+        win->dragPrevPos = Point(-2, -3);
     } else {
         win->isFullScreen = true;
     }
@@ -3436,7 +3456,7 @@ void ExitFullScreen(WindowInfo* win) {
             win->ctrl->SetPresentationMode(false);
         }
         // re-enable the auto-hidden cursor
-        KillTimer(win->hwndCanvas, HIDE_CURSOR_TIMER_ID);
+        KillTimer(win->hwndCanvas, kHideCursorTimerID);
         SetCursorCached(IDC_ARROW);
         // ensure that no ToC is shown when entering presentation mode the next time
         for (TabInfo* tab : win->tabs) {
@@ -3890,6 +3910,26 @@ static void FrameOnChar(WindowInfo* win, WPARAM key, LPARAM info = 0) {
 
     auto* ctrl = win->ctrl;
     DisplayModel* dm = win->AsFixed();
+    auto currentTab = win->currentTab;
+
+    auto openAnnotsInEditWindow = [&win](Vec<Annotation*>& annots, bool isShift) -> void {
+        if (annots.empty()) {
+            return;
+        }
+        WindowInfoRerender(win);
+        if (isShift) {
+            StartEditAnnotations(win->currentTab, annots);
+            return;
+        }
+        auto w = win->currentTab->editAnnotsWindow;
+        if (w) {
+            for (auto annot : annots) {
+                AddAnnotationToEditWindow(w, annot);
+            }
+        } else {
+            DeleteVecMembers(annots);
+        }
+    };
 
     switch (key) {
         case VK_SPACE:
@@ -3987,12 +4027,15 @@ static void FrameOnChar(WindowInfo* win, WPARAM key, LPARAM info = 0) {
         case 'i':
             // experimental "page info" tip: make figuring out current page and
             // total pages count a one-key action (unless they're already visible)
-            if (isShift && dm) {
-                TogglePageInfoHelper(win);
-            }
-            if (!isShift) {
+            if (isShift) {
                 gGlobalPrefs->fixedPageUI.invertColors ^= true;
                 UpdateDocumentColors();
+                UpdateTreeCtrlColors(win);
+                // UpdateUiForCurrentTab(win);
+            } else {
+                if (dm) {
+                    TogglePageInfoHelper(win);
+                }
             }
             break;
         case 'm':

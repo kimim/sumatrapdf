@@ -1,5 +1,89 @@
 A daily log of changes and commentary. An experiment of sorts.
 
+2021-11-05 Fri
+
+- take access lock in GetToc() (fixes #2229)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2229
+  there might be more locking lacking
+
+- add Shift-F12 shorcut to toggle bookmarks (in addition to F12)
+  This is for use under Visual Studio. F12 triggers a breakpoint,
+  which is annoying
+
+- hide cursor immediately on F5 and fix cursor hiding regression (fixes #2231)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2231
+  There was a regression in 3.3 where the cursor in F5 (full-screen) was not auto-hidden
+  the second time
+  There was also an issue (probably always present) that hiding a cursor in
+  EnterFullScreen() was a no-op because would get over-ridden by OnMouseMove()
+  which is triggered after entering full-screen (which makes sense because it
+  re-positiones a window and therefore mouse position changes)
+
+- restore multi-frame images (tif and gif) (fixes #2234)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2234
+
+- fix tooltips to always show the right text (fixes #2233)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2233
+  turns out TTM_NEWTOOLRECT doesn't change the text shown by tooltip
+  so we remember what we show and if it changes, we TTM_DELTOOL
+  and then TTM_ADDTOOL it. There might be a simpler way
+  (TTM_GETTOOLINFO followed by TTM_SETTOOLINFO?)
+
+2021-10-26 Tue
+
+- fix pdf_resolve_link (fixes #2216)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2216
+
+2021-10-25 Mon
+
+- if fails to open with engine mupdf, also try to open with other engines (fixes #2212)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2212
+
+2021-10-22 Fri
+
+- fix generating corrupted PDF when doing 'save to new pdf' twice (fixes #2206)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2206
+  was doing something that wasn't supported by mupdf
+
+- re-enable opening fb2 inside .zip and support .fbz extension (fixes #870, fixes #2147)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/870
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2147
+
+- don't show favorites when reloading prefs (fixes #2145)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2145
+  still not perfect: we don't save preferences after changing state of showing favorites
+
+- swap keyboard shortcuts 'i' and 'shift - i' (fixes #2210)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2210
+
+- better handle URLs in EngineMupdf
+
+2021-10-20 Wed
+
+- fixed storing navigation change twice on tree item click (fixes #2202)
+  removed TocTreeClick handler because it duplicates the work
+  of selection changed handler
+- fix crash 'save as' for .zip / .cbx files (fixes #2198)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2198
+  There were 2 problems. OnMenuSaveAs() didn't handle defExt being null
+  defaultExt for EngineCbx was null because defaultExt field
+  was hiding one in EngineBase. 
+
+2021-10-17 Sun
+
+- add 'u' for underline annotation; add Annotations.underlineColor setting (fixes #2157)
+- don't crash on empty links in djvu (fixes #2200)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2200
+
+2021-10-15 Fri
+
+- support .heic files (fixes #2196)
+  https://github.com/sumatrapdfreader/sumatrapdf/issues/2196
+
+2021-10-04 Mon
+
+- update mupdf
+
 2021-09-29 Wed
 
 - Revert "lazy calculation of page dimensions in DisplayModel"

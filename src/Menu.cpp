@@ -161,7 +161,7 @@ static MenuDef menuDefFile[] = {
         CmdSaveAs,
     },
     {
-        _TRN("Save Annotations"),
+        _TRN("Save Annotations to existing PDF"),
         CmdSaveAnnotations,
     },
 //[ ACCESSKEY_ALTERNATIVE // only one of these two will be shown
@@ -660,7 +660,7 @@ static MenuDef menuDefCreateAnnotFromSelection[] = {
         CmdCreateAnnotHighlight,
     },
     {
-        _TRN("&Underline"),
+        _TRN("&Underline\tu"),
         CmdCreateAnnotUnderline,
     },
     {
@@ -779,7 +779,7 @@ static MenuDef menuDefContext[] = {
         (UINT_PTR)menuDefCreateAnnotUnderCursor,
     },
     {
-        _TRN("Save Annotations"),
+        _TRN("Save Annotations to existing PDF"),
         CmdSaveAnnotations,
     },
     {
@@ -1008,6 +1008,28 @@ static void AddFileMenuItem(HMENU menuFile, const WCHAR* filePath, int index) {
 
     AutoFreeWstr menuString;
     menuString.SetCopy(path::GetBaseNameTemp(filePath));
+
+    // If the name is too long, save only the ends glued together
+    // E.g. 'Very Long PDF Name (3).pdf' -> 'Very Long...e (3).pdf'
+    const UINT MAX_LEN = 70;
+    if (menuString.size() > MAX_LEN) {
+        WCHAR* tmpStr = menuString.Get();
+        WCHAR* newStr = AllocArray<WCHAR>(MAX_LEN);
+        const UINT half = MAX_LEN / 2;
+        const UINT strSize = menuString.size() + 1; // size()+1 because wcslen() doesn't include \0
+        // Copy first N/2 characters, move last N/2 characters to the halfway point
+        for (UINT i = 0; i < half; i++) {
+            newStr[i] = tmpStr[i];
+            newStr[i + half] = tmpStr[strSize - half + i];
+        }
+        // Add ellipsis
+        newStr[half - 2] = newStr[half - 1] = newStr[half] = '.';
+        // Ensure null-terminated string
+        newStr[MAX_LEN - 1] = '\0';
+        // Save truncated string
+        menuString.Set(newStr);
+    }
+
     auto fileName = win::menu::ToSafeString(menuString);
     int menuIdx = (int)((index + 1) % 10);
     menuString.Set(str::Format(L"&%d) %s", menuIdx, fileName));
