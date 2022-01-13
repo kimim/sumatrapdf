@@ -314,7 +314,7 @@ char *search(fz_document *doc, int number, float dpi, const char *needle)
 	{
 		loadPage(doc, number);
 
-		n = fz_search_page(ctx, lastPage, needle, hits, nelem(hits));
+		n = fz_search_page(ctx, lastPage, needle, NULL, hits, nelem(hits));
 
 		buf = fz_new_buffer(ctx, 0);
 
@@ -390,9 +390,9 @@ char *outlineTitle(fz_outline *node)
 }
 
 EMSCRIPTEN_KEEPALIVE
-int outlinePage(fz_outline *node)
+int outlinePage(fz_document *doc, fz_outline *node)
 {
-	return node->page + 1;
+	return fz_page_number_from_location(ctx, doc, node->page);
 }
 
 EMSCRIPTEN_KEEPALIVE

@@ -252,6 +252,36 @@ void pdf_walk_tree(fz_context *ctx, pdf_obj *tree, pdf_obj *kid_name,
 	Resolve a link within a document.
 */
 int pdf_resolve_link(fz_context *ctx, pdf_document *doc, const char *uri, float *xp, float *yp);
+fz_link_dest pdf_resolve_link_dest(fz_context *ctx, pdf_document *doc, const char *uri);
+
+/*
+	Create a destination object given an internal link URI.
+*/
+pdf_obj *pdf_new_destination_from_link(fz_context *ctx, pdf_document *doc, const char *uri);
+
+/*
+	Create an action object given a link URI. The action will
+	be a GoTo or URI action depending on whether the link URI
+	specifies a document internal or external destination.
+*/
+pdf_obj *pdf_new_action_from_link(fz_context *ctx, pdf_document *doc, const char *uri);
+
+/*
+	Create a link URI string according to the Adobe specification
+	"Parameters for Opening PDF files" from the Adobe Acrobat SDK,
+	version 8.1, which can, at the time of writing, be found here:
+
+	https://web.archive.org/web/20170921000830/http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/pdf_open_parameters.pdf
+
+	The resulting string must be freed by the caller.
+*/
+char *pdf_format_link_uri(fz_context *ctx, fz_link_dest dest);
+
+/*
+	Parse an internal link URI that uses the Adobe specification
+	"parameters for opening PDF files".
+*/
+fz_link_dest pdf_parse_link_uri(fz_context *ctx, const char *uri);
 
 /*
 	Create transform to fit appearance stream to annotation Rect

@@ -3599,6 +3599,27 @@ bool FrameOnKeydown(WindowInfo* win, WPARAM key, LPARAM lp, bool inTextfield) {
         return true;
     }
 
+    if (VK_DELETE == key || VK_BACK == key) {
+        logf("del or back pressed\n");
+        Point pt{0, 0};
+        bool ok = GetCursorPosInHwnd(win->hwndCanvas, pt);
+        DisplayModel* dm = win->AsFixed();
+        Annotation* annot = nullptr;
+        if (ok && dm) {
+            int pageNoUnderCursor = dm->GetPageNoByPoint(pt);
+            if (pageNoUnderCursor > 0) {
+                annot = dm->GetAnnotationAtPos(pt, nullptr);
+            }
+        }
+        if (annot) {
+            auto tab = win->currentTab;
+            DeleteAnnotationAndUpdateUI(tab, tab->editAnnotsWindow, annot);
+            delete annot;
+        }
+
+        return true;
+    }
+
     bool isCtrl = IsCtrlPressed();
     bool isShift = IsShiftPressed();
 

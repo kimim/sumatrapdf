@@ -24,6 +24,16 @@ package com.artifex.mupdf.fitz;
 
 public class PDFDocument extends Document
 {
+	/* Languages, keep in sync with FZ_LANG_* */
+	public static final int LANGUAGE_UNSET = 0;
+	public static final int LANGUAGE_ur = 507;
+	public static final int LANGUAGE_urd = 3423;
+	public static final int LANGUAGE_ko = 416;
+	public static final int LANGUAGE_ja = 37;
+	public static final int LANGUAGE_zh = 242;
+	public static final int LANGUAGE_zh_Hans = 14093;
+	public static final int LANGUAGE_zh_Hant = 14822;
+
 	static {
 		Context.init();
 	}
@@ -172,4 +182,7 @@ public class PDFDocument extends Document
 	public native void beginOperation(String operation);
 	public native void beginImplicitOperation();
 	public native void endOperation();
+
+	public native int getLanguage();
+	public native void setLanguage(int lang);
 }

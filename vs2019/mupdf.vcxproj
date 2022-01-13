@@ -469,6 +469,7 @@
     <ClInclude Include="..\mupdf\include\mupdf\fitz\track-usage.h" />
     <ClInclude Include="..\mupdf\include\mupdf\fitz\transition.h" />
     <ClInclude Include="..\mupdf\include\mupdf\fitz\tree.h" />
+    <ClInclude Include="..\mupdf\include\mupdf\fitz\types.h" />
     <ClInclude Include="..\mupdf\include\mupdf\fitz\util.h" />
     <ClInclude Include="..\mupdf\include\mupdf\fitz\version.h" />
     <ClInclude Include="..\mupdf\include\mupdf\fitz\write-pixmap.h" />
