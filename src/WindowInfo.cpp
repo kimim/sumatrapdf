@@ -579,7 +579,7 @@ void UpdateTreeCtrlColors(WindowInfo* win) {
     COLORREF labelTxtCol = GetSysColor(COLOR_BTNTEXT);
     COLORREF treeBgCol = GetAppColor(AppColor::DocumentBg);
     COLORREF treeTxtCol = GetAppColor(AppColor::DocumentText);
-    COLORREF splitterCol = GetSysColor(COLOR_BTNFACE);
+    COLORREF splitterCol = GetAppColor(AppColor::MainWindowBg);
     bool flatTreeWnd = false;
 
     {
