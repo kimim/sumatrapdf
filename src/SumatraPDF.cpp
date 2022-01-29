@@ -161,6 +161,8 @@ static void UpdatePageInfoHelper(WindowInfo*, NotificationWnd* wnd = nullptr, in
 static void OnSidebarSplitterMove(SplitterMoveEvent*);
 static void OnFavSplitterMove(SplitterMoveEvent*);
 static void DownloadDebugSymbols();
+//KIMIM: used for annotation shortcut
+static void SaveAnnotationsAndCloseEditAnnowtationsWindow(TabInfo*);
 
 void SetCurrentLang(const char* langCode) {
     if (!langCode) {
@@ -4057,13 +4059,26 @@ static void FrameOnChar(WindowInfo* win, WPARAM key, LPARAM info = 0) {
         case 'm':
             ShowCursorPositionInDoc(win);
             break;
+        //KIMIM: no annots window and save annots automatically
         case 'u': {
             auto annots = MakeAnnotationFromSelection(currentTab, AnnotationType::Underline);
-            openAnnotsInEditWindow(annots, isShift);
+            //openAnnotsInEditWindow(annots, isShift);
+            SaveAnnotationsAndCloseEditAnnowtationsWindow(currentTab);
         } break;
         case 'a': {
             auto annots = MakeAnnotationFromSelection(currentTab, AnnotationType::Highlight);
-            openAnnotsInEditWindow(annots, isShift);
+            //openAnnotsInEditWindow(annots, isShift);
+            SaveAnnotationsAndCloseEditAnnowtationsWindow(currentTab);
+        } break;
+        case 's': {
+            auto annots = MakeAnnotationFromSelection(currentTab, AnnotationType::StrikeOut);
+            //openAnnotsInEditWindow(annots, isShift);
+            SaveAnnotationsAndCloseEditAnnowtationsWindow(currentTab);
+        } break;
+        case '`': {
+            auto annots = MakeAnnotationFromSelection(currentTab, AnnotationType::Squiggly);
+            //openAnnotsInEditWindow(annots, isShift);
+            SaveAnnotationsAndCloseEditAnnowtationsWindow(currentTab);
         } break;
     }
 }
