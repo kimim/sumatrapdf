@@ -161,6 +161,8 @@ static void UpdatePageInfoHelper(WindowInfo*, NotificationWnd* wnd = nullptr, in
 static void OnSidebarSplitterMove(SplitterMoveEvent*);
 static void OnFavSplitterMove(SplitterMoveEvent*);
 static void DownloadDebugSymbols();
+//KIMIM: used for annotation shortcut
+static void SaveAnnotationsAndCloseEditAnnowtationsWindow(TabInfo*);
 
 void SetCurrentLang(const char* langCode) {
     if (!langCode) {
@@ -3956,6 +3958,55 @@ static void FrameOnChar(WindowInfo* win, WPARAM key, LPARAM info = 0) {
         case 'b':
             OnFrameKeyB(win);
             break;
+        case '.':
+            // for Logitech's wireless presenters which target PowerPoint's shortcuts
+            if (win->presentation) {
+                win->ChangePresentationMode(PM_BLACK_SCREEN);
+            }
+            break;
+        case 'w':
+            if (win->presentation) {
+                win->ChangePresentationMode(PM_WHITE_SCREEN);
+            }
+            break;
+        case 'i':
+            // experimental "page info" tip: make figuring out current page and
+            // total pages count a one-key action (unless they're already visible)
+            if (isShift) {
+                gGlobalPrefs->fixedPageUI.invertColors ^= true;
+                UpdateDocumentColors();
+                UpdateTreeCtrlColors(win);
+                // UpdateUiForCurrentTab(win);
+            } else {
+                if (dm) {
+                    TogglePageInfoHelper(win);
+                }
+            }
+            break;
+        case 'm':
+            ShowCursorPositionInDoc(win);
+            break;
+        //KIMIM: no annots window and save annots automatically
+        case 'u': {
+            auto annots = MakeAnnotationFromSelection(currentTab, AnnotationType::Underline);
+            //openAnnotsInEditWindow(annots, isShift);
+            SaveAnnotationsAndCloseEditAnnowtationsWindow(currentTab);
+        } break;
+        case 'a': {
+            auto annots = MakeAnnotationFromSelection(currentTab, AnnotationType::Highlight);
+            //openAnnotsInEditWindow(annots, isShift);
+            SaveAnnotationsAndCloseEditAnnowtationsWindow(currentTab);
+        } break;
+        case 's': {
+            auto annots = MakeAnnotationFromSelection(currentTab, AnnotationType::StrikeOut);
+            //openAnnotsInEditWindow(annots, isShift);
+            SaveAnnotationsAndCloseEditAnnowtationsWindow(currentTab);
+        } break;
+        case '`': {
+            auto annots = MakeAnnotationFromSelection(currentTab, AnnotationType::Squiggly);
+            //openAnnotsInEditWindow(annots, isShift);
+            SaveAnnotationsAndCloseEditAnnowtationsWindow(currentTab);
+        } break;
     }
 }
 
