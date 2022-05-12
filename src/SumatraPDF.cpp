@@ -3988,24 +3988,24 @@ static void FrameOnChar(WindowInfo* win, WPARAM key, LPARAM info = 0) {
             break;
         //KIMIM: no annots window and save annots automatically
         case 'u': {
-            auto annots = MakeAnnotationFromSelection(currentTab, AnnotationType::Underline);
+            auto annots = MakeAnnotationFromSelection(win->currentTab, AnnotationType::Underline);
             //openAnnotsInEditWindow(annots, isShift);
-            SaveAnnotationsAndCloseEditAnnowtationsWindow(currentTab);
+            SaveAnnotationsAndCloseEditAnnowtationsWindow(win->currentTab);
         } break;
         case 'a': {
-            auto annots = MakeAnnotationFromSelection(currentTab, AnnotationType::Highlight);
+            auto annots = MakeAnnotationFromSelection(win->currentTab, AnnotationType::Highlight);
             //openAnnotsInEditWindow(annots, isShift);
-            SaveAnnotationsAndCloseEditAnnowtationsWindow(currentTab);
+            SaveAnnotationsAndCloseEditAnnowtationsWindow(win->currentTab);
         } break;
         case 's': {
-            auto annots = MakeAnnotationFromSelection(currentTab, AnnotationType::StrikeOut);
+            auto annots = MakeAnnotationFromSelection(win->currentTab, AnnotationType::StrikeOut);
             //openAnnotsInEditWindow(annots, isShift);
-            SaveAnnotationsAndCloseEditAnnowtationsWindow(currentTab);
+            SaveAnnotationsAndCloseEditAnnowtationsWindow(win->currentTab);
         } break;
         case '`': {
-            auto annots = MakeAnnotationFromSelection(currentTab, AnnotationType::Squiggly);
+            auto annots = MakeAnnotationFromSelection(win->currentTab, AnnotationType::Squiggly);
             //openAnnotsInEditWindow(annots, isShift);
-            SaveAnnotationsAndCloseEditAnnowtationsWindow(currentTab);
+            SaveAnnotationsAndCloseEditAnnowtationsWindow(win->currentTab);
         } break;
     }
 }
