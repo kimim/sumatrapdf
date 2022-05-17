@@ -623,13 +623,12 @@ void LinkHandler::GotoNamedDest(const char* name) {
     }
 }
 
-void UpdateControlsColors(MainWindow* win) {
-    COLORREF bgCol = GetControlBackgroundColor();
-    COLORREF txtCol = gCurrentTheme->window.textColor;
-
-    // logfa("retrieved doc colors in tree control: 0x%x 0x%x\n", treeTxtCol, treeBgCol);
-
-    COLORREF splitterCol = GetSysColor(COLOR_BTNFACE);
+void UpdateTreeCtrlColors(MainWindow* win) {
+    COLORREF labelBgCol = GetAppColor(AppColor::DocumentBg);
+    COLORREF labelTxtCol = GetSysColor(COLOR_BTNTEXT);
+    COLORREF treeBgCol = GetAppColor(AppColor::DocumentBg);
+    COLORREF treeTxtCol = GetAppColor(AppColor::DocumentText);
+    COLORREF splitterCol = GetAppColor(AppColor::MainWindowBg);
     bool flatTreeWnd = false;
 
     {

@@ -178,7 +178,7 @@ ACCEL gBuiltInAccelerators[] = {
     {FCONTROL | FVIRTKEY, VK_F4, CmdClose},
     {FVIRTKEY, VK_F6, CmdMoveFrameFocus},
     {FVIRTKEY, VK_F8, CmdToggleToolbar},
-    {FVIRTKEY, VK_F9, CmdToggleMenuBar},
+    {FVIRTKEY, VK_F9, CmdToggleScrollbars},
     {FCONTROL | FVIRTKEY, 'L', CmdTogglePresentationMode},
     {FVIRTKEY, VK_F5, CmdTogglePresentationMode},
     {FSHIFT | FVIRTKEY, VK_F11, CmdTogglePresentationMode},
@@ -199,6 +199,11 @@ ACCEL gBuiltInAccelerators[] = {
 
     {0, 'u', CmdCreateAnnotUnderline},
     {0, 'U', CmdCreateAnnotUnderline},
+    // KIMIM: add more keys for annotation
+    {0, '`', CmdCreateAnnotSquiggly},
+
+    {0, 's', CmdCreateAnnotStrikeOut},
+    {0, 'S', CmdCreateAnnotStrikeOut},
 
     {0, 'i', CmdInvertColors},
     {0, 'I', CmdTogglePageInfo},

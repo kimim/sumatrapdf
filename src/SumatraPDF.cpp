@@ -91,8 +91,8 @@ using std::placeholders::_1;
 
 constexpr const char* kRestrictionsFileName = "sumatrapdfrestrict.ini";
 
-constexpr const char* kSumatraWindowTitle = "SumatraPDF";
-constexpr const WCHAR* kSumatraWindowTitleW = L"SumatraPDF";
+constexpr const char* kSumatraWindowTitle = "Reader";
+constexpr const WCHAR* kSumatraWindowTitleW = L"Reader";
 
 // used to show it in debug, but is not very useful,
 // so always disable
@@ -5191,6 +5191,23 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         case CmdSelectAll:
             OnSelectAll(win);
             break;
+
+        // TODO: make it closer to handling in OnWindowContextMenu()
+        case CmdCreateAnnotHighlight:
+        case CmdCreateAnnotSquiggly:
+        case CmdCreateAnnotStrikeOut:
+        case CmdCreateAnnotUnderline:
+            if (win && tab) {
+                auto annots = MakeAnnotationFromSelection(tab, annotType);
+                bool isShift = IsShiftPressed();
+                openAnnotsInEditWindow(win, annots, isShift);
+                SaveAnnotationsAndCloseEditAnnowtationsWindow(tab);
+            }
+            break;
+
+        case CmdDeleteAnnotation: {
+            DeleteAnnotationUnderCursor(win);
+        } break;
 
         case CmdDebugDownloadSymbols:
             DownloadDebugSymbols();
