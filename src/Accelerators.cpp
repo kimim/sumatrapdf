@@ -180,11 +180,17 @@ ACCEL gBuiltInAccelerators[] = {
 
     // need 2 entries for 'a' and 'Shift + a'
     // TODO: maybe add CmdCreateAnnotHighlightAndOpenWindow (kind of clumsy)
+    // KIMIM: add frequently used keys for annotation
     {0, 'a', CmdCreateAnnotHighlight},
     {0, 'A', CmdCreateAnnotHighlight},
 
     {0, 'u', CmdCreateAnnotUnderline},
     {0, 'U', CmdCreateAnnotUnderline},
+
+    {0, '`', CmdCreateAnnotSquiggly},
+
+    {0, 's', CmdCreateAnnotStrikeOut},
+    {0, 'S', CmdCreateAnnotStrikeOut},
 
     {0, 'i', CmdInvertColors},
     {0, 'I', CmdTogglePageInfo},

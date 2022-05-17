@@ -3986,27 +3986,6 @@ static void FrameOnChar(WindowInfo* win, WPARAM key, LPARAM info = 0) {
         case 'm':
             ShowCursorPositionInDoc(win);
             break;
-        //KIMIM: no annots window and save annots automatically
-        case 'u': {
-            auto annots = MakeAnnotationFromSelection(win->currentTab, AnnotationType::Underline);
-            //openAnnotsInEditWindow(annots, isShift);
-            SaveAnnotationsAndCloseEditAnnowtationsWindow(win->currentTab);
-        } break;
-        case 'a': {
-            auto annots = MakeAnnotationFromSelection(win->currentTab, AnnotationType::Highlight);
-            //openAnnotsInEditWindow(annots, isShift);
-            SaveAnnotationsAndCloseEditAnnowtationsWindow(win->currentTab);
-        } break;
-        case 's': {
-            auto annots = MakeAnnotationFromSelection(win->currentTab, AnnotationType::StrikeOut);
-            //openAnnotsInEditWindow(annots, isShift);
-            SaveAnnotationsAndCloseEditAnnowtationsWindow(win->currentTab);
-        } break;
-        case '`': {
-            auto annots = MakeAnnotationFromSelection(win->currentTab, AnnotationType::Squiggly);
-            //openAnnotsInEditWindow(annots, isShift);
-            SaveAnnotationsAndCloseEditAnnowtationsWindow(win->currentTab);
-        } break;
     }
 }
 
@@ -4873,6 +4852,7 @@ static LRESULT FrameOnCommand(WindowInfo* win, HWND hwnd, UINT msg, WPARAM wp, L
                 auto annots = MakeAnnotationFromSelection(tab, annotType);
                 bool isShift = IsShiftPressed();
                 openAnnotsInEditWindow(win, annots, isShift);
+                SaveAnnotationsAndCloseEditAnnowtationsWindow(tab);
             }
             break;
 

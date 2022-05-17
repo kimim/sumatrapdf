@@ -1921,15 +1921,19 @@ void OnWindowContextMenu(WindowInfo* win, int x, int y) {
         } break;
         case CmdCreateAnnotHighlight:
             createdAnnots = MakeAnnotationFromSelection(tab, AnnotationType::Highlight);
+            HwndSendCommand(win->hwndFrame, CmdSaveAnnotations);
             break;
         case CmdCreateAnnotSquiggly:
             createdAnnots = MakeAnnotationFromSelection(tab, AnnotationType::Squiggly);
+            HwndSendCommand(win->hwndFrame, CmdSaveAnnotations);
             break;
         case CmdCreateAnnotStrikeOut:
             createdAnnots = MakeAnnotationFromSelection(tab, AnnotationType::StrikeOut);
+            HwndSendCommand(win->hwndFrame, CmdSaveAnnotations);
             break;
         case CmdCreateAnnotUnderline:
             createdAnnots = MakeAnnotationFromSelection(tab, AnnotationType::Underline);
+            HwndSendCommand(win->hwndFrame, CmdSaveAnnotations);
             break;
         case CmdCreateAnnotInk:
         case CmdCreateAnnotPolyLine:
