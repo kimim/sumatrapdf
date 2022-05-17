@@ -89,8 +89,8 @@ using std::placeholders::_1;
 
 #define kRestrictionsFileName "sumatrapdfrestrict.ini"
 
-constexpr const char* kSumatraWindowTitle = "SumatraPDF";
-constexpr const WCHAR* kSumatraWindowTitleW = L"SumatraPDF";
+constexpr const char* kSumatraWindowTitle = "Reader";
+constexpr const WCHAR* kSumatraWindowTitleW = L"Reader";
 
 /* if true, we're in debug mode where we show links as blue rectangle on
    the screen. Makes debugging code related to links easier. */
@@ -5158,6 +5158,7 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
                 auto annots = MakeAnnotationFromSelection(tab, annotType);
                 bool isShift = IsShiftPressed();
                 openAnnotsInEditWindow(win, annots, isShift);
+                SaveAnnotationsAndCloseEditAnnowtationsWindow(tab);
             }
             break;
 
