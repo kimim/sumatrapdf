@@ -4822,6 +4822,7 @@ static LRESULT FrameOnCommand(WindowInfo* win, HWND hwnd, UINT msg, WPARAM wp, L
                 auto annots = MakeAnnotationFromSelection(tab, annotType);
                 bool isShift = IsShiftPressed();
                 openAnnotsInEditWindow(win, annots, isShift);
+                SaveAnnotationsAndCloseEditAnnowtationsWindow(tab);
             }
             break;
 
