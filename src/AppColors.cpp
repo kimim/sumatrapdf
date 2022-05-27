@@ -57,6 +57,10 @@ static COLORREF GetAboutBgColor() {
     COLORREF bgColor = ABOUT_BG_GRAY_COLOR;
 
     ParsedColor* bgParsed = GetPrefsColor(gGlobalPrefs->mainWindowBackground);
+    if (gGlobalPrefs->fixedPageUI.invertColors) {
+        return ((COLORREF)(0xfe333333)); // #333333
+    }
+
     if (ABOUT_BG_COLOR_DEFAULT != bgParsed->col) {
         bgColor = bgParsed->col;
     }
@@ -108,9 +112,9 @@ COLORREF GetAppColor(AppColor col) {
         // return ABOUT_BG_GRAY_COLOR;
     }
 
-    if (col == AppColor::MainWindowText) {
-        return COL_BLACK;
-    }
+    //if (col == AppColor::MainWindowText) {
+    //    return COL_BLACK;
+    //}
 
     if (col == AppColor::MainWindowLink) {
         return COL_BLUE_LINK;
@@ -125,16 +129,15 @@ COLORREF GetAppColor(AppColor col) {
             }
             return c;
         }
-        ParsedColor* bgParsed = GetPrefsColor(gGlobalPrefs->mainWindowBackground);
+
+        parsedCol = GetPrefsColor(gGlobalPrefs->fixedPageUI.backgroundColor);
         if (gGlobalPrefs->fixedPageUI.invertColors) {
-            parsedCol = GetPrefsColor(gGlobalPrefs->fixedPageUI.textColor);
-        } else {
-            parsedCol = GetPrefsColor(gGlobalPrefs->fixedPageUI.backgroundColor);
+            return ((COLORREF)(0xfe262626)); // #262626
         }
         return parsedCol->col;
     }
 
-    if (col == AppColor::DocumentText) {
+    if (col == AppColor::DocumentText || col == AppColor::MainWindowText) {
         if (gGlobalPrefs->useSysColors) {
             if (gGlobalPrefs->fixedPageUI.invertColors) {
                 c = GetSysColor(COLOR_WINDOW);
@@ -144,10 +147,9 @@ COLORREF GetAppColor(AppColor col) {
             return c;
         }
 
+        parsedCol = GetPrefsColor(gGlobalPrefs->fixedPageUI.textColor);
         if (gGlobalPrefs->fixedPageUI.invertColors) {
-            parsedCol = GetPrefsColor(gGlobalPrefs->fixedPageUI.backgroundColor);
-        } else {
-            parsedCol = GetPrefsColor(gGlobalPrefs->fixedPageUI.textColor);
+            return ((COLORREF)(0xfef6f6f6)); // #f6f6f6
         }
         return parsedCol->col;
     }

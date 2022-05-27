@@ -559,7 +559,7 @@ void LinkHandler::GotoNamedDest(const WCHAR* name) {
 
 void UpdateTreeCtrlColors(WindowInfo* win) {
     COLORREF labelBgCol = GetAppColor(AppColor::DocumentBg);
-    COLORREF labelTxtCol = GetSysColor(COLOR_BTNTEXT);
+    COLORREF labelTxtCol = GetAppColor(AppColor::DocumentText);
     COLORREF treeBgCol = GetAppColor(AppColor::DocumentBg);
     COLORREF treeTxtCol = GetAppColor(AppColor::DocumentText);
     COLORREF splitterCol = GetAppColor(AppColor::MainWindowBg);
