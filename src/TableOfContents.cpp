@@ -236,9 +236,9 @@ void ToggleTocBox(WindowInfo* win) {
         return;
     }
     SetSidebarVisibility(win, true, gGlobalPrefs->showFavorites);
-    if (win->tocVisible) {
-        win->tocTreeCtrl->SetFocus();
-    }
+    //if (win->tocVisible) {
+    //    win->tocTreeCtrl->SetFocus();
+    //}
 }
 
 // find the closest item in tree view to a given page number
@@ -880,7 +880,7 @@ void CreateToc(WindowInfo* win) {
 
     auto* treeCtrl = new TreeCtrl();
     treeCtrl->fullRowSelect = true;
-    treeCtrl->dwExStyle = WS_EX_STATICEDGE;
+    //treeCtrl->dwExStyle = WS_EX_STATICEDGE;
     treeCtrl->onGetTooltip = TocCustomizeTooltip;
     treeCtrl->onContextMenu = TocContextMenu;
     treeCtrl->onChar = TocTreeCharHandler;

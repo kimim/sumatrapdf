@@ -565,14 +565,15 @@ void UpdateTreeCtrlColors(WindowInfo* win) {
     COLORREF splitterCol = GetAppColor(AppColor::MainWindowBg);
     bool flatTreeWnd = false;
 
-    {
-        auto tocTreeCtrl = win->tocTreeCtrl;
+    auto tocTreeCtrl = win->tocTreeCtrl;
+    if (tocTreeCtrl) {
         tocTreeCtrl->SetBackgroundColor(treeBgCol);
         tocTreeCtrl->SetTextColor(treeTxtCol);
 
         win->tocLabelWithClose->SetBgCol(labelBgCol);
         win->tocLabelWithClose->SetTextCol(labelTxtCol);
         win->sidebarSplitter->SetBackgroundColor(splitterCol);
+        win->sidebarSplitter->backgroundColor = labelBgCol;
         SetWindowExStyle(tocTreeCtrl->hwnd, WS_EX_STATICEDGE, !flatTreeWnd);
         uint flags = SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED;
         SetWindowPos(tocTreeCtrl->hwnd, nullptr, 0, 0, 0, 0, flags);
@@ -587,6 +588,7 @@ void UpdateTreeCtrlColors(WindowInfo* win) {
         win->favLabelWithClose->SetTextCol(labelTxtCol);
 
         win->favSplitter->SetBackgroundColor(splitterCol);
+        win->favSplitter->backgroundColor = labelBgCol;
 
         SetWindowExStyle(favTreeCtrl->hwnd, WS_EX_STATICEDGE, !flatTreeWnd);
         uint flags = SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED;

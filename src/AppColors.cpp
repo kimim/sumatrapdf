@@ -149,17 +149,23 @@ COLORREF GetAppColor(AppColor col) {
 
         parsedCol = GetPrefsColor(gGlobalPrefs->fixedPageUI.textColor);
         if (gGlobalPrefs->fixedPageUI.invertColors) {
-            return ((COLORREF)(0xfef6f6f6)); // #f6f6f6
+            return ((COLORREF)(0xfee0e0e0)); // #e0e0e0
         }
         return parsedCol->col;
     }
 
     if (col == AppColor::NotificationsBg) {
+        if (gGlobalPrefs->fixedPageUI.invertColors) {
+            return RgbToCOLORREF(0x262626); // #262626
+        }
         return MkGray(0xff);
         // return GetAppColor(AppColor::MainWindowBg);
     }
 
     if (col == AppColor::NotificationsText) {
+        if (gGlobalPrefs->fixedPageUI.invertColors) {
+            return RgbToCOLORREF(0xe0e0e0); // #e0e0e0
+        }
         return GetAppColor(AppColor::MainWindowText);
     }
 

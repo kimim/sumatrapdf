@@ -209,10 +209,11 @@ static void NotificationWndOnPaint(HWND hwnd, NotificationWnd* wnd) {
     rTmp = ToRECT(rectMsg);
     DrawTextW(hdc, text, -1, &rTmp, DT_SINGLELINE | DT_NOPREFIX);
 
-    if (wnd->hasClose) {
-        rTmp = ToRECT(GetCloseRect(hwnd));
-        DrawFrameControl(hdc, &rTmp, DFC_CAPTION, DFCS_CAPTIONCLOSE | DFCS_FLAT);
-    }
+    // use 'I' to toggle the label
+    //if (wnd->hasClose) {
+    //    rTmp = ToRECT(GetCloseRect(hwnd));
+    //    DrawFrameControl(hdc, &rTmp, DFC_CAPTION, DFCS_CAPTIONCLOSE | DFCS_FLAT);
+    //}
 
     if (wnd->hasProgress) {
         rect.dx = wnd->progressWidth;
