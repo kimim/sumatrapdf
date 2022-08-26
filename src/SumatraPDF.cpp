@@ -4489,12 +4489,14 @@ static void CopySelectionInTabToClipboard(WindowTab* tab) {
         return;
     }
     // TODO: can this be reached?
+#if 0
     if (tab->AsFixed()) {
         NotificationCreateArgs args;
         args.hwndParent = tab->win->hwndCanvas;
         args.msg = _TRA("Select content with Ctrl+left mouse button");
         ShowNotification(args);
     }
+#endif
 }
 
 static void OnMenuCustomZoom(MainWindow* win) {
