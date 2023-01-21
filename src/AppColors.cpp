@@ -130,12 +130,15 @@ COLORREF GetAppColor(AppColor col) {
             }
             return c;
         }
+
         // ParsedColor* bgParsed = GetPrefsColor(gGlobalPrefs->mainWindowBackground);
         if (gGlobalPrefs->fixedPageUI.invertColors) {
             // kimim: Document background color turns to gray when inverted
             return ((COLORREF)(0xfe262626)); // #262626
+        } else {
+            parsedCol = GetPrefsColor(gGlobalPrefs->fixedPageUI.backgroundColor);
+            return parsedCol->col;
         }
-        return parsedCol->col;
     }
 
     if (col == AppColor::DocumentText || col == AppColor::MainWindowText) {
@@ -152,8 +155,10 @@ COLORREF GetAppColor(AppColor col) {
         if (gGlobalPrefs->fixedPageUI.invertColors) {
             // kimim: document text color turns to light when inverted
             return ((COLORREF)(0xfef6f6f6)); // #f6f6f6
+        } else {
+            parsedCol = GetPrefsColor(gGlobalPrefs->fixedPageUI.textColor);
+            return parsedCol->col;
         }
-        return parsedCol->col;
     }
 
     if (col == AppColor::NotificationsBg) {

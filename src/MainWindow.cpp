@@ -634,7 +634,7 @@ void UpdateTreeCtrlColors(MainWindow* win) {
         win->tocLabelWithClose->SetBgCol(labelBgCol);
         win->tocLabelWithClose->SetTextCol(labelTxtCol);
         win->sidebarSplitter->SetBackgroundColor(splitterCol);
-        SetWindowExStyle(tocTreeView->hwnd, WS_EX_STATICEDGE, !flatTreeWnd);
+        SetWindowExStyle(tocTreeView->hwnd, WS_EX_STATICEDGE, flatTreeWnd);
         uint flags = SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED;
         SetWindowPos(tocTreeView->hwnd, nullptr, 0, 0, 0, 0, flags);
     }
