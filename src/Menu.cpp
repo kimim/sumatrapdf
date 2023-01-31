@@ -672,6 +672,10 @@ static MenuDef menuDefContext[] = {
         CmdCopySelection,
     },
     {
+        _TRN("Copy SuPDF Link"),
+        CmdCopySupdfLink,
+    },
+    {
         _TRN("S&election"),
         (UINT_PTR)menuDefSelection,
     },
@@ -1693,6 +1697,7 @@ void OnWindowContextMenu(MainWindow* win, int x, int y) {
         case CmdSaveAnnotations:
         case CmdFavoriteAdd:
         case CmdToggleFullscreen:
+        case CmdCopySupdfLink:
             // handle in FrameOnCommand() in SumatraPDF.cpp
             HwndSendCommand(win->hwndFrame, cmd);
             break;

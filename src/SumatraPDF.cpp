@@ -4499,6 +4499,26 @@ static void CopySelectionInTabToClipboard(WindowTab* tab) {
 #endif
 }
 
+static void CopySupdfLinkInTabToClipboard(WindowTab* tab) {
+    // Don't break the shortcut for text boxes
+    if (!tab || !tab->win) {
+        return;
+    }
+
+    if (!OpenClipboard(nullptr)) {
+        return;
+    }
+    EmptyClipboard();
+    defer {
+        CloseClipboard();
+    };
+    str::Str link;
+    link.AppendFmt("[[supdf:%s::%d][P%d]]", tab->filePath.Get(),
+        tab->ctrl->CurrentPageNo(), tab->ctrl->CurrentPageNo());
+
+    CopyTextToClipboard(link.Get(), true);
+}
+
 static void OnMenuCustomZoom(MainWindow* win) {
     if (!win->IsDocLoaded()) {
         return;
@@ -5145,6 +5165,10 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
 
         case CmdCopySelection:
             CopySelectionInTabToClipboard(tab);
+            break;
+
+        case CmdCopySupdfLink:
+            CopySupdfLinkInTabToClipboard(tab);
             break;
 
         case CmdSelectAll:
