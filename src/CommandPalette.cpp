@@ -29,8 +29,6 @@
 
 #include "utils/Log.h"
 
-static HFONT gCommandPaletteFont = nullptr;
-
 // clang-format off
 // those commands never show up in command palette
 static i32 gBlacklistCommandsFromPalette[] = {
@@ -94,6 +92,7 @@ static i32 gDocumentNotOpenWhitelist[] = {
     CmdClearHistory,
     CmdReopenLastClosedFile,
     CmdSelectNextTheme,
+    CmdToggleFrequentlyRead,
 #if defined(DEBUG)
     CmdDebugCrashMe,
     CmdDebugCorruptMemory,
@@ -151,6 +150,7 @@ static bool IsCmdInMenuList(i32 cmdId, UINT_PTR* a) {
 
 struct CommandPaletteWnd : Wnd {
     ~CommandPaletteWnd() override = default;
+    HFONT font = nullptr;
     MainWindow* win = nullptr;
 
     Edit* editQuery = nullptr;
@@ -222,6 +222,11 @@ static bool AllowCommand(const CommandPaletteBuildCtx& ctx, i32 cmdId) {
 
     if (IsOpenExternalViewerCommand(cmdId)) {
         return HasExternalViewerForCmd(cmdId);
+    }
+
+    // we only want to show this in home page
+    if (cmdId == CmdToggleFrequentlyRead) {
+        return !ctx.isDocLoaded;
     }
 
     if (!ctx.isDocLoaded) {
@@ -691,7 +696,7 @@ bool CommandPaletteWnd::Create(MainWindow* win, const char* prefix) {
         CreateCustomArgs args;
         args.visible = false;
         args.style = WS_POPUPWINDOW;
-        args.font = gCommandPaletteFont;
+        args.font = this->font;
         CreateCustom(args);
     }
     if (!hwnd) {
@@ -708,7 +713,7 @@ bool CommandPaletteWnd::Create(MainWindow* win, const char* prefix) {
         args.isMultiLine = false;
         args.withBorder = true;
         args.cueText = "enter search term";
-        args.font = gCommandPaletteFont;
+        args.font = this->font;
         auto c = new Edit();
         c->maxDx = 150;
         c->onTextChanged = std::bind(&CommandPaletteWnd::QueryChanged, this);
@@ -721,7 +726,7 @@ bool CommandPaletteWnd::Create(MainWindow* win, const char* prefix) {
     {
         ListBoxCreateArgs args;
         args.parent = hwnd;
-        args.font = gCommandPaletteFont;
+        args.font = this->font;
         auto c = new ListBox();
         c->onDoubleClick = std::bind(&CommandPaletteWnd::ListDoubleClick, this);
         c->idealSizeLines = 32;
@@ -738,7 +743,7 @@ bool CommandPaletteWnd::Create(MainWindow* win, const char* prefix) {
     {
         StaticCreateArgs args;
         args.parent = hwnd;
-        args.font = gCommandPaletteFont;
+        args.font = this->font;
         args.text = "↑ ↓ to navigate      Enter to select     Esc to close";
 
         auto c = new Static();
@@ -776,19 +781,17 @@ bool CommandPaletteWnd::Create(MainWindow* win, const char* prefix) {
 void RunCommandPallette(MainWindow* win, const char* prefix) {
     CrashIf(gCommandPaletteWnd);
 
-    if (!gCommandPaletteFont) {
-        // make min font size 16 (I get 12)
-        int fontSize = GetSizeOfDefaultGuiFont();
-        // make font 1.4x bigger than system font
-        fontSize = (fontSize * 14) / 10;
-        if (fontSize < 16) {
-            fontSize = 16;
-        }
-        // TODO: leaking font
-        gCommandPaletteFont = GetDefaultGuiFontOfSize(fontSize);
+    // make min font size 16 (I get 12)
+    int fontSize = GetSizeOfDefaultGuiFont();
+    // make font 1.4x bigger than system font
+    fontSize = (fontSize * 14) / 10;
+    if (fontSize < 16) {
+        fontSize = 16;
     }
+    HFONT font = GetDefaultGuiFontOfSize(fontSize);
 
     auto wnd = new CommandPaletteWnd();
+    wnd->font = font;
     wnd->win = win;
     bool ok = wnd->Create(win, prefix);
     CrashIf(!ok);

@@ -22,7 +22,7 @@
 #include "MainWindow.h"
 #include "resource.h"
 #include "Commands.h"
-#include "SumatraAbout.h"
+#include "HomePage.h"
 #include "SumatraProperties.h"
 #include "Translations.h"
 #include "SumatraConfig.h"
@@ -292,8 +292,8 @@ static char* FormatPermissionsA(DocController* ctrl) {
 }
 
 static Rect CalcPropertiesLayout(PropertiesLayout* layoutData, HDC hdc) {
-    AutoDeleteFont fontLeftTxt(CreateSimpleFont(hdc, kLeftTextFont, kLeftTextFontSize));
-    AutoDeleteFont fontRightTxt(CreateSimpleFont(hdc, kRightTextFont, kRightTextFontSize));
+    HFONT fontLeftTxt = CreateSimpleFont(hdc, kLeftTextFont, kLeftTextFontSize);
+    HFONT fontRightTxt = CreateSimpleFont(hdc, kRightTextFont, kRightTextFontSize);
     HGDIOBJ origFont = SelectObject(hdc, fontLeftTxt);
 
     /* calculate text dimensions for the left side */
@@ -592,8 +592,8 @@ void ShowProperties(HWND parent, DocController* ctrl, bool extended) {
 static void DrawProperties(HWND hwnd, HDC hdc) {
     PropertiesLayout* layoutData = FindPropertyWindowByHwnd(hwnd);
 
-    AutoDeleteFont fontLeftTxt(CreateSimpleFont(hdc, kLeftTextFont, kLeftTextFontSize));
-    AutoDeleteFont fontRightTxt(CreateSimpleFont(hdc, kRightTextFont, kRightTextFontSize));
+    HFONT fontLeftTxt = CreateSimpleFont(hdc, kLeftTextFont, kLeftTextFontSize);
+    HFONT fontRightTxt = CreateSimpleFont(hdc, kRightTextFont, kRightTextFontSize);
 
     HGDIOBJ origFont = SelectObject(hdc, fontLeftTxt); /* Just to remember the orig font */
 
@@ -602,7 +602,7 @@ static void DrawProperties(HWND hwnd, HDC hdc) {
     Rect rcClient = ClientRect(hwnd);
     RECT rTmp = ToRECT(rcClient);
     auto col = GetMainWindowBackgroundColor();
-    ScopedGdiObj<HBRUSH> brushAboutBg(CreateSolidBrush(col));
+    AutoDeleteBrush brushAboutBg = CreateSolidBrush(col);
     FillRect(hdc, &rTmp, brushAboutBg);
 
     col = gCurrentTheme->window.textColor;

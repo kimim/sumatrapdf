@@ -13,11 +13,6 @@
 
 #include "utils/Log.h"
 
-static HFONT gDefaultGuiFont = nullptr;
-static HFONT gDefaultGuiFontBold = nullptr;
-static HFONT gDefaultGuiFontItalic = nullptr;
-static HFONT gDefaultGuiFontBoldItalic = nullptr;
-
 bool ToBool(BOOL b) {
     return b ? true : false;
 }
@@ -1373,63 +1368,180 @@ Rect ChildPosWithinParent(HWND hwnd) {
     return rc;
 }
 
-HFONT GetDefaultGuiFontOfSize(int size) {
-    NONCLIENTMETRICS ncm = {};
-    ncm.cbSize = sizeof(ncm);
-    SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
-    ncm.lfMessageFont.lfHeight = -size;
-    HFONT fnt = CreateFontIndirectW(&ncm.lfMessageFont);
-    return fnt;
+constexpr u16 kFontFlagItalic = 0x01;
+constexpr u16 kFontFlagBold = 0x02;
+
+struct CreatedFontInfo {
+    CreatedFontInfo* next = nullptr;
+    const char* name = nullptr; // if nullptr, default gui font
+    HFONT font = nullptr;
+    u16 size = 0;
+    u16 flags = 0;
+    u16 weightOffset = 0;
+};
+
+// those are cached for the lifetime of the app
+static CreatedFontInfo* gFonts = nullptr;
+static HFONT gMenuFont = nullptr;
+
+static CreatedFontInfo* FindCreatedFont(const char* name, int size, u16 flags, u16 weightOffset) {
+    CreatedFontInfo* curr = gFonts;
+    while (curr) {
+        if (curr->size == (u16)size && curr->flags == flags && curr->weightOffset == weightOffset &&
+            str::Eq(curr->name, name)) {
+            name = name ? name : "";
+            /* logf("FindCreatedFont: found font '%s', size: %d, flags: %x, weightOffset: %d\n", name, (int)size,
+                 (int)flags, (int)weightOffset); */
+            return curr;
+        }
+        curr = curr->next;
+    }
+    return nullptr;
 }
 
-HFONT GetUserGuiFont(int size, int weightOffset, char* fontName) {
+void DeleteCreatedFonts() {
+    CreatedFontInfo* curr = gFonts;
+    while (curr) {
+        auto next = curr->next;
+        free((void*)curr->name);
+        DeleteFont(&curr->font);
+        delete curr;
+        curr = next;
+    }
+    gFonts = nullptr;
+
+    DeleteFont(gMenuFont);
+    gMenuFont = nullptr;
+}
+
+static HFONT AddCreatedFont(HFONT font, const char* name, int size, u16 flags, u16 weightOffset) {
+    auto cf = new CreatedFontInfo();
+    cf->name = str::Dup(name);
+    cf->font = font;
+    cf->size = (u16)size;
+    cf->flags = flags;
+    cf->weightOffset = weightOffset;
+    ListInsert(&gFonts, cf);
+    int n = ListLen(gFonts);
+    name = name ? name : "";
+    /* logf("AddCreatedFont: added font '%s', size: %d, flags: %x, weightOffset: %d\n", name, size, (int)flags,
+         (int)weightOffset);  */
+    return font;
+}
+
+HFONT GetMenuFont() {
+    if (!gMenuFont) {
+        NONCLIENTMETRICS ncm{};
+        ncm.cbSize = sizeof(ncm);
+        SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
+        gMenuFont = CreateFontIndirectW(&ncm.lfMenuFont);
+    }
+    return gMenuFont;
+}
+
+HFONT CreateSimpleFont(HDC hdc, const char* fontName, int fontSizePt) {
+    int realSize = MulDiv(fontSizePt, GetDeviceCaps(hdc, LOGPIXELSY), USER_DEFAULT_SCREEN_DPI);
+
+    u16 flags = 0;
+    auto f = FindCreatedFont(fontName, realSize, flags, 0);
+    if (f) {
+        return f->font;
+    }
+
+    WCHAR* fontNameW = ToWStrTemp(fontName);
+    LOGFONTW lf{};
+
+    lf.lfWidth = 0;
+    lf.lfHeight = -realSize;
+    lf.lfItalic = FALSE;
+    lf.lfUnderline = FALSE;
+    lf.lfStrikeOut = FALSE;
+    lf.lfCharSet = DEFAULT_CHARSET;
+    lf.lfOutPrecision = OUT_TT_PRECIS;
+    lf.lfQuality = DEFAULT_QUALITY;
+    lf.lfPitchAndFamily = DEFAULT_PITCH;
+    str::BufSet(lf.lfFaceName, dimof(lf.lfFaceName), fontNameW);
+    lf.lfWeight = FW_DONTCARE;
+    lf.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+    lf.lfEscapement = 0;
+    lf.lfOrientation = 0;
+
+    HFONT res = CreateFontIndirectW(&lf);
+    return AddCreatedFont(res, fontName, realSize, flags, 0);
+}
+
+HFONT GetDefaultGuiFontOfSize(int size) {
+    auto f = FindCreatedFont(nullptr, size, 0, 0);
+    if (f) {
+        return f->font;
+    }
+
     NONCLIENTMETRICS ncm = {};
     ncm.cbSize = sizeof(ncm);
     SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
     ncm.lfMessageFont.lfHeight = -size;
-    if (fontName && !str::EqI(fontName, "automatic")) {
+    HFONT res = CreateFontIndirectW(&ncm.lfMessageFont);
+    return AddCreatedFont(res, nullptr, size, 0, 0);
+}
+
+HFONT GetUserGuiFont(char* fontName, int size, int weightOffset) {
+    if (str::EqI(fontName, "automatic") || str::EqI(fontName, "auto")) {
+        fontName = nullptr;
+    }
+    auto f = FindCreatedFont(fontName, size, 0, (u16)weightOffset);
+    if (f) {
+        return f->font;
+    }
+
+    NONCLIENTMETRICS ncm = {};
+    ncm.cbSize = sizeof(ncm);
+    SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
+    if (fontName) {
         WCHAR* dest = ncm.lfMessageFont.lfFaceName;
         int cchDestBufSize = dimof(ncm.lfMessageFont.lfFaceName);
-        str::BufSet(dest, cchDestBufSize, fontName);
+        TempWStr nameW = ToWStrTemp(fontName);
+        str::BufSet(dest, cchDestBufSize, nameW);
     }
+    ncm.lfMessageFont.lfHeight = -size;
     ncm.lfMessageFont.lfWeight += weightOffset;
-    HFONT fnt = CreateFontIndirectW(&ncm.lfMessageFont);
-    return fnt;
+    HFONT res = CreateFontIndirectW(&ncm.lfMessageFont);
+    return AddCreatedFont(res, fontName, size, 0, 0);
 }
 
-// TODO: lfUnderline? lfStrikeOut?
 HFONT GetDefaultGuiFont(bool bold, bool italic) {
-    HFONT* dest = &gDefaultGuiFont;
-    if (bold && !italic) {
-        dest = &gDefaultGuiFontBold;
-    } else if (!bold && italic) {
-        dest = &gDefaultGuiFontItalic;
-    } else if (bold && italic) {
-        dest = &gDefaultGuiFontBoldItalic;
+    u16 flags = 0;
+    if (bold) {
+        flags |= kFontFlagBold;
     }
-    HFONT existing = *dest;
-    if (existing != nullptr) {
-        return existing;
+    if (italic) {
+        flags |= kFontFlagItalic;
     }
+
     NONCLIENTMETRICS ncm = {};
     ncm.cbSize = sizeof(ncm);
     SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
+    int size = (int)std::abs(ncm.lfMessageFont.lfHeight);
+
+    auto f = FindCreatedFont(nullptr, size, flags, 0);
+    if (f) {
+        return f->font;
+    }
+
     if (bold) {
         ncm.lfMessageFont.lfWeight = FW_BOLD;
     }
     if (italic) {
         ncm.lfMessageFont.lfItalic = true;
     }
-    *dest = CreateFontIndirectW(&ncm.lfMessageFont);
-    return *dest;
+    HFONT res = CreateFontIndirectW(&ncm.lfMessageFont);
+    return AddCreatedFont(res, nullptr, size, flags, 0);
 }
 
 int GetSizeOfDefaultGuiFont() {
     NONCLIENTMETRICS ncm{};
     ncm.cbSize = sizeof(ncm);
     SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
-    int res = -ncm.lfMessageFont.lfHeight;
-    CrashIf(res <= 0);
+    int res = std::abs(ncm.lfMessageFont.lfHeight);
     return res;
 }
 
@@ -1566,43 +1678,6 @@ TempStr MenuToSafeStringTemp(const char* s) {
     }
     TempStr safe = str::ReplaceTemp(str, "&", "&&");
     return safe;
-}
-
-HFONT CreateSimpleFont(HDC hdc, const char* fontName, int fontSize) {
-    WCHAR* fontNameW = ToWStrTemp(fontName);
-    LOGFONTW lf{};
-
-    lf.lfWidth = 0;
-    lf.lfHeight = -MulDiv(fontSize, GetDeviceCaps(hdc, LOGPIXELSY), USER_DEFAULT_SCREEN_DPI);
-    lf.lfItalic = FALSE;
-    lf.lfUnderline = FALSE;
-    lf.lfStrikeOut = FALSE;
-    lf.lfCharSet = DEFAULT_CHARSET;
-    lf.lfOutPrecision = OUT_TT_PRECIS;
-    lf.lfQuality = DEFAULT_QUALITY;
-    lf.lfPitchAndFamily = DEFAULT_PITCH;
-    str::BufSet(lf.lfFaceName, dimof(lf.lfFaceName), fontNameW);
-    lf.lfWeight = FW_DONTCARE;
-    lf.lfClipPrecision = CLIP_DEFAULT_PRECIS;
-    lf.lfEscapement = 0;
-    lf.lfOrientation = 0;
-
-    return CreateFontIndirectW(&lf);
-}
-
-// https://www.gamedev.net/forums/topic/683205-c-win32-can-i-change-the-menu-font/
-// affects size of menu font, system wide
-void SetMenuFontSize(int fontSize) {
-    NONCLIENTMETRICS m = {0};
-    uint sz = sizeof(NONCLIENTMETRICS);
-    m.cbSize = sz;
-    SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, sz, (void*)&m, 0);
-    logf("font size: %d\n", m.lfMenuFont.lfHeight);
-    m.lfMenuFont.lfHeight = -fontSize;
-    SystemParametersInfoW(SPI_SETNONCLIENTMETRICS, sz, (void*)&m, 0);
-    // TODO: hangs, maybe needs to use SystemParametersInfoForDpi as doc say
-    // for per-monitor dpi aware apps
-    // CrashIf(true);
 }
 
 IStream* CreateStreamFromData(const ByteSlice& d) {
@@ -2674,10 +2749,6 @@ bool DeleteObjectSafe(HGDIOBJ* h) {
     return ToBool(res);
 }
 
-bool DeleteFontSafe(HFONT* h) {
-    return DeleteObjectSafe((HGDIOBJ*)h);
-}
-
 bool DestroyIconSafe(HICON* h) {
     if (!h || !*h) {
         return false;
@@ -2777,26 +2848,6 @@ void DrawCenteredText(HDC hdc, const RECT& r, const WCHAR* txt, bool isRTL) {
 }
 
 // Return size of a text <txt> in a given <hwnd>, taking into account its font
-Size TextSizeInHwnd(HWND hwnd, const char* txt, HFONT font) {
-    if (!txt || !*txt) {
-        return Size{};
-    }
-    size_t txtLen = str::Len(txt);
-    HDC dc = GetWindowDC(hwnd);
-    /* GetWindowDC() returns dc with default state, so we have to first set
-       window's current font into dc */
-    if (font == nullptr) {
-        font = (HFONT)SendMessageW(hwnd, WM_GETFONT, 0, 0);
-    }
-    HGDIOBJ prev = SelectObject(dc, font);
-    SIZE sz{};
-    GetTextExtentPoint32Utf8(dc, txt, (int)txtLen, &sz);
-    SelectObject(dc, prev);
-    ReleaseDC(hwnd, dc);
-    return Size(sz.cx, sz.cy);
-}
-
-// Return size of a text <txt> in a given <hwnd>, taking into account its font
 Size TextSizeInHwnd(HWND hwnd, const WCHAR* txt, HFONT font) {
     if (!txt || !*txt) {
         return Size{};
@@ -2834,56 +2885,41 @@ SIZE TextSizeInHwnd2(HWND hwnd, const WCHAR* txt, HFONT font) {
     return sz;
 }
 
-/* Return size of a text <txt> in a given <hwnd>, taking into account its font */
-Size HwndMeasureText(HWND hwnd, const char* txt, HFONT font) {
-    SIZE sz{};
-    size_t txtLen = str::Len(txt);
-    HDC dc = GetWindowDC(hwnd);
-    /* GetWindowDC() returns dc with default state, so we have to first set
-       window's current font into dc */
-    if (font == nullptr) {
-        font = (HFONT)SendMessageW(hwnd, WM_GETFONT, 0, 0);
+// Return size of a text <txt> in a given <hwnd>, taking into account its font
+Size TextSizeInHwnd(HWND hwnd, const char* txt, HFONT font) {
+    if (!txt || !*txt) {
+        return Size{};
     }
-    HGDIOBJ prev = SelectObject(dc, font);
-
-    RECT r{};
-    uint fmt = DT_CALCRECT | DT_LEFT | DT_NOCLIP | DT_EDITCONTROL;
-    HdcDrawText(dc, txt, (int)txtLen, &r, fmt);
-    SelectObject(dc, prev);
-    ReleaseDC(hwnd, dc);
-    int dx = RectDx(r);
-    int dy = RectDy(r);
-    return {dx, dy};
+    TempWStr ws = ToWStrTemp(txt);
+    return TextSizeInHwnd(hwnd, ws, font);
 }
 
 /* Return size of a text <txt> in a given <hwnd>, taking into account its font */
 Size HwndMeasureText(HWND hwnd, const WCHAR* txt, HFONT font) {
     SIZE sz{};
-    size_t txtLen = str::Len(txt);
-    HDC dc = GetWindowDC(hwnd);
+
+    AutoReleaseDC dc(hwnd);
     /* GetWindowDC() returns dc with default state, so we have to first set
        window's current font into dc */
     if (font == nullptr) {
         font = (HFONT)SendMessageW(hwnd, WM_GETFONT, 0, 0);
     }
-    HGDIOBJ prev = SelectObject(dc, font);
+    ScopedSelectFont prev(dc, font);
 
     RECT r{};
     uint fmt = DT_CALCRECT | DT_LEFT | DT_NOCLIP | DT_EDITCONTROL;
+    size_t txtLen = str::Len(txt);
     DrawTextExW(dc, (WCHAR*)txt, (int)txtLen, &r, fmt, nullptr);
-    SelectObject(dc, prev);
-    ReleaseDC(hwnd, dc);
+
     int dx = RectDx(r);
     int dy = RectDy(r);
     return {dx, dy};
 }
 
-/* Return size of a text <txt> in a given <hdc>, taking into account its font */
-Size TextSizeInDC(HDC hdc, const WCHAR* txt) {
-    SIZE sz;
-    size_t txtLen = str::Len(txt);
-    GetTextExtentPoint32(hdc, txt, (int)txtLen, &sz);
-    return Size(sz.cx, sz.cy);
+/* Return size of a text <txt> in a given <hwnd>, taking into account its font */
+Size HwndMeasureText(HWND hwnd, const char* txt, HFONT font) {
+    TempWStr sw = ToWStrTemp(txt);
+    return HwndMeasureText(hwnd, sw, font);
 }
 
 void TreeViewExpandRecursively(HWND hTree, HTREEITEM hItem, uint flag, bool subtree) {
@@ -2903,4 +2939,47 @@ void TreeViewExpandRecursively(HWND hTree, HTREEITEM hItem, uint flag, bool subt
 void AddPathToRecentDocs(const char* path) {
     WCHAR* pathW = ToWStrTemp(path);
     SHAddToRecentDocs(SHARD_PATH, pathW);
+}
+
+TempStr HGLOBALToStrTemp(HGLOBAL h, bool isUnicode) {
+    void* mem = GlobalLock(h);
+    if (!mem) {
+        return nullptr;
+    }
+
+    TempStr res;
+    if (isUnicode) {
+        res = ToUtf8Temp((WCHAR*)mem);
+    } else {
+        res = str::DupTemp((char*)mem);
+    }
+    GlobalUnlock(h);
+    return res;
+}
+
+HGLOBAL MemToHGLOBAL(void* src, int n, UINT flags) {
+    HGLOBAL h = GlobalAlloc(flags, n);
+    if (!h) {
+        return 0;
+    }
+    void* d = GlobalLock(h);
+    if (d) {
+        memcpy(d, src, n);
+    }
+    GlobalUnlock(h);
+    return h;
+}
+
+HGLOBAL StrToHGLOBAL(const char* s, UINT flags) {
+    int cb = str::Len(s) + 1;
+    return MemToHGLOBAL((void*)s, cb, flags);
+}
+
+TempStr AtomToStrTemp(ATOM a) {
+    WCHAR buf[1024];
+    UINT cch = GlobalGetAtomNameW(a, buf, dimofi(buf));
+    if (cch == 0) {
+        return nullptr;
+    }
+    return ToUtf8Temp(buf, cch);
 }

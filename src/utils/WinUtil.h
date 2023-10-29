@@ -98,10 +98,6 @@ bool IsShiftPressed();
 bool IsAltPressed();
 bool IsCtrlPressed();
 
-HFONT CreateSimpleFont(HDC hdc, const char* fontName, int fontSize);
-
-void SetMenuFontSize(int);
-
 Rect ShiftRectToWorkArea(Rect rect, HWND hwnd = nullptr, bool bFully = false);
 Rect GetWorkAreaRect(Rect rect, HWND hwnd);
 void LimitWindowSizeToScreen(HWND hwnd, SIZE& size);
@@ -116,7 +112,6 @@ void DrawCenteredText(HDC, const RECT& r, const WCHAR* txt, bool isRTL = false);
 Size TextSizeInHwnd(HWND, const WCHAR*, HFONT = nullptr);
 Size TextSizeInHwnd(HWND, const char*, HFONT = nullptr);
 SIZE TextSizeInHwnd2(HWND, const WCHAR*, HFONT);
-Size TextSizeInDC(HDC, const WCHAR*);
 
 bool IsFocused(HWND);
 bool IsCursorOverWindow(HWND);
@@ -145,10 +140,13 @@ void SetRtl(HWND hwnd, bool isRtl);
 
 Rect ChildPosWithinParent(HWND);
 
-int GetSizeOfDefaultGuiFont();
+HFONT GetMenuFont();
+HFONT CreateSimpleFont(HDC hdc, const char* fontName, int fontSize);
 HFONT GetDefaultGuiFont(bool bold = false, bool italic = false);
 HFONT GetDefaultGuiFontOfSize(int size);
-HFONT GetUserGuiFont(int size, int weight_offset, char* fontName);
+HFONT GetUserGuiFont(char* fontName, int size, int weightOffset);
+int GetSizeOfDefaultGuiFont();
+void DeleteCreatedFonts();
 
 IStream* CreateStreamFromData(const ByteSlice&);
 ByteSlice GetDataFromStream(IStream* stream, HRESULT* resOpt);
@@ -326,7 +324,6 @@ int HdcDrawText(HDC hdc, const char* s, int sLen, RECT* r, UINT format);
 Size HdcMeasureText(HDC hdc, const char* s, UINT format);
 
 bool DeleteObjectSafe(HGDIOBJ*);
-bool DeleteFontSafe(HFONT*);
 bool DestroyIconSafe(HICON*);
 
 void TbSetButtonInfo(HWND hwnd, int buttonId, TBBUTTONINFO* info);
@@ -338,3 +335,8 @@ void TbGetRect(HWND hwnd, int buttonId, RECT* rc);
 
 void TreeViewExpandRecursively(HWND hTree, HTREEITEM hItem, uint flag, bool subtree);
 void AddPathToRecentDocs(const char*);
+
+TempStr HGLOBALToStrTemp(HGLOBAL h, bool isUnicode);
+HGLOBAL MemToHGLOBAL(void* src, int n, UINT flags = GMEM_MOVEABLE);
+HGLOBAL StrToHGLOBAL(const char* s, UINT flags = GMEM_MOVEABLE);
+TempStr AtomToStrTemp(ATOM a);

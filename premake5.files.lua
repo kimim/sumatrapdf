@@ -619,6 +619,7 @@ function sumatrapdf_files()
     "Flags.*",
     "FzImgReader.*",
     "GlobalPrefs.*",
+    "HomePage.*",
     "Installer.*",
     "InstallerCommon.cpp",
     "MainWindow.*",
@@ -642,7 +643,6 @@ function sumatrapdf_files()
     "SumatraPDF.rc",
     "SumatraStartup.cpp",
     "SumatraConfig.cpp",
-    "SumatraAbout.*",
     "SumatraDialogs.*",
     "SumatraProperties.*",
     "StressTesting.*",
@@ -946,6 +946,7 @@ function mupdf_files()
     "html-outline.c",
     "html-parse.c",
     "mobi.c",
+    "office.c",
     "story-writer.c",
     "xml-dom.c",
   })

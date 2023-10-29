@@ -46,7 +46,7 @@
 #include "uia/Provider.h"
 #include "SearchAndDDE.h"
 #include "Selection.h"
-#include "SumatraAbout.h"
+#include "HomePage.h"
 #include "Tabs.h"
 #include "Toolbar.h"
 #include "Translations.h"
@@ -759,13 +759,13 @@ static void PaintPageFrameAndShadow(HDC hdc, Rect& bounds, Rect& pageRect, bool 
 
     // Draw shadow
     if (!presentation) {
-        ScopedGdiObj<HBRUSH> brush(CreateSolidBrush(COL_PAGE_SHADOW));
+        AutoDeleteBrush brush = CreateSolidBrush(COL_PAGE_SHADOW);
         FillRect(hdc, &shadow.ToRECT(), brush);
     }
 
     // Draw frame
     ScopedGdiObj<HPEN> pe(CreatePen(PS_SOLID, 1, presentation ? TRANSPARENT : COL_PAGE_FRAME));
-    ScopedGdiObj<HBRUSH> brush(CreateSolidBrush(gCurrentTheme->window.backgroundColor));
+    AutoDeleteBrush brush = CreateSolidBrush(gCurrentTheme->window.backgroundColor);
     SelectObject(hdc, pe);
     SelectObject(hdc, brush);
     Rectangle(hdc, frame.x, frame.y, frame.x + frame.dx, frame.y + frame.dy);
@@ -889,11 +889,11 @@ static void DrawDocument(MainWindow* win, HDC hdc, RECT* rcArea) {
     auto gcols = gGlobalPrefs->fixedPageUI.gradientColors;
     auto nGCols = gcols->size();
     if (paintOnBlackWithoutShadow) {
-        ScopedGdiObj<HBRUSH> brush(CreateSolidBrush(WIN_COL_BLACK));
+        AutoDeleteBrush brush = CreateSolidBrush(WIN_COL_BLACK);
         FillRect(hdc, rcArea, brush);
     } else if (0 == nGCols) {
         auto col = GetMainWindowBackgroundColor();
-        ScopedGdiObj<HBRUSH> brush(CreateSolidBrush(col));
+        AutoDeleteBrush brush = CreateSolidBrush(col);
         FillRect(hdc, rcArea, brush);
     } else {
         COLORREF colors[3];
@@ -979,7 +979,7 @@ static void DrawDocument(MainWindow* win, HDC hdc, RECT* rcArea) {
         int renderDelay = gRenderCache.Paint(hdc, bounds, dm, pageNo, pageInfo, &renderOutOfDateCue);
 
         if (renderDelay != 0) {
-            AutoDeleteFont fontRightTxt(CreateSimpleFont(hdc, "MS Shell Dlg", 14));
+            HFONT fontRightTxt = CreateSimpleFont(hdc, "MS Shell Dlg", 14);
             HGDIOBJ hPrevFont = SelectObject(hdc, fontRightTxt);
             auto col = gCurrentTheme->window.textColor;
             SetTextColor(hdc, col);
@@ -1566,10 +1566,10 @@ static void OnPaintError(MainWindow* win) {
     PAINTSTRUCT ps;
     HDC hdc = BeginPaint(win->hwndCanvas, &ps);
 
-    AutoDeleteFont fontRightTxt(CreateSimpleFont(hdc, "MS Shell Dlg", 14));
+    HFONT fontRightTxt = CreateSimpleFont(hdc, "MS Shell Dlg", 14);
     HGDIOBJ hPrevFont = SelectObject(hdc, fontRightTxt);
     auto bgCol = GetMainWindowBackgroundColor();
-    ScopedGdiObj<HBRUSH> bgBrush(CreateSolidBrush(bgCol));
+    AutoDeleteBrush bgBrush = CreateSolidBrush(bgCol);
     FillRect(hdc, &ps.rcPaint, bgBrush);
     // TODO: should this be "Error opening %s"?
     auto tab = win->CurrentTab();
