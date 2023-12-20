@@ -197,6 +197,8 @@ ACCEL gBuiltInAccelerators[] = {
     {0, 'a', CmdCreateAnnotHighlight},
     {0, 'A', CmdCreateAnnotHighlight},
 
+    {0, '`', CmdCreateAnnotSquiggly},
+
     {0, 'u', CmdCreateAnnotUnderline},
     {0, 'U', CmdCreateAnnotUnderline},
 
