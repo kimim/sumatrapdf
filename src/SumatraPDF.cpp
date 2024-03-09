@@ -5000,6 +5000,20 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             }
         } break;
 
+        case CmdScrollUpQ: {
+            if (!win->IsDocLoaded()) {
+                return 0;
+            }
+            if (dm && dm->NeedVScroll()) {
+                for (int i = 0; i < 20; i++) {
+                    SendMessageW(win->hwndCanvas, WM_VSCROLL, SB_LINEUP, 0);
+                }
+            } else {
+                // in single page view, scrolls by page
+                win->ctrl->GoToPrevPage(true);
+            }
+        } break;
+
         case CmdScrollUpHalfPage: {
             if (!win->IsDocLoaded()) {
                 return 0;
@@ -5040,6 +5054,20 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             }
             if (dm && dm->NeedVScroll()) {
                 SendMessageW(win->hwndCanvas, WM_VSCROLL, SB_LINEDOWN, 0);
+            } else {
+                // in single page view, scrolls by page
+                win->ctrl->GoToNextPage();
+            }
+        } break;
+
+        case CmdScrollDownQ: {
+            if (!win->IsDocLoaded()) {
+                return 0;
+            }
+            if (dm && dm->NeedVScroll()) {
+                for (int i = 0; i < 20; i++) {
+                    SendMessageW(win->hwndCanvas, WM_VSCROLL, SB_LINEDOWN, 0);
+                }
             } else {
                 // in single page view, scrolls by page
                 win->ctrl->GoToNextPage();

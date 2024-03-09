@@ -83,8 +83,8 @@
     V(VK_F24, "F24")
 
 ACCEL gBuiltInAccelerators[] = {
-    {0, 'k', CmdScrollUp},
-    {0, 'j', CmdScrollDown},
+    {0, 'k', CmdScrollUpQ},
+    {0, 'j', CmdScrollDownQ},
     {0, 'h', CmdScrollLeft},
     {0, 'l', CmdScrollRight},
     {FVIRTKEY, VK_UP, CmdScrollUp},

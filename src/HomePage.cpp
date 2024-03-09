@@ -227,7 +227,7 @@ static void DrawAbout(HWND hwnd, HDC hdc, Rect rect, Vec<StaticLinkInfo*>& stati
     col = ThemeMainWindowBackgroundColor();
     AutoDeleteBrush brushAboutBg = CreateSolidBrush(col);
     FillRect(hdc, rc, brushAboutBg);
-
+#if 0
     /* render title */
     Rect titleRect(rect.TL(), CalcSumatraVersionSize(hdc));
 
@@ -293,6 +293,7 @@ static void DrawAbout(HWND hwnd, HDC hdc, Rect rect, Vec<StaticLinkInfo*>& stati
     Rect divideLine(gAboutLayoutInfo[0].rightPos.x - DpiScale(hwnd, kAboutLeftRightSpaceDx), rect.y + titleRect.dy + 4,
                     0, rect.y + rect.dy - 4 - gAboutLayoutInfo[0].rightPos.y);
     DrawLine(hdc, divideLine);
+#endif
 }
 
 static void UpdateAboutLayoutInfo(HWND hwnd, HDC hdc, Rect* rect) {
