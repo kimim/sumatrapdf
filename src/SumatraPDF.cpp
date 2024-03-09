@@ -91,8 +91,8 @@ using std::placeholders::_1;
 
 constexpr const char* kRestrictionsFileName = "sumatrapdfrestrict.ini";
 
-constexpr const char* kSumatraWindowTitle = "SumatraPDF";
-constexpr const WCHAR* kSumatraWindowTitleW = L"SumatraPDF";
+constexpr const char* kSumatraWindowTitle = "Reader";
+constexpr const WCHAR* kSumatraWindowTitleW = L"Reader";
 
 // used to show it in debug, but is not very useful,
 // so always disable
