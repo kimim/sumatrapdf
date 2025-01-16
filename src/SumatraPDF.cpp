@@ -1041,24 +1041,23 @@ static void SetFrameTitleForTab(WindowTab* tab, bool needRefresh) {
     }
 
     TempStr docTitle = (TempStr) "";
+    TempStr s = nullptr;
+
     if (tab->ctrl) {
         TempStr title = tab->ctrl->GetPropertyTemp(kPropTitle);
         if (title != nullptr) {
             str::NormalizeWSInPlace(title);
             docTitle = str::DupTemp(title);
             if (!str::IsEmpty(title)) {
-                docTitle = str::FormatTemp("- [%s] ", title);
+                docTitle = str::FormatTemp("%s", title);
+                s = str::FormatTemp("[%s] - %s", docTitle, titlePath);
             }
+        } else {
+            s = str::FormatTemp("%s", titlePath);
         }
     }
 
-    TempStr s = nullptr;
-    if (!IsUIRtl()) {
-        s = str::FormatTemp("%s %s- %s", titlePath, docTitle, kSumatraWindowTitle);
-    } else {
-        // explicitly revert the title, so that filenames aren't garbled
-        s = str::FormatTemp("%s %s- %s", kSumatraWindowTitle, docTitle, titlePath);
-    }
+
     if (needRefresh && tab->ctrl) {
         // TODO: this isn't visible when tabs are used
         s = str::FormatTemp(_TRA("[Changes detected; refreshing] %s"), tab->frameTitle);
@@ -5498,7 +5497,7 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
                 return 0;
             }
             if (dm && dm->NeedVScroll()) {
-                int n = GetCommandIntArg(cmd, kCmdArgN, 1);
+                int n = GetCommandIntArg(cmd, kCmdArgN, 12);
                 WPARAM dir = (cmdId == CmdScrollUp) ? SB_LINEUP : SB_LINEDOWN;
                 for (int i = 0; i < n; i++) {
                     SendMessageW(win->hwndCanvas, WM_VSCROLL, dir, 0);
