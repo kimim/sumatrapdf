@@ -862,14 +862,14 @@ static void UpdatePageInfoHelper(DocController* ctrl, NotificationWnd* wnd, int 
         pageNo = ctrl->CurrentPageNo();
     }
     int nPages = ctrl->PageCount();
-    TempStr pageInfo = str::FormatTemp("%s %d / %d", _TRA("Page:"), pageNo, nPages);
+    TempStr pageInfo = str::FormatTemp("%d / %d", pageNo, nPages);
     if (ctrl->HasPageLabels()) {
         TempStr label = ctrl->GetPageLabeTemp(pageNo);
-        pageInfo = str::FormatTemp("%s %s (%d / %d)", _TRA("Page:"), label, pageNo, nPages);
+        pageInfo = str::FormatTemp("%s (%d / %d)", label, pageNo, nPages);
     }
-    float zoomLevel = ctrl->GetZoomVirtual();
-    auto zoomStr = BuildZoomString(zoomLevel);
-    pageInfo = str::JoinTemp(pageInfo, " ", zoomStr);
+//    float zoomLevel = ctrl->GetZoomVirtual();
+//    auto zoomStr = BuildZoomString(zoomLevel);
+//    pageInfo = str::JoinTemp(pageInfo, " ", zoomStr);
     NotificationUpdateMessage(wnd, pageInfo);
 }
 

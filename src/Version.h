@@ -54,4 +54,4 @@
 #define kCopyrightStr      "Copyright 2006-2024 all authors (GPLv3)"
 #define kPublisherStr      "Krzysztof Kowalczyk"
 
-#define kAppName        "SumatraPDF"
+#define kAppName        "Doclan"

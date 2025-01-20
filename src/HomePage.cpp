@@ -96,6 +96,7 @@ struct AboutLayoutInfoEl {
 };
 
 static AboutLayoutInfoEl gAboutLayoutInfo[] = {
+#if 0
     {"website", "SumatraPDF website", kWebsiteURL},
     {"manual", "SumatraPDF manual", kManualURL},
     {"forums", "SumatraPDF forums", "https://github.com/sumatrapdfreader/sumatrapdf/discussions"},
@@ -112,6 +113,7 @@ static AboutLayoutInfoEl gAboutLayoutInfo[] = {
 #endif
 #ifdef DEBUG
     {"a note", "Debug version, for testing only!", nullptr},
+#endif
 #endif
     {nullptr, nullptr, nullptr}};
 
@@ -228,10 +230,10 @@ static TempStr TrimGitTemp(char* s) {
    to understand without seeing the design. */
 static void DrawAbout(HWND hwnd, HDC hdc, Rect rect, Vec<StaticLinkInfo*>& staticLinks) {
     auto col = ThemeWindowTextColor();
-    AutoDeletePen penBorder(CreatePen(PS_SOLID, ABOUT_LINE_OUTER_SIZE, col));
-    AutoDeletePen penDivideLine(CreatePen(PS_SOLID, ABOUT_LINE_SEP_SIZE, col));
+    AutoDeletePen penBorder(CreatePen(PS_NULL, ABOUT_LINE_OUTER_SIZE, col));
+    AutoDeletePen penDivideLine(CreatePen(PS_NULL, ABOUT_LINE_SEP_SIZE, col));
     col = ThemeWindowLinkColor();
-    AutoDeletePen penLinkLine(CreatePen(PS_SOLID, ABOUT_LINE_SEP_SIZE, col));
+    AutoDeletePen penLinkLine(CreatePen(PS_NULL, ABOUT_LINE_SEP_SIZE, col));
 
     HFONT fontLeftTxt = CreateSimpleFont(hdc, kLeftTextFont, kLeftTextFontSize);
     HFONT fontRightTxt = CreateSimpleFont(hdc, kRightTextFont, kRightTextFontSize);
@@ -305,9 +307,11 @@ static void DrawAbout(HWND hwnd, HDC hdc, Rect rect, Vec<StaticLinkInfo*>& stati
     }
 
     SelectObject(hdc, penDivideLine);
+#if 0
     Rect divideLine(gAboutLayoutInfo[0].rightPos.x - DpiScale(hwnd, kAboutLeftRightSpaceDx), rect.y + titleRect.dy + 4,
                     0, rect.y + rect.dy - 4 - gAboutLayoutInfo[0].rightPos.y);
     DrawLine(hdc, divideLine);
+#endif
 }
 
 static void UpdateAboutLayoutInfo(HWND hwnd, HDC hdc, Rect* rect) {
@@ -602,11 +606,13 @@ void DrawAboutPage(MainWindow* win, HDC hdc) {
     Rect rc = ClientRect(win->hwndCanvas);
     UpdateAboutLayoutInfo(win->hwndCanvas, hdc, &rc);
     DrawAbout(win->hwndCanvas, hdc, rc, win->staticLinks);
+#if 0
     if (HasPermission(Perm::SavePreferences | Perm::DiskAccess) && gGlobalPrefs->rememberOpenedFiles) {
         Rect rect = DrawHideFrequentlyReadLink(win->hwndCanvas, hdc, _TRA("Show frequently read"));
         auto sl = new StaticLinkInfo(rect, kLinkShowList);
         win->staticLinks.Append(sl);
     }
+#endif
 }
 
 /* alternate static page to display when no document is loaded */
