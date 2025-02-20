@@ -56,6 +56,8 @@ Cmd* enum (e.g. CmdOpen) and a human-readable name (not used yet).
     V(CmdCopyFilePath, "Copy File Path")                                           \
     V(CmdScrollUp, "Scroll Up")                                                    \
     V(CmdScrollDown, "Scroll Down")                                                \
+    V(CmdScrollUpMore, "Scroll Up More")                                           \
+    V(CmdScrollDownMore, "Scroll Down More")                                       \
     V(CmdScrollLeft, "Scroll Left")                                                \
     V(CmdScrollRight, "Scroll Right")                                              \
     V(CmdScrollLeftPage, "Scroll Left By Page")                                    \

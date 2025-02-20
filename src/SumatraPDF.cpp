@@ -5497,7 +5497,7 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
                 return 0;
             }
             if (dm && dm->NeedVScroll()) {
-                int n = GetCommandIntArg(cmd, kCmdArgN, 12);
+                int n = GetCommandIntArg(cmd, kCmdArgN, 1);
                 WPARAM dir = (cmdId == CmdScrollUp) ? SB_LINEUP : SB_LINEDOWN;
                 for (int i = 0; i < n; i++) {
                     SendMessageW(win->hwndCanvas, WM_VSCROLL, dir, 0);
@@ -5505,6 +5505,27 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             } else {
                 // in single page view, scrolls by page
                 if (cmdId == CmdScrollUp) {
+                    win->ctrl->GoToPrevPage(true);
+                } else {
+                    win->ctrl->GoToNextPage();
+                }
+            }
+        } break;
+
+        case CmdScrollDownMore:
+        case CmdScrollUpMore: {
+            if (!win->IsDocLoaded()) {
+                return 0;
+            }
+            if (dm && dm->NeedVScroll()) {
+                int n = GetCommandIntArg(cmd, kCmdArgN, 12);
+                WPARAM dir = (cmdId == CmdScrollUpMore) ? SB_LINEUP : SB_LINEDOWN;
+                for (int i = 0; i < n; i++) {
+                    SendMessageW(win->hwndCanvas, WM_VSCROLL, dir, 0);
+                }
+            } else {
+                // in single page view, scrolls by page
+                if (cmdId == CmdScrollUpMore) {
                     win->ctrl->GoToPrevPage(true);
                 } else {
                     win->ctrl->GoToNextPage();
