@@ -5,6 +5,7 @@
 #include "utils/FileUtil.h"
 #include "utils/ScopedWin.h"
 #include "utils/WinUtil.h"
+#include "utils/WinDynCalls.h"
 
 #include "utils/Log.h"
 
@@ -239,16 +240,18 @@ static TempWStr NormalizeTemp(const WCHAR* path) {
 
     TempWStr fullPath = AllocArrayTemp<WCHAR>(cch);
     GetFullPathNameW(path, cch, fullPath, nullptr);
+
+    TempWStr normPath = fullPath;
     // convert to long form
     cch = GetLongPathNameW(fullPath, nullptr, 0);
-    if (!cch) {
-        return fullPath;
-    }
-
-    TempWStr normPath = AllocArrayTemp<WCHAR>(cch);
-    GetLongPathNameW(fullPath, normPath, cch);
-    if (cch <= MAX_PATH) {
-        return normPath;
+    if (cch > 0) {
+        // this sometimes fails for valid long paths
+        // https://github.com/sumatrapdfreader/sumatrapdf/issues/4940
+        normPath = AllocArrayTemp<WCHAR>(cch);
+        GetLongPathNameW(fullPath, normPath, cch);
+        if (cch <= MAX_PATH) {
+            return normPath;
+        }
     }
 
     // handle overlong paths: first, try to shorten the path
@@ -466,6 +469,37 @@ bool IsAbsolute(const char* path) {
     TempWStr ws = ToWStrTemp(path);
     return !PathIsRelativeW(ws);
 }
+
+// When running in App Store, Windows virtualizes %APPDATA% etc., so to get a real path
+// for settings etc., we need to un-virtualize
+TempStr GetNonVirtualTemp(const char* virtualPath) {
+    if (!DynGetFinalPathNameByHandleW) {
+        return (TempStr)virtualPath;
+    }
+    TempWStr pathW = ToWStrTemp(virtualPath);
+    HANDLE hFile = CreateFileW(pathW, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING,
+                               FILE_ATTRIBUTE_NORMAL, nullptr);
+
+    if (hFile == INVALID_HANDLE_VALUE) {
+        return (TempStr)virtualPath;
+    }
+
+    WCHAR realPath[MAX_PATH * 4];
+    DWORD ret = DynGetFinalPathNameByHandleW(hFile, realPath, sizeof(realPath) / sizeof(WCHAR), FILE_NAME_NORMALIZED);
+
+    CloseHandle(hFile);
+    if (ret <= 0) {
+        return (TempStr)virtualPath;
+    }
+
+    TempStr res = ToUtf8Temp(realPath);
+    // Remove the "\\?\" prefix if present
+    if (str::StartsWith(res, "\\\\?\\")) {
+        res = res + 4;
+    }
+    return res;
+}
+
 } // namespace path
 
 // returns the path to either the %TEMP% directory or a
@@ -607,18 +641,10 @@ bool Exists(const char* path) {
     return true;
 }
 
-// returns -1 on error (can't use INVALID_FILE_SIZE because it won't cast right)
-i64 GetSize(const char* path) {
-    ReportIf(!path);
-    if (!path) {
+i64 GetSize(HANDLE h) {
+    if (h == nullptr || h == INVALID_HANDLE_VALUE) {
         return -1;
     }
-
-    AutoCloseHandle h = OpenReadOnly(path);
-    if (!h.IsValid()) {
-        return -1;
-    }
-
     // Don't use GetFileAttributesEx to retrieve the file size, as
     // that function doesn't interact well with symlinks, etc.
     LARGE_INTEGER size{};
@@ -627,6 +653,17 @@ i64 GetSize(const char* path) {
         return -1;
     }
     return size.QuadPart;
+}
+
+// returns -1 on error (can't use INVALID_FILE_SIZE because it won't cast right)
+i64 GetSize(const char* path) {
+    ReportIf(!path);
+    if (!path) {
+        return -1;
+    }
+
+    AutoCloseHandle h = OpenReadOnly(path);
+    return GetSize(h);
 }
 
 // buf must be at least toRead in size (note: it won't be zero-terminated)

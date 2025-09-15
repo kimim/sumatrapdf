@@ -150,6 +150,10 @@ static UpdateInfo* ParseUpdateInfo(const char* d) {
 }
 
 static bool ShouldCheckForUpdate(UpdateCheck updateCheckType) {
+    if (gIsStoreBuild) {
+        // I assume store will take care of updates
+        return false;
+    }
     if (gUpdateCheckInProgress) {
         logf("CheckForUpdate: skipping because gUpdateCheckInProgress\n");
         return false;
@@ -531,14 +535,14 @@ static void UpdateCheckFinish(UpdateCheckAsyncData* data) {
 static void UpdateCheckAsync(UpdateCheckAsyncData* data) {
     auto updateCheckType = data->updateCheckType;
     str::Str url;
-    BuildUpdateURL(url, kUpdateInfoURL2, updateCheckType);
+    BuildUpdateURL(url, kUpdateInfoURL, updateCheckType);
     char* uri = url.Get();
     HttpRsp* rsp = new HttpRsp;
     rsp->url.SetCopy(uri);
     bool ok = HttpGet(uri, rsp);
     if (!ok) {
         delete rsp;
-        BuildUpdateURL(url, kUpdateInfoURL, updateCheckType);
+        BuildUpdateURL(url, kUpdateInfoURL2, updateCheckType);
         uri = url.Get();
         rsp = new HttpRsp;
         rsp->url.SetCopy(uri);

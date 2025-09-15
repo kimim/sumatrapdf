@@ -164,60 +164,39 @@ TempStr WinMsgNameTemp(UINT msg) {
 // TODO:
 // - if layout is set, do layout on WM_SIZE using LayoutToSize
 
-struct WindowToHwnd {
-    Wnd* window = nullptr;
-    HWND hwnd = nullptr;
-};
+Vec<HWND> gHwndDestroyed;
 
-Vec<WindowToHwnd> gWindowToHwndMap;
+void MarkHWNDDestroyed(HWND hwnd) {
+    gHwndDestroyed.Append(hwnd);
+}
 
-static Wnd* WindowMapGetWindow(HWND hwnd) {
-    for (auto& el : gWindowToHwndMap) {
-        if (el.hwnd == hwnd) {
-            return el.window;
+Vec<Wnd*> gWndList;
+
+Wnd* WndListFindByHwnd(HWND hwnd) {
+    for (auto& wnd : gWndList) {
+        if (wnd->hwnd == hwnd) {
+            if (gHwndDestroyed.Find(hwnd) >= 0) {
+                return nullptr;
+            }
+            return wnd;
         }
     }
     return nullptr;
 }
 
-static void WindowMapAdd(HWND hwnd, Wnd* w) {
-    if (!hwnd) {
-        ReportIf(!hwnd);
-        return;
+static bool WndListRemove(Wnd* w) {
+    bool removed = false;
+    while (gWndList.RemoveFast(w) >= 0) {
+        removed = true;
     }
-    Wnd* existing = WindowMapGetWindow(hwnd);
-    if (existing) {
-        ReportIf(existing);
-        return;
-    }
-    WindowToHwnd el = {w, hwnd};
-    gWindowToHwndMap.Append(el);
+    // logf("WndMapRemoveWnd: failed to remove w: 0x%p\n", w);
+    return removed;
 }
 
-/*
-static bool WindowMapRemove(HWND hwnd) {
-    int n = gWindowToHwndMap.Size();
-    for (int i = 0; i < n; i++) {
-        auto&& el = gWindowToHwndMap[i];
-        if (el.hwnd == hwnd) {
-            gWindowToHwndMap.RemoveAtFast(i);
-            return true;
-        }
-    }
-    return false;
-}
-*/
-
-static bool WindowMapRemove(Wnd* w) {
-    int n = gWindowToHwndMap.Size();
-    for (int i = 0; i < n; i++) {
-        auto&& el = gWindowToHwndMap[i];
-        if (el.window == w) {
-            gWindowToHwndMap.RemoveAtFast(i);
-            return true;
-        }
-    }
-    return false;
+static void WndListAdd(Wnd* w) {
+    bool report = WndListRemove(w);
+    ReportIfQuick(report);
+    gWndList.Append(w);
 }
 
 //- Taskbar.cpp
@@ -237,14 +216,14 @@ static LRESULT CALLBACK WndWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM
         return 0;
     }
 
-    Wnd* wnd = WindowMapGetWindow(hwnd);
+    Wnd* wnd = WndListFindByHwnd(hwnd);
 
     if (msg == WM_NCCREATE) {
         CREATESTRUCT* cs = (CREATESTRUCT*)(lparam);
         ReportIf(wnd);
         wnd = (Wnd*)(cs->lpCreateParams);
         wnd->hwnd = hwnd;
-        WindowMapAdd(hwnd, wnd);
+        WndListAdd(wnd);
     }
 
     if (wnd) {
@@ -322,9 +301,13 @@ bool Wnd::IsVisible() const {
 }
 
 void Wnd::Destroy() {
-    HwndDestroyWindowSafe(&hwnd);
+    // the order is important
+    // stop dispatching messages to this Wnd
+    WndListRemove(this);
+    // unsubclass while hwnd is still valid
     UnSubclass();
-    Cleanup();
+    // finally destroy hwnd
+    HwndDestroyWindowSafe(&hwnd);
 }
 
 LRESULT Wnd::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
@@ -597,7 +580,7 @@ LRESULT Wnd::MessageReflect(UINT msg, WPARAM wparam, LPARAM lparam) {
         return 0;
     }
 
-    Wnd* pWnd = WindowMapGetWindow(wnd);
+    Wnd* pWnd = WndListFindByHwnd(wnd);
     if (pWnd != nullptr) {
         auto res = pWnd->OnMessageReflect(msg, wparam, lparam);
         return res;
@@ -612,7 +595,7 @@ LRESULT TryReflectMessages(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
     switch (msg) {
         case WM_COMMAND: {
             // Reflect this message if it's from a control.
-            Wnd* pWnd = WindowMapGetWindow(reinterpret_cast<HWND>(lparam));
+            Wnd* pWnd = WndListFindByHwnd(reinterpret_cast<HWND>(lparam));
             bool didHandle = false;
             if (pWnd != nullptr) {
                 didHandle = pWnd->OnCommand(wparam, lparam);
@@ -626,7 +609,7 @@ LRESULT TryReflectMessages(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             // Restricting OnNotifyReflect to child windows avoids double handling.
             NMHDR* hdr = reinterpret_cast<LPNMHDR>(lparam);
             HWND from = hdr->hwndFrom;
-            Wnd* wndFrom = WindowMapGetWindow(from);
+            Wnd* wndFrom = WndListFindByHwnd(from);
             if (!wndFrom) {
                 return 0;
             }
@@ -650,7 +633,7 @@ LRESULT TryReflectMessages(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
         case WM_HSCROLL:
         case WM_VSCROLL:
         case WM_PARENTNOTIFY: {
-            Wnd* pWnd = WindowMapGetWindow(reinterpret_cast<HWND>(lparam));
+            Wnd* pWnd = WndListFindByHwnd(reinterpret_cast<HWND>(lparam));
             LRESULT result = 0;
             if (pWnd != nullptr) {
                 result = pWnd->MessageReflect(msg, wparam, lparam);
@@ -707,7 +690,7 @@ LRESULT Wnd::WndProcDefault(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
         case WM_COMMAND: {
             // Reflect this message if it's from a control.
-            Wnd* pWnd = WindowMapGetWindow(reinterpret_cast<HWND>(lparam));
+            Wnd* pWnd = WndListFindByHwnd(reinterpret_cast<HWND>(lparam));
             bool didHandle = false;
             if (pWnd != nullptr) {
                 didHandle = pWnd->OnCommand(wparam, lparam);
@@ -738,7 +721,7 @@ LRESULT Wnd::WndProcDefault(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             // Restricting OnNotifyReflect to child windows avoids double handling.
             NMHDR* hdr = reinterpret_cast<NMHDR*>(lparam);
             HWND from = hdr->hwndFrom;
-            Wnd* wndFrom = WindowMapGetWindow(from);
+            Wnd* wndFrom = WndListFindByHwnd(from);
 
             if (wndFrom != nullptr) {
                 if (::GetParent(from) == this->hwnd) {
@@ -892,7 +875,7 @@ bool Wnd::PreTranslateMessage(MSG& msg) {
 
 void Wnd::Attach(HWND hwnd) {
     ReportIf(!IsWindow(hwnd));
-    ReportIf(WindowMapGetWindow(hwnd));
+    ReportIf(WndListFindByHwnd(hwnd));
 
     this->hwnd = hwnd;
     Subclass();
@@ -910,13 +893,13 @@ HWND Wnd::Detach() {
     UnSubclass();
 
     HWND wnd = hwnd;
-    WindowMapRemove(this);
+    WndListRemove(this);
     hwnd = nullptr;
     return wnd;
 }
 
 void Wnd::Cleanup() {
-    WindowMapRemove(this);
+    WndListRemove(this);
     hwnd = nullptr;
     subclassId = 0;
 }
@@ -1040,7 +1023,7 @@ HWND Wnd::CreateCustom(const CreateCustomArgs& args) {
     ReportIf(!hwndTmp);
     // hwnd should be assigned in WM_CREATE
     ReportIf(hwndTmp != hwnd);
-    ReportIf(this != WindowMapGetWindow(hwndTmp));
+    ReportIf(this != WndListFindByHwnd(hwndTmp));
     if (!hwnd) {
         return nullptr;
     }
@@ -1073,7 +1056,7 @@ void Wnd::Subclass() {
     if (subclassId) {
         return;
     }
-    WindowMapAdd(hwnd, this);
+    WndListAdd(this);
 
     subclassId = NextSubclassId();
     BOOL ok = SetWindowSubclass(hwnd, WndSubclassedWindowProc, subclassId, (DWORD_PTR)this);
@@ -1145,7 +1128,7 @@ bool PreTranslateMessage(MSG& msg) {
         return false;
     }
     for (HWND hwnd = msg.hwnd; hwnd != nullptr; hwnd = ::GetParent(hwnd)) {
-        auto wnd = WindowMapGetWindow(hwnd);
+        auto wnd = WndListFindByHwnd(hwnd);
         if (wnd && wnd->PreTranslateMessage(msg)) {
             return true;
         }
@@ -2461,7 +2444,7 @@ HWND TreeView::Create(const CreateArgs& argsIn) {
     args.className = WC_TREEVIEWW;
     args.parent = argsIn.parent;
     args.font = argsIn.font;
-    args.style = WS_CHILD | WS_VISIBLE | WS_TABSTOP;
+    args.style = WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER;
     args.style |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_SHOWSELALWAYS;
     args.style |= TVS_TRACKSELECT | TVS_NOHSCROLL | TVS_INFOTIP;
     args.exStyle = argsIn.exStyle | TVS_EX_DOUBLEBUFFER;
@@ -2771,14 +2754,7 @@ bool TreeView::UpdateItem(TreeItem ti) {
 void PopulateTreeItem(TreeView* treeView, TreeItem item, HTREEITEM parent) {
     auto tm = treeView->treeModel;
     int n = tm->ChildCount(item);
-    TreeItem tmp[256];
-    TreeItem* a = &tmp[0];
-    void* toFree = nullptr;
-    if (n > dimof(tmp)) {
-        size_t nBytes = (size_t)n * sizeof(TreeItem);
-        toFree = malloc(nBytes);
-        a = (TreeItem*)toFree;
-    }
+    TreeItem* a = AllocArrayTemp<TreeItem>(n);
     // ChildAt() is optimized for sequential access and we need to
     // insert backwards, so gather the items in v first
     for (int i = 0; i < n; i++) {
@@ -2796,8 +2772,6 @@ void PopulateTreeItem(TreeView* treeView, TreeItem item, HTREEITEM parent) {
             PopulateTreeItem(treeView, ti, h);
         }
     }
-
-    free(toFree);
 }
 
 static void PopulateTree(TreeView* treeView, TreeModel* tm) {
@@ -3255,6 +3229,9 @@ void TabsCtrl::Paint(HDC hdc, RECT& rc) {
 
 HBITMAP TabsCtrl::RenderForDragging(int idx) {
     TabInfo* ti = GetTab(idx);
+    if (!ti) {
+        return nullptr;
+    }
     Bitmap bitmap(ti->r.dx, ti->r.dy);
     Graphics* gfx = Graphics::FromImage(&bitmap);
     // DrawString() on a bitmap does not work with CompositingModeSourceCopy - obscure bug.
@@ -3478,11 +3455,15 @@ LRESULT TabsCtrl::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
             TrackMouseLeave(hwnd);
             bool isDragging = (GetCapture() == hwnd);
             int hl = tabHighlighted;
-            if (isDragging && tabUnderMouse == -1) {
+            if (isDragging) {
                 // move the tab out: draw it as a image and drag around the screen
                 draggingTab = true;
                 TabInfo* thl = GetTab(hl);
                 HBITMAP hbmp = RenderForDragging(hl);
+                if (!hbmp) {
+                    logfa("TabsCtrl::WndProc: RenderForDragging failed for tab %d\n", hl);
+                    return 0;
+                }
                 HIMAGELIST himl = ImageList_Create(thl->r.dx, thl->r.dy, 0, 1, 0);
                 ImageList_Add(himl, hbmp, NULL);
                 ImageList_BeginDrag(himl, 0, grabLocation.x, grabLocation.y);
@@ -3529,23 +3510,29 @@ LRESULT TabsCtrl::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
             if (overClose) {
                 HwndScheduleRepaint(hwnd);
                 tabBeingClosed = tabUnderMouse;
-            } else if (tabUnderMouse != -1) {
-                int selectedTab = GetSelected();
-                if (tabUnderMouse != selectedTab) {
-                    bool stopChange = TriggerSelectionChanging(this);
-                    if (stopChange) {
-                        return 0;
-                    }
-                    SetSelected(tabUnderMouse);
-                    TriggerSelectionChanged(this);
-                }
-                TabInfo* ti = GetTab(GetSelected());
-                if (!ti->isPinned) {
-                    grabLocation.x = mousePos.x - ti->r.x;
-                    grabLocation.y = mousePos.y - ti->r.y;
-                    SetCapture(hwnd);
-                }
+                return 0;
             }
+            if (tabUnderMouse < 0) {
+                return 0;
+            }
+
+            int selectedTab = GetSelected();
+            if (tabUnderMouse != selectedTab) {
+                bool stopChange = TriggerSelectionChanging(this);
+                if (stopChange) {
+                    return 0;
+                }
+                SetSelected(tabUnderMouse);
+                TriggerSelectionChanged(this);
+            }
+            TabInfo* ti = GetTab(GetSelected());
+            if (ti->isPinned) {
+                return 0;
+            }
+
+            grabLocation.x = mousePos.x - ti->r.x;
+            grabLocation.y = mousePos.y - ti->r.y;
+            SetCapture(hwnd);
             return 0;
         }
 

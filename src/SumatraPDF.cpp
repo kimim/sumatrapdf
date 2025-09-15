@@ -89,6 +89,7 @@
 #include "CommandPalette.h"
 #include "Theme.h"
 #include "Caption.h"
+#include "DarkModeSubclass.h"
 
 #include "utils/Log.h"
 
@@ -130,6 +131,9 @@ static StrVec gAllowedLinkProtocols;
 // externally by LinkHandler::LaunchFile (i.e. when clicking
 // on an in-document link); examples: "audio", "video", ...
 static StrVec gAllowedFileTypes;
+
+static const char* gNextPrevDir = nullptr;
+static StrVec gNextPrevDirCache; // cached files in gNextPrevDir
 
 static void CloseDocumentInCurrentTab(MainWindow*, bool keepUIEnabled, bool deleteModel);
 static void OnSidebarSplitterMove(Splitter::MoveEvent*);
@@ -721,14 +725,12 @@ struct CreateThumbnailData {
     RenderedBitmap* bmp = nullptr;
 
     ~CreateThumbnailData() {
-        logf("~CreateThumbnailData: deleting 0x%p filePath='%s' 0x%p\n", this, filePath, filePath);
         str::Free(filePath);
     }
 };
 
 static void CreateThumbnailFinish(CreateThumbnailData* d) {
     char* path = d->filePath;
-    logf("CreateThumbnailFinish: path: '%s', 0x%p, d: 0x%p, d->bmp: 0x%p\n", path, path, d, d->bmp);
     if (d->bmp) {
         SetThumbnail(gFileHistory.FindByPath(path), d->bmp);
     }
@@ -765,10 +767,8 @@ static void CreateThumbnailForFile(MainWindow* win, FileState* ds) {
     }
 
     auto size = Size(kThumbnailDx, kThumbnailDy);
-    char* filePath = str::Dup(win->ctrl->GetFilePath());
-    auto d = new CreateThumbnailData{filePath, nullptr};
-    logf("CreateThumbnailForFile: filePath: '%s', 0x%p, d: 0x%p\n", filePath, filePath, d);
-    // TODO: this leaks
+    auto d = new CreateThumbnailData{};
+    d->filePath = str::Dup(win->ctrl->GetFilePath());
     auto fn = NewFunc1(CreateThumbnailOnBitmapRendered, d);
     win->ctrl->CreateThumbnail(size, fn);
 }
@@ -1551,6 +1551,13 @@ static MainWindow* CreateMainWindow() {
     // TODO: this is hackish. in general we should divorce
     // layout re-calculations from MainWindow and creation of windows
     win->UpdateCanvasSize();
+    if (gUseDarkModeLib) {
+        DarkMode::setDarkTitleBar(win->hwndFrame);
+        DarkMode::setChildCtrlsSubclassAndTheme(win->hwndFrame);
+        DarkMode::removeTabCtrlSubclass(win->tabsCtrl->hwnd);
+        DarkMode::setDarkScrollBar(win->hwndCanvas);
+        DarkMode::setDarkTooltips(win->infotip->hwnd);
+    }
     return win;
 }
 
@@ -1622,7 +1629,12 @@ void UpdateAfterThemeChange() {
         CaptionUpdateUI(win, win->caption);
         // TODO: probably leaking toolbar image list
         UpdateToolbarAfterThemeChange(win);
-
+        if (gUseDarkModeLib) {
+            DarkMode::setDarkTitleBar(win->hwndFrame);
+            DarkMode::setChildCtrlsTheme(win->hwndFrame);
+            DarkMode::setDarkScrollBar(win->hwndCanvas);
+            DarkMode::setDarkTooltips(win->infotip->hwnd);
+        }
         // TODO: this only rerenders canvas, not frame, even with
         // includingNonClientArea == true.
         MainWindowRerender(win, true);
@@ -2730,7 +2742,7 @@ void CloseWindow(MainWindow* win, bool quitIfLast, bool forceClose) {
 
     for (auto& tab : win->Tabs()) {
         if (tab->AsFixed()) {
-            tab->AsFixed()->dontRenderFlag = true;
+            tab->AsFixed()->pauseRendering = true;
         }
     }
 
@@ -2780,12 +2792,9 @@ void CloseWindow(MainWindow* win, bool quitIfLast, bool forceClose) {
     }
 
     if (lastWindow && quitIfLast) {
-        logf("Calling PostQuitMessage() in CloseWindow() because closing lastWindow\n");
         int nWindows = gWindows.size();
-        if (nWindows != 0) {
-            logf("nWindows: %d\n", nWindows);
-            ReportDebugIf(nWindows != 0);
-        }
+        logf("Calling PostQuitMessage() in CloseWindow() because closing lastWindow, nWindows: %d\n", nWindows);
+        ReportDebugIf(nWindows != 0);
         PostQuitMessage(0);
     }
 }
@@ -2990,7 +2999,7 @@ static void DeleteCurrentFile(MainWindow* win) {
         return;
     }
     auto* ctrl = win->ctrl;
-    const char* path = ctrl->GetFilePath();
+    const char* path = str::DupTemp(ctrl->GetFilePath());
     // this happens e.g. for embedded documents and directories
     if (!file::Exists(path)) {
         return;
@@ -3012,7 +3021,7 @@ static void RenameCurrentFile(MainWindow* win) {
     }
 
     auto* ctrl = win->ctrl;
-    const char* srcPath = ctrl->GetFilePath();
+    const char* srcPath = str::DupTemp(ctrl->GetFilePath());
     // this happens e.g. for embedded documents and directories
     if (!file::Exists(srcPath)) {
         return;
@@ -3061,9 +3070,8 @@ static void RenameCurrentFile(MainWindow* win) {
     }
     TempStr dstFilePath = ToUtf8Temp(dstFilePathW);
     TempStr dstPathNormalized = path::NormalizeTemp(dstFilePath);
-    logf("RenameCurrentFile: '%s' => '%s'\n", srcPath, dstFilePath);
-    logf("  dstPathNormalized: '%s'\n", dstPathNormalized);
-    if (path::IsSame(dstFilePath, dstPathNormalized)) {
+    TempStr srcPathNormalized = path::NormalizeTemp(srcPath);
+    if (path::IsSame(srcPathNormalized, dstPathNormalized)) {
         return;
     }
 
@@ -3346,9 +3354,6 @@ static void OpenFile(MainWindow* win) {
     }
 }
 
-static StrVec gLastNextPrevFiles;
-const char* lastNextPrevFilesDir = nullptr;
-
 static void RemoveFailedFiles(StrVec& files) {
     for (char* path : gFilesFailedToOpen) {
         int idx = files.Find(path);
@@ -3359,15 +3364,16 @@ static void RemoveFailedFiles(StrVec& files) {
 }
 
 static StrVec& CollectNextPrevFilesIfChanged(const char* path) {
-    StrVec& files = gLastNextPrevFiles;
+    StrVec& files = gNextPrevDirCache;
 
     char* dir = path::GetDirTemp(path);
-    if (str::Eq(dir, lastNextPrevFilesDir)) {
+    if (path::IsSame(dir, gNextPrevDir)) {
         // failed files could have changed
         RemoveFailedFiles(files);
         return files;
     }
-    str::ReplaceWithCopy(&lastNextPrevFilesDir, dir);
+    files.Reset();
+    str::ReplaceWithCopy(&gNextPrevDir, dir);
     DirIter di{dir};
     for (DirIterEntry* de : di) {
         files.Append(de->filePath);
@@ -3403,6 +3409,8 @@ static void OpenNextPrevFileInFolder(MainWindow* win, bool forward) {
     }
 
     WindowTab* tab = win->CurrentTab();
+    bool didRetry = false;
+again:
     const char* path = tab->filePath;
     StrVec files = CollectNextPrevFilesIfChanged(path);
     if (files.Size() < 2) {
@@ -3416,10 +3424,19 @@ static void OpenNextPrevFileInFolder(MainWindow* win, bool forward) {
     } else {
         idx = (idx + nFiles - 1) % nFiles;
     }
+    path = files[idx];
+    if (!file::Exists(path)) {
+        if (didRetry) {
+            // TODO: can I do something better?
+            return;
+        }
+        didRetry = true;
+        str::FreePtr(&gNextPrevDir); // trigger re-reading the directory
+        goto again;
+    }
 
     // TODO: check for unsaved modifications
     UpdateTabFileDisplayStateForTab(tab);
-    path = files[idx];
     // TODO: should take onFinish() callback so that if failed
     // we could automatically go to next file
     LoadArgs args(path, win);
@@ -3644,7 +3661,7 @@ static void OpenAdvancedOptions() {
     // TODO: disable/hide the menu item when there's no prefs file
     //       (happens e.g. when run in portable mode from a CD)?
     TempStr path = GetSettingsPathTemp();
-    LaunchFileShell(path);
+    LaunchFileIfExists(path);
 }
 
 static void ShowOptionsDialog(HWND hwnd) {
@@ -4268,12 +4285,12 @@ static void OnFrameKeyEsc(MainWindow* win) {
         ToolbarUpdateStateForWindow(win, false);
         return;
     }
-    if (gGlobalPrefs->escToExit && CanCloseWindow(win)) {
-        CloseWindow(win, true, false);
-        return;
-    }
     if (win->presentation || win->isFullScreen) {
         ToggleFullScreen(win, win->presentation != PM_DISABLED);
+        return;
+    }
+    if (gGlobalPrefs->escToExit && CanCloseWindow(win)) {
+        CloseWindow(win, true, false);
         return;
     }
 }
@@ -4599,76 +4616,38 @@ void SetSidebarVisibility(MainWindow* win, bool tocVisible, bool showFavorites) 
     RelayoutFrame(win, false);
 }
 
-// Tests that various ways to crash will generate crash report.
-// Commented-out because they are ad-hoc. Left in code because
-// I don't want to write them again if I ever need to test crash reporting
-#if 0
-#include <signal.h>
-static void TestCrashAbort()
-{
-    raise(SIGABRT);
-}
+constexpr int kMaxURLLen = 1500;
 
-struct Base;
-void foo(Base* b);
-
-struct Base {
-    Base() {
-        foo(this);
-    }
-    virtual ~Base() = 0;
-    virtual void pure() = 0;
-};
-struct Derived : public Base {
-    void pure() { }
-};
-
-void foo(Base* b) {
-    b->pure();
-}
-
-static void TestCrashPureCall()
-{
-    Derived d; // should crash
-}
-
-// tests that making a big allocation with new raises an exception
-static int TestBigNew()
-{
-    size_t size = 1024*1024*1024*1;  // 1 GB should be out of reach
-    char *mem = (char*)1;
-    while (mem) {
-        mem = new char[size];
-    }
-    // just some code so that compiler doesn't optimize this code to null
-    for (size_t i = 0; i < 1024; i++) {
-        mem[i] = i & 0xff;
-    }
-    int res = 0;
-    for (size_t i = 0; i < 1024; i++) {
-        res += mem[i];
-    }
-    return res;
-}
-#endif
-
-#if 0
-static bool NeedsURLEncoding(WCHAR c) {
-    // TODO: implement me
-    return false;
-}
-#endif
-
-static TempStr URLEncodeTemp(const char* s) {
-    TempWStr ws = ToWStrTemp(s);
-    WCHAR buf[INTERNET_MAX_URL_LENGTH + 16]{}; // +16 jic
-    DWORD cchSizeInOut = dimof(buf) - 1;
+// if url-encoded s is bigger than a reasonable URL path,
+// we don't want to fail but truncate and encode less
+static TempStr URLEncodeMayTruncateTemp(const char* s) {
+    HRESULT hr;
+    DWORD diff;
+    WCHAR buf[kMaxURLLen + 1]{};
     DWORD flags = URL_ESCAPE_AS_UTF8;
-    HRESULT hr = UrlEscapeW(ws, buf, &cchSizeInOut, flags);
-    if (FAILED(hr)) {
-        return nullptr;
+    TempWStr ws = ToWStrTemp(s);
+    // we can't predict the length of encoded string so we try
+    // with increasingly smaller input strings, from 1500 down to 1000
+    int maxLen = kMaxURLLen;
+    for (int i = 0; i < 10; i++) {
+        if (str::Leni(ws) >= maxLen) {
+            ws[maxLen - 1] = 0;
+        }
+        DWORD cchSizeInOut = kMaxURLLen;
+        hr = UrlEscapeW(ws, buf, &cchSizeInOut, flags);
+        if (SUCCEEDED(hr)) {
+            return ToUtf8Temp(buf);
+        }
+        // cchSizeInOut involves url-encoded characters
+        // we can reduce ws by less characters than that
+        // but don't know how many, so we use conservative guess
+        diff = cchSizeInOut - kMaxURLLen;
+        if (diff > 10) {
+            diff = (diff * 2) / 3;
+        }
+        maxLen -= diff;
     }
-    return ToUtf8Temp(buf);
+    return nullptr;
 }
 
 constexpr const char* kUserLangStr = "${userlang}";
@@ -4685,7 +4664,7 @@ constexpr const char* kSelectionStr = "${selection}";
 // I made it manually by looking at trans_lang.go and
 // https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes
 // but not fully and it might be incorrect anyway wrt. to other translation websites
-static const char* gLangsMap = "am\0hy\0by\0be\0ca-xv\0ca\0cz\0cs\0kr\0ko\0vn\0vi\0cn\0zh-CN\0tw\0zh-TW";
+static const char* gLangsMap = "am\0hy\0by\0be\0ca-xv\0ca\0cz\0cs\0kr\0ko\0vn\0vi\0cn\0zh-CN\0tw\0zh-TW\0";
 static const char* GetISO639LangCodeFromLang(const char* lang) {
     int idx = seqstrings::StrToIdx(gLangsMap, lang);
     if (idx < 0 || idx % 2 != 0) {
@@ -4713,7 +4692,7 @@ static void LaunchBrowserWithSelection(WindowTab* tab, const char* urlPattern) {
     if (!selText) {
         return;
     }
-    TempStr encodedSelection = URLEncodeTemp(selText);
+    TempStr encodedSelection = URLEncodeMayTruncateTemp(selText);
     // ${userLang} and and ${selectin} are typed by user in settings file
     // to be shomewhat resilient against typos, we'll accept a different case
     const char* lang = trans::GetCurrentLangCode();
@@ -5729,9 +5708,18 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
                 tab, "https://translate.google.com/?op=translate&sl=auto&tl=${userlang}&text=${selection}");
             break;
 
-        case CmdTranslateSelectionWithDeepL:
-            LaunchBrowserWithSelection(tab, "https://www.deepl.com/translator#-/${userlang}/${selection}");
-            break;
+        case CmdTranslateSelectionWithDeepL: {
+            // Note: we don't know if selected string is English but I don't know
+            // how to get deepl.com to auto-detect language
+            const char* lang = trans::GetCurrentLangCode();
+            const char* uri = "https://www.deepl.com/translator#en/${userlang}/${selection}";
+            if (str::Eq(lang, "en")) {
+                // it's pointless to translate from English to English
+                // this format will hopefully trigger auto-detection of user languge by deepl.com
+                uri = "https://www.deepl.com/translator#en/${selection}";
+            }
+            LaunchBrowserWithSelection(tab, uri);
+        } break;
 
         case CmdSearchSelectionWithGoogle:
             LaunchBrowserWithSelection(tab, "https://www.google.com/search?q=${selection}");
@@ -6381,7 +6369,7 @@ void ShowCrashHandlerMessage() {
         log("ShowCrashHandlerMessage: !gCrashFilePath\n");
         return;
     }
-    LaunchFileShell(gCrashFilePath, nullptr, "open");
+    LaunchFileIfExists(gCrashFilePath);
     auto url = "https://www.sumatrapdfreader.org/docs/Submit-crash-report.html";
     LaunchFileShell(url, nullptr, "open");
 }

@@ -248,15 +248,17 @@ struct BitmapPixels {
 struct BlittableBitmap {
     Size size = {};
 
-    BlittableBitmap(){};
+    BlittableBitmap() {};
 
     Size GetSize();
 
     virtual bool Blit(HDC hdc, Rect target) = 0;
     virtual bool IsValid() = 0;
 
-    virtual ~BlittableBitmap(){};
+    virtual ~BlittableBitmap() {};
 };
+
+i64 BlittableBitmapByteSize(BlittableBitmap*);
 
 struct RenderedBitmap : BlittableBitmap {
     HBITMAP hbmp = nullptr;

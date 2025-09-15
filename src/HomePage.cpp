@@ -30,6 +30,7 @@
 #include "Translations.h"
 #include "Version.h"
 #include "Theme.h"
+#include "DarkModeSubclass.h"
 
 #ifndef ABOUT_USE_LESS_COLORS
 #define ABOUT_LINE_OUTER_SIZE 2
@@ -67,16 +68,6 @@ constexpr int kSumatraTxtFontSize = 24;
 constexpr const char* kVersionTxtFont = "Arial Black";
 constexpr int kVersionTxtFontSize = 12;
 
-#ifdef PRE_RELEASE_VER
-#define VERSION_SUB_TXT "Pre-release"
-#else
-#define VERSION_SUB_TXT ""
-#endif
-
-#ifdef GIT_COMMIT_ID
-#define GIT_COMMIT_ID_STR QM(GIT_COMMIT_ID)
-#endif
-
 #define LAYOUT_LTR 0
 
 static ATOM gAtomAbout;
@@ -103,12 +94,11 @@ static AboutLayoutInfoEl gAboutLayoutInfo[] = {
     {"programming", "The Programmers", "https://github.com/sumatrapdfreader/sumatrapdf/blob/master/AUTHORS"},
     {"translations", "The Translators", "https://github.com/sumatrapdfreader/sumatrapdf/blob/master/TRANSLATORS"},
     {"licenses", "Various Open Source", "https://github.com/sumatrapdfreader/sumatrapdf/blob/master/AUTHORS"},
-#ifdef GIT_COMMIT_ID
-    // TODO: use short ID for rightTxt (only first 7 digits) with less hackery
+#if defined(GIT_COMMIT_ID_STR)
     {"last change", "git commit " GIT_COMMIT_ID_STR,
      "https://github.com/sumatrapdfreader/sumatrapdf/commit/" GIT_COMMIT_ID_STR},
 #endif
-#ifdef PRE_RELEASE_VER
+#if defined(PRE_RELEASE_VER)
     {"a note", "Pre-release version, for testing only!", nullptr},
 #endif
 #ifdef DEBUG
@@ -168,7 +158,9 @@ static void DrawSumatraVersion(HDC hdc, Rect rect) {
     Point p = {x, y};
     HdcDrawText(hdc, ver, p, fmt, fontVersionTxt);
     p.y += DpiScale(hdc, 13);
-    HdcDrawText(hdc, VERSION_SUB_TXT, p, fmt);
+    if (gIsPreReleaseBuild) {
+        HdcDrawText(hdc, "Pre-release", p, fmt);
+    }
 }
 
 // draw on the bottom right
@@ -408,11 +400,7 @@ static void OnPaintAbout(HWND hwnd) {
 }
 
 static void OnSizeAbout(HWND hwnd) {
-    MainWindow* win = FindMainWindowByHwnd(hwnd);
-    if (!win) {
-        ReportDebugIf(true);
-        return;
-    }
+    // TODO: do I need anything here?
 }
 
 static void CopyAboutInfoToClipboard() {
@@ -487,6 +475,9 @@ LRESULT CALLBACK WndProcAbout(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
     switch (msg) {
         case WM_CREATE:
             ReportIf(gHwndAbout);
+            if (gUseDarkModeLib) {
+                DarkMode::setDarkTitleBarEx(hwnd, true);
+            }
             break;
 
         case WM_ERASEBKGND:

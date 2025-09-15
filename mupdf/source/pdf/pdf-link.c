@@ -213,6 +213,7 @@ pdf_parse_link_dest_to_file_with_path(fz_context *ctx, pdf_document *doc, const 
 	}
 }
 
+#if 0
 /* Look at an FS object, and find a name. Find any embedded
  * file stream object that corresponds to that and return it.
  * Optionally return the name.
@@ -254,7 +255,39 @@ get_file_stream_and_name(fz_context *ctx, pdf_obj *fs, pdf_obj **namep)
 
 	return name ? file : NULL;
 }
+#else
+/* SumatraPDF: https://github.com/sumatrapdfreader/sumatrapdf/issues/4563 */
+static pdf_obj *
+get_file_stream_and_name(fz_context *ctx, pdf_obj *fs, pdf_obj **namep)
+{
+	pdf_obj *ef = pdf_dict_get(ctx, fs, PDF_NAME(EF));
+	pdf_obj *name = pdf_dict_get(ctx, fs, PDF_NAME(UF));
+	pdf_obj *file = pdf_dict_get(ctx, ef, PDF_NAME(UF));
 
+	if (!name)
+		name = pdf_dict_get(ctx, fs, PDF_NAME(F));
+	if (!name)
+		name = pdf_dict_get(ctx, fs, PDF_NAME(Unix));
+	if (!name)
+		name = pdf_dict_get(ctx, fs, PDF_NAME(DOS));
+	if (!name)
+		name = pdf_dict_get(ctx, fs, PDF_NAME(Mac));
+
+	if (!file)
+		file = pdf_dict_get(ctx, ef, PDF_NAME(F));
+	if (!file)
+		file = pdf_dict_get(ctx, ef, PDF_NAME(Unix));
+	if (!file)
+		file = pdf_dict_get(ctx, ef, PDF_NAME(DOS));
+	if (!file)
+		file = pdf_dict_get(ctx, ef, PDF_NAME(Mac));
+
+	if (namep)
+		*namep = name;
+
+	return name ? file : NULL;
+}
+#endif
 static char *
 convert_file_spec_to_URI(fz_context *ctx, pdf_document *doc, pdf_obj *file_spec, pdf_obj *dest, int is_remote)
 {
@@ -306,12 +339,6 @@ pdf_is_embedded_file(fz_context *ctx, pdf_obj *fs)
 }
 
 void
-pdf_get_embedded_file_params(fz_context *ctx, pdf_obj *fs, pdf_embedded_file_params *out)
-{
-	pdf_get_filespec_params(ctx, fs, out);
-}
-
-void
 pdf_get_filespec_params(fz_context *ctx, pdf_obj *fs, pdf_filespec_params *out)
 {
 	pdf_obj *file, *params, *filename, *subtype;
@@ -319,6 +346,9 @@ pdf_get_filespec_params(fz_context *ctx, pdf_obj *fs, pdf_filespec_params *out)
 		return;
 
 	memset(out, 0, sizeof(*out));
+	out->created = -1;
+	out->modified = -1;
+	out->size = -1;
 
 	file = get_file_stream_and_name(ctx, fs, &filename);
 	if (!pdf_is_stream(ctx, file))

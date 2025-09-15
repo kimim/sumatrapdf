@@ -69,6 +69,7 @@
 #include "ExternalViewers.h"
 #include "AppColors.h"
 #include "Theme.h"
+#include "DarkModeSubclass.h"
 
 #include "utils/Log.h"
 
@@ -838,43 +839,38 @@ static void ShowNoAdminErrorMessage() {
     TaskDialogIndirect(&dialogConfig, nullptr, nullptr, nullptr);
 }
 
-static void MaybeDeleteStaleDirectory(char* dir, DirIterEntry* d) {
-    const char* name = d->name;
-    bool maybeDelete = str::StartsWith(name, "manual-") || str::StartsWith(name, "crashinfo-");
-    if (!maybeDelete) {
-        logf("MaybeDeleteStaleDirectory: skipping '%s' because not manual-* or crsahinfo-*\n", name);
-        return;
-    }
-    TempStr currVer = GetVerDirNameTemp("");
-    if (str::Contains(name, currVer)) {
-        logf("MaybeDeleteStaleDirectory: skipping '%s' because our ver '%s'\n", name, currVer);
-        return;
-    }
-    bool ok = dir::RemoveAll(dir);
-    logf("MaybeDeleteStaleDirectory: dir::RemoveAll('%s') returned %d\n", dir, ok);
-    return;
-}
-
 // delete symbols and manual from possibly previous versions
 static void DeleteStaleFilesAsync() {
     TempStr dir = GetNotImportantDataDirTemp();
+    TempStr ver = GetVerDirNameTemp("");
+    logf("DeleteStaleFilesAsync: dir: '%s', gIsPreRelaseBuild: %d, ver: %s\n", dir, (int)gIsPreReleaseBuild, ver);
+
     DirIter di{dir};
     di.includeFiles = false;
     di.includeDirs = true;
     for (DirIterEntry* de : di) {
-        MaybeDeleteStaleDirectory(dir, de);
+        const char* name = de->name;
+        bool maybeDelete = str::StartsWith(name, "manual-") || str::StartsWith(name, "crashinfo-");
+        if (!maybeDelete) {
+            logf("DeleteStaleFilesAsync: skipping '%s' because not manual-* or crsahinfo-*\n", name);
+            continue;
+        }
+        TempStr currVer = GetVerDirNameTemp("");
+        if (str::Contains(name, currVer)) {
+            logf("DeleteStaleFilesAsync: skipping '%s' because our ver '%s'\n", name, currVer);
+            continue;
+        }
+        bool ok = dir::RemoveAll(dir);
+        logf("DeleteStaleFilesAsync: dir::RemoveAll('%s') returned %d\n", dir, ok);
     }
 }
 
 void StartDeleteStaleFiles() {
     // for now we only care about pre-release builds as they can be updated frequently
-    if (false && !gIsPreReleaseBuild) {
+    if (!(gIsPreReleaseBuild || gIsDebugBuild)) {
         logf("DeleteStaleFiles: skipping because gIsPreRelaseBuild: %d\n", (int)gIsPreReleaseBuild);
         return;
     }
-    TempStr dir = GetNotImportantDataDirTemp();
-    TempStr ver = GetVerDirNameTemp("");
-    logf("DeleteStaleFiles: dir: '%s', gIsPreRelaseBuild: %d, ver: %s\n", dir, (int)gIsPreReleaseBuild, ver);
     auto fn = MkFunc0Void(DeleteStaleFilesAsync);
     RunAsync(fn, "DeleteStaleFilesThread");
 }
@@ -1053,22 +1049,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
         return exitCode;
     }
 
-    if (isInstaller) {
-        if (!ExeHasInstallerResources()) {
-            ShowNotValidInstallerError();
-            return 1;
-        }
-        exitCode = RunInstaller();
-        // exit immediately. for some reason exit handlers try to
-        // pull in libmupdf.dll which we don't have access to in the installer
-        ::ExitProcess(exitCode);
-    }
-
-    if (isUninstaller) {
-        exitCode = RunUninstaller();
-        ::ExitProcess(exitCode);
-    }
-
     if (flags.updateSelfTo) {
         logf(" flags.updateSelfTo: '%s'\n", flags.updateSelfTo);
         RedirectIOToExistingConsole();
@@ -1098,6 +1078,24 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
             HandleRedirectedConsoleOnShutdown();
             ::ExitProcess(0);
         }
+    }
+
+    // must check before isInstaller becase isInstaller can be auto-deduced
+    // from -installer.exe pattern in the name, so it would ignore explit -uninstall flag
+    if (isUninstaller) {
+        exitCode = RunUninstaller();
+        ::ExitProcess(exitCode);
+    }
+
+    if (isInstaller) {
+        if (!ExeHasInstallerResources()) {
+            ShowNotValidInstallerError();
+            return 1;
+        }
+        exitCode = RunInstaller();
+        // exit immediately. for some reason exit handlers try to
+        // pull in libmupdf.dll which we don't have access to in the installer
+        ::ExitProcess(exitCode);
     }
 
     if (ForceRunningAsInstaller()) {
@@ -1144,7 +1142,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
     DetectExternalViewers();
 
     gRenderCache = new RenderCache();
-
+    if (gUseDarkModeLib) {
+        DarkMode::initDarkMode();
+        DarkMode::setColorizeTitleBarConfig(true);
+    }
     LoadSettings();
     UpdateGlobalPrefs(flags);
     SetCurrentLang(flags.lang ? flags.lang : gGlobalPrefs->uiLanguage);

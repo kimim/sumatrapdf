@@ -1,4 +1,4 @@
-package main
+package do
 
 import (
 	"flag"
@@ -196,7 +196,7 @@ func ensureBuildOptionsPreRequesites(opts *BuildOptions) {
 	}
 }
 
-func main() {
+func Main() {
 	logf("Current directory: %s\n", currDirAbsMust())
 	timeStart := time.Now()
 	defer func() {
@@ -216,43 +216,39 @@ func main() {
 	)
 
 	var (
-		flgBuildLogview         bool
-		flgBuildNo              int
-		flgBuildPreRelease      bool
-		flgBuildRelease         bool
-		flgBuildSmoke           bool
-		flgBuildCodeQL          bool
-		flgCheckAccessKeys      bool
-		flgCIBuild              bool
-		flgCIDailyBuild         bool
-		flgClangFormat          bool
-		flgClean                bool
-		flgDiff                 bool
-		flgFilesList            bool
-		flgFileUpload           string
-		flgGenDocs              bool
-		flgGenSettings          bool
-		flgGenWebsiteDocs       bool
-		flgLogView              bool
-		flgRegenPremake         bool
-		flgRunTests             bool
-		flgTransDownload        bool
-		flgTriggerCodeQL        bool
-		flgUpdateGoDeps         bool
-		flgUpdateVer            string
-		flgUpload               bool
-		flgWc                   bool
-		flgSignUploadPreRelease bool
+		flgBuildLogview              bool
+		flgBuildNo                   int
+		flgBuildPreRelease           bool
+		flgBuildRelease              bool
+		flgBuildSmoke                bool
+		flgBuildCodeQL               bool
+		flgCheckAccessKeys           bool
+		flgCIBuild                   bool
+		flgCIDailyBuild              bool
+		flgClangFormat               bool
+		flgClean                     bool
+		flgDiff                      bool
+		flgGenDocs                   bool
+		flgGenSettings               bool
+		flgGenWebsiteDocs            bool
+		flgRunLogView                bool
+		flgRegenPremake              bool
+		flgRunTests                  bool
+		flgTransDownload             bool
+		flgTriggerCodeQL             bool
+		flgUpdateGoDeps              bool
+		flgUpdateVer                 string
+		flgUpload                    bool
+		flgWc                        bool
+		flgBuildSignUploadPreRelease bool
 	)
 
 	{
-		flag.StringVar(&flgFileUpload, "file-upload", "", "upload a test file to s3 / spaces")
-		flag.BoolVar(&flgFilesList, "files-list", false, "list uploaded files in s3 / spaces")
 		flag.BoolVar(&flgRegenPremake, "premake", false, "regenerate premake*.lua files")
 		flag.BoolVar(&flgCIBuild, "ci", false, "run CI steps")
 		flag.BoolVar(&flgCIDailyBuild, "ci-daily", false, "run CI daily steps")
 		flag.BoolVar(&flgBuildSmoke, "build-smoke", false, "run smoke build (installer for 64bit release)")
-		flag.BoolVar(&flgSignUploadPreRelease, "sign-upload-pre-rel", false, "sign and upload pre-release")
+		flag.BoolVar(&flgBuildSignUploadPreRelease, "build-sign-upload-pre-rel", false, "build, sign and upload pre-release")
 		flag.BoolVar(&flgBuildPreRelease, "build-pre-rel", false, "build pre-release")
 		flag.BoolVar(&flgBuildRelease, "build-release", false, "build release")
 		flag.BoolVar(&flgBuildCodeQL, "build-codeql", false, "build for codeql")
@@ -273,7 +269,7 @@ func main() {
 		flag.BoolVar(&flgDiff, "diff", false, "preview diff using winmerge")
 		flag.BoolVar(&flgGenSettings, "gen-settings", false, "re-generate src/Settings.h")
 		flag.StringVar(&flgUpdateVer, "update-auto-update-ver", "", "update version used for auto-update checks")
-		flag.BoolVar(&flgLogView, "logview", false, "run logview")
+		flag.BoolVar(&flgRunLogView, "logview", false, "run logview")
 		flag.BoolVar(&flgRunTests, "run-tests", false, "run test_util executable")
 		flag.BoolVar(&flgBuildLogview, "build-logview", false, "build logview-win. Use -upload to also upload it to backblaze")
 		flag.IntVar(&flgBuildNo, "build-no-info", 0, "print build number info for given build number")
@@ -281,6 +277,12 @@ func main() {
 		flag.BoolVar(&flgGenDocs, "gen-docs", false, "generate html docs in docs/www from markdown in docs/md")
 		flag.BoolVar(&flgGenWebsiteDocs, "gen-docs-website", false, "generate html docs in ../sumatra-website repo and check them in")
 		flag.Parse()
+	}
+
+	if false {
+		// for ad-hoc testing
+		detectVersions()
+		return
 	}
 
 	if false {
@@ -301,10 +303,11 @@ func main() {
 
 	if flgUpdateGoDeps {
 		defer measureDuration()()
-		u.UpdateGoDeps("do", true)
+		u.UpdateGoDeps(".", true)
 		u.UpdateGoDeps(filepath.Join("tools", "regress"), true)
-		u.UpdateGoDeps(filepath.Join("tools", "logview-cli"), true)
-		u.UpdateGoDeps(filepath.Join("tools", "logview"), true)
+		// u.UpdateGoDeps(filepath.Join("tools", "logview-cli"), true)
+		// u.UpdateGoDeps(filepath.Join("tools", "logview"), true)
+		// u.UpdateGoDeps(filepath.Join("tools", "logview-web"), true)
 		return
 	}
 
@@ -360,10 +363,8 @@ func main() {
 	if false {
 		testCompressOneOff()
 		if false {
-			// make them reachable
+			// avoid "unused function" warnings
 			testGenUpdateTxt()
-			buildPreRelease(kPlatformIntel64, true)
-			deleteFilesOneOff()
 		}
 		return
 	}
@@ -378,21 +379,11 @@ func main() {
 		return
 	}
 
-	if flgFileUpload != "" {
-		fileUpload(flgFileUpload)
-		return
-	}
-
 	if flgBuildLogview {
 		buildLogView()
 		if flgUpload {
 			uploadLogView()
 		}
-		return
-	}
-
-	if flgFilesList {
-		filesList()
 		return
 	}
 
@@ -403,8 +394,8 @@ func main() {
 		opts.upload = true
 	}
 
-	if flgSignUploadPreRelease {
-		signAndUploadLatestPreRelease()
+	if flgBuildSignUploadPreRelease {
+		buildSignAndUploadPreRelease()
 		return
 	}
 
@@ -453,27 +444,18 @@ func main() {
 	}
 
 	if flgCIDailyBuild {
-		buildCiDaily(flgUpload)
+		buildCiDaily()
 		return
 	}
 
 	if flgCIBuild {
 		buildCi()
-		if opts.upload {
-			uploadToStorage(buildTypePreRel)
-		} else {
-			logf("uploadToStorage: skipping because opts.upload = false\n")
-		}
 		return
 	}
 
 	if flgBuildRelease {
+		// TODO: must fix signing and upload
 		buildRelease()
-		if opts.upload {
-			uploadToStorage(buildTypeRel)
-		} else {
-			logf("uploadToStorage: skipping because opts.upload = false\n")
-		}
 		return
 	}
 
@@ -482,12 +464,7 @@ func main() {
 	if flgBuildPreRelease {
 		cleanReleaseBuilds()
 		genHTMLDocsForApp()
-		buildPreRelease(kPlatformIntel64, true)
-		if opts.upload {
-			uploadToStorage(buildTypePreRel)
-		} else {
-			logf("uploadToStorage: skipping because opts.upload = false\n")
-		}
+		buildPreRelease(platform32)
 		return
 	}
 
@@ -497,8 +474,11 @@ func main() {
 		return
 	}
 
-	if flgLogView {
-		logView()
+	if flgRunLogView {
+		runLogViewWeb()
+		if false {
+			runLogViewWin()
+		}
 		return
 	}
 
@@ -514,7 +494,8 @@ func main() {
 	flag.Usage()
 }
 
-func logView() {
+func runLogViewWin() {
+	logf("runLogViewWin\n")
 	path := filepath.Join(logViewWinDir, "build", "bin", "logview.exe")
 	if !u.FileExists(path) {
 		logf("'%s' doesn't exist, rebuilding\n", path)
@@ -524,9 +505,23 @@ func logView() {
 		logf("rm \"%s\"\n", path)
 	}
 	cmd := exec.Command(path)
+	cmd.Dir = logViewWinDir
 	err := cmd.Start()
 	must(err)
 	logf("Started %s\n", path)
+}
+
+func runLogViewWeb() {
+	logf("runLogViewWweb\n")
+	dir := filepath.Join("tools", "logview-web")
+	cmd := exec.Command("go", "run", ".", "-run-dev")
+	cmd.Dir = dir
+	err := cmd.Start()
+	must(err)
+	logf("Started %s in %s\n", cmd.String(), dir)
+	// wait for it to finish
+	err = cmd.Wait()
+	must(err)
 }
 
 func cmdRunLoggedInDir(dir string, args ...string) {

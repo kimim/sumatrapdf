@@ -259,7 +259,9 @@ static bool IsPointInRect(fz_rect rect, fz_point pt) {
 fz_matrix FzCreateViewCtm(fz_rect mediabox, float zoom, int rotation) {
     fz_matrix ctm = fz_pre_scale(fz_rotate((float)rotation), zoom, zoom);
 
-    ReportIf(0 != mediabox.x0 || 0 != mediabox.y0);
+    // TODO: this is happening quite often so don't report it
+    // not sure if it indicates an actual issue
+    // ReportIf(0 != mediabox.x0 || 0 != mediabox.y0);
     rotation = (rotation + 360) % 360;
     if (90 == rotation) {
         ctm = fz_pre_translate(ctm, 0, -mediabox.y1);
@@ -328,6 +330,11 @@ static WCHAR* PdfCleanStringInPlace(WCHAR* s) {
         WCHAR c = *curr;
         if (c < 0x20) {
             *curr = ' ';
+        } else if (c == 0xfffd) {
+            // https://github.com/sumatrapdfreader/sumatrapdf/issues/4965
+            // TODO: was there mupdf change that caused this?
+            *curr = 0;
+            break;
         }
         curr++;
     }
@@ -1352,8 +1359,8 @@ static fz_outline* PdfLoadAttachments(fz_context* ctx, pdf_document* doc, const 
             if (!pdf_is_embedded_file(ctx, fs)) {
                 continue;
             }
-            pdf_embedded_file_params fileParams = {};
-            pdf_get_embedded_file_params(ctx, fs, &fileParams);
+            pdf_filespec_params fileParams = {};
+            pdf_get_filespec_params(ctx, fs, &fileParams);
             const char* nameStr = fileParams.filename;
             if (str::IsEmpty(nameStr)) {
                 continue;
@@ -2616,10 +2623,10 @@ static void RebuildCommentsFromAnnotationsInner(fz_context* ctx, pdf_annot* anno
     if (PDF_ANNOT_FILE_ATTACHMENT == tp) {
         logf("found file attachment annotation\n");
 
-        pdf_embedded_file_params fileParams = {};
+        pdf_filespec_params fileParams = {};
         pdf_obj* fs = pdf_annot_filespec(ctx, annot);
         int num = pdf_to_num(ctx, pdf_annot_obj(ctx, annot));
-        pdf_get_embedded_file_params(ctx, fs, &fileParams);
+        pdf_get_filespec_params(ctx, fs, &fileParams);
         const char* attname = fileParams.filename;
         fz_rect rect = pdf_bound_annot(ctx, annot);
         if (str::IsEmpty(attname) || fz_is_empty_rect(rect) || !pdf_is_embedded_file(ctx, fs)) {

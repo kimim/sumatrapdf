@@ -23,6 +23,7 @@
 #include "DisplayModel.h"
 #include "FileHistory.h"
 #include "Theme.h"
+#include "DarkModeSubclass.h"
 #include "GlobalPrefs.h"
 #include "Annotation.h"
 #include "AppColors.h"
@@ -74,13 +75,10 @@ struct MenuOwnerDrawInfo {
 
 constexpr UINT kMenuSeparatorID = (UINT)-13;
 
-bool gAddCrashMeMenu = false;
-
-#if defined(DEBUG) || defined(PRE_RELEASE_VER)
-bool gShowDebugMenu = true;
-#else
-bool gShowDebugMenu = false;
-#endif
+static bool gAddCrashMeMenu = false;
+static bool ShowDebugMenu() {
+    return gIsDebugBuild || gIsPreReleaseBuild;
+}
 
 // note: IDM_VIEW_SINGLE_PAGE - IDM_VIEW_CONTINUOUS and also
 //       CmdZoomFIT_PAGE - CmdZoomCUSTOM must be in a continuous range!
@@ -1019,6 +1017,9 @@ UINT_PTR removeIfNoDiskAccessPerm[] = {
     CmdPinSelectedDocument,
     CmdForgetSelectedDocument,
     CmdInvokeInverseSearch,
+    CmdCreateShortcutToFile,
+    CmdSaveEmbeddedFile,
+    CmdShowLog,
     0,
 };
 
@@ -1455,7 +1456,7 @@ HMENU BuildMenuFromDef(MenuDef* menuDef, HMENU menu, BuildMenuCtx* ctx) {
             removeMenu |= !ctx->isCursorOnPage && (subMenuDef == menuDefCreateAnnotUnderCursor);
             removeMenu |= !ctx->hasSelection && (subMenuDef == menuDefCreateAnnotFromSelection);
         }
-        removeMenu |= ((subMenuDef == menuDefDebug) && !gShowDebugMenu);
+        removeMenu |= ((subMenuDef == menuDefDebug) && !ShowDebugMenu());
         if (removeMenu) {
             continue;
         }
@@ -2089,6 +2090,9 @@ void FreeMenuOwnerDrawInfoData(HMENU hmenu) {
 }
 
 void MarkMenuOwnerDraw(HMENU hmenu) {
+    if (gUseDarkModeLib && DarkMode::isEnabled()) {
+        return;
+    }
     if (!ThemeColorizeControls()) {
         return;
     }

@@ -29,6 +29,7 @@
 #include "SumatraConfig.h"
 #include "Print.h"
 #include "Theme.h"
+#include "DarkModeSubclass.h"
 
 void ShowProperties(HWND parent, DocController* ctrl, bool extended);
 
@@ -462,7 +463,10 @@ static bool CreatePropertiesWindow(HWND hParent, PropertiesLayout* layoutData, b
     wRc.dy = std::min(rc.dy + wRc.dy - cRc.dy, work.dy);
     MoveWindow(hwnd, wRc.x, wRc.y, wRc.dx, wRc.dy, FALSE);
     CenterDialog(hwnd, hParent);
-
+    if (gUseDarkModeLib) {
+        DarkMode::setDarkWndSafe(hwnd);
+        DarkMode::setWindowEraseBgSubclass(hwnd);
+    }
     ShowWindow(hwnd, SW_SHOW);
     return true;
 }

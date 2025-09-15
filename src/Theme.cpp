@@ -12,8 +12,17 @@ License: GPLv3 */
 #include "GlobalPrefs.h"
 #include "Translations.h"
 #include "Toolbar.h"
+#include "DarkModeSubclass.h"
 
 #include "utils/Log.h"
+
+// allow only x64 and arm64 for compatibility for older OS
+#if !defined(_DARKMODELIB_NOT_USED) && \
+    (defined(__x86_64__) || defined(_M_X64) || defined(__arm64__) || defined(__arm64) || defined(_M_ARM64))
+bool gUseDarkModeLib = true;
+#else
+bool gUseDarkModeLib = false;
+#endif
 
 /*
 preserve those translations:
@@ -57,6 +66,22 @@ static const char* themesTxt = R"(Themes [
         BackgroundColor = #000000
         ControlBackgroundColor = #000000
         LinkColor = #6B7280
+        ColorizeControls = true
+    ]
+    [
+        Name = Dark background Bright text
+        TextColor = #ffffff
+        BackgroundColor = #2d2d30
+        ControlBackgroundColor = #2d2d30
+        LinkColor = #9999a0
+        ColorizeControls = true
+    ]
+    [
+        Name = Solarized Light
+        TextColor = #212323
+        BackgroundColor = #fdf6e3
+        ControlBackgroundColor = #eee8d5
+        LinkColor = #9999a0
         ColorizeControls = true
     ]
 ]
@@ -122,7 +147,34 @@ void SetThemeByIndex(int themeIdx) {
     gCurrSetThemeCmdId = gFirstSetThemeCmdId + themeIdx;
     gCurrentTheme = gThemes->At(gCurrThemeIndex);
     str::ReplaceWithCopy(&gGlobalPrefs->theme, gCurrentTheme->name);
-    UpdateAfterThemeChange();
+    if (gUseDarkModeLib) {
+        // TODO: we should apply themes to every theme other than 0
+        // but in Solarized Light in Find dialog's input field text is invisible i.e. black
+        // UINT mode = themeIdx == 0 ? kModeClassic : kModeDark;
+        const bool isDarkCol = DarkMode::isColorDark(ThemeWindowControlBackgroundColor());
+        const UINT mode = static_cast<UINT>(isDarkCol         ? DarkMode::DarkModeType::dark
+                                            : (themeIdx == 0) ? DarkMode::DarkModeType::classic
+                                                              : DarkMode::DarkModeType::light);
+        DarkMode::setDarkModeConfig(mode);
+        DarkMode::setDefaultColors(false);
+
+        DarkMode::setBackgroundColor(ThemeWindowBackgroundColor());
+        DarkMode::setTextColor(ThemeWindowTextColor());
+        DarkMode::setDisabledTextColor(ThemeWindowTextDisabledColor());
+        DarkMode::setDlgBackgroundColor(ThemeWindowControlBackgroundColor());
+        DarkMode::setLinkTextColor(ThemeWindowLinkColor());
+        DarkMode::updateThemeBrushesAndPens();
+
+        DarkMode::setViewTextColor(ThemeWindowTextColor());
+        DarkMode::setViewBackgroundColor(ThemeWindowControlBackgroundColor());
+        DarkMode::calculateTreeViewStyle();
+
+        UpdateAfterThemeChange();
+
+        DarkMode::setPrevTreeViewStyle();
+    } else {
+        UpdateAfterThemeChange();
+    }
 };
 
 void SelectNextTheme() {
@@ -203,6 +255,13 @@ COLORREF ThemeDocumentColors(COLORREF& bg) {
         return text;
     }
 
+    // if user did change those colors in advanced settings, respect them
+    bool userDidChange = text != kColBlack || bg != kColWhite;
+    if (userDidChange) {
+        std::swap(text, bg);
+        return text;
+    }
+
     // default colors
     if (gCurrentTheme == gThemeLight) {
         std::swap(text, bg);
@@ -279,10 +338,18 @@ COLORREF ThemeNotificationsTextColor() {
 }
 
 COLORREF ThemeNotificationsHighlightColor() {
+    if (gCurrentTheme->colorizeControls) {
+        auto col = ThemeWindowBackgroundColor();
+        return AdjustLightOrDark(col, 20);
+    }
     return RgbToCOLORREF(0xFFEE70); // yellowish
 }
 
 COLORREF ThemeNotificationsHighlightTextColor() {
+    if (gCurrentTheme->colorizeControls) {
+        auto col = ThemeWindowTextColor();
+        return AdjustLightOrDark(col, 20);
+    }
     return RgbToCOLORREF(0x8d0801); // reddish
 }
 

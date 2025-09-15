@@ -781,10 +781,7 @@ void PrintCurrentFile(MainWindow* win, bool waitForCompletion) {
     }
 
     if (win->AsChm()) {
-        // the Print dialog allows access to the file system, so fall back
-        // to printing the entire document without dialog if that isn't desired
-        bool showUI = CanAccessDisk();
-        win->AsChm()->PrintCurrentPage(showUI);
+        win->AsChm()->PrintCurrentPage(true);
         return;
     }
     DisplayModel* dm = win->AsFixed();
@@ -816,13 +813,6 @@ void PrintCurrentFile(MainWindow* win, bool waitForCompletion) {
         }
     }
     AbortPrinting(win);
-
-    // the Print dialog allows access to the file system, so fall back
-    // to printing the entire document without dialog if that isn't desired
-    if (!CanAccessDisk()) {
-        PrintFile2(engine);
-        return;
-    }
 
     PRINTDLGEXW pdex{};
     pdex.lStructSize = sizeof(PRINTDLGEXW);
@@ -1082,7 +1072,11 @@ static short GetPaperByName(const WCHAR* papername) {
 // wantedName can be a paper name, like "A6" or number for DMPAPER_* contstants like DMPAPER_LETTER
 static short GetPaperByName(Printer* printer, const char* wantedName) {
     auto devMode = printer->devMode;
-    ReportIf(!(devMode->dmFields & DM_PAPERSIZE));
+    // TODO: seen in crash report with cmd-line:
+    //  -print-to KM-202MD -print-settings "paper=76mm x 130mm" foo.pdf
+    // Note that: 76mm x 130mm is not valid
+    // Note: not sure what this was meant to check
+    // ReportIf(!(devMode->dmFields & DM_PAPERSIZE));
     if (!(devMode->dmFields & DM_PAPERSIZE)) {
         return devMode->dmPaperSize;
     }

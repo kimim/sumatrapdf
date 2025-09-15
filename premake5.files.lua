@@ -115,8 +115,11 @@ function unrar_files()
     "hash.*",
     "headers.*",
     "isnt.*",
+    "largepage.*",
     "list.*",
     "match.*",
+    --"model.*",
+    "motw.*",
     "options.*",
     "pathfn.*",
     "qopen.*",
@@ -614,6 +617,8 @@ function sumatrapdf_files()
     "premake5.lua",
     "premake5.obsolete.lua",
     "premake5.files.lua",
+    "ext/versions.txt",
+    "Appx/AppxManifest.xml",
   })
   files_in_dir("src", {
     "Accelerators.*",
@@ -684,7 +689,6 @@ function sumatrapdf_files()
     "Uninstaller.cpp",
     "WindowTab.*",
 
-    "ext/versions.txt",
     "scratch.txt",
   })
   filter {"configurations:Debug or DebugFull"}
@@ -716,6 +720,20 @@ function uia_files()
     "DocumentProvider.*",
     "PageProvider.*",
     "TextRange.*",
+  })
+end
+
+function darkmodelib_files()
+  files_in_dir("ext/darkmodelib/src", {
+    "DarkMode.*",
+    "DarkModeSubclass.cpp",
+    "IatHook.h",
+    "StdAfx.h",
+    "UAHMenuBar.h",
+    "Version.h",
+  })
+  files_in_dir("ext/darkmodelib/include", {
+    "DarkModeSubclass.h",
   })
 end
 
@@ -836,10 +854,12 @@ function mupdf_files()
   files { "mupdf/source/fitz/*.h" }
   files_in_dir("mupdf/source/fitz", {
     "archive.c",
+    -- "barcode.cpp",
     "bbox-device.c",
     "bidi.c",
     "bidi-std.c",
     "bitmap.c",
+    "brotli.c",
     "buffer.c",
     "color-fast.c",
     "color-icc-create.c",
@@ -875,6 +895,7 @@ function mupdf_files()
     "encodings.c",
     "error.c",
     "filter-basic.c",
+    "filter-brotli.c",
     "filter-dct.c",
     "filter-fax.c",
     "filter-flate.c",
@@ -897,6 +918,7 @@ function mupdf_files()
     "heap.c",
     "image.c",
     "jmemcust.c",
+    "json.c",
     "link.c",
     "list-device.c",
     "load-bmp.c",
@@ -917,6 +939,7 @@ function mupdf_files()
     "outline.c",
     "output.c",
     "output-cbz.c",
+    "output-csv.c",
     "output-docx.c",
     "output-jpeg.c",
     "output-pcl.c",
@@ -939,7 +962,9 @@ function mupdf_files()
     "stext-boxer.c",
     "stext-device.c",
     "stext-output.c",
+    "stext-para.c",
     "stext-search.c",
+    "stext-table.c",
     "store.c",
     "stream-open.c",
     "stream-read.c",
@@ -1008,6 +1033,7 @@ function mupdf_files()
     "pdf-image-rewriter.c",
     "pdf-interpret.c",
     "pdf-js.c",
+    "pdf-label.c",
     "pdf-layer.c",
     "pdf-layout.c",
     "pdf-lex.c",

@@ -316,13 +316,23 @@ bool DownloadSymbolsIfNeeded() {
     return InitializeDbgHelp(false);
 }
 
-#if !defined(UPLOAD_REPORT)
-void _uploadDebugReport(const char*, bool, bool) {
-    // no-op in
-}
-#else
 // like crash report, but can be triggered without a crash
 void _uploadDebugReport(const char* condStr, bool isCrash, bool captureCallstack) {
+    // in release builds ReportIf()/ReportIfQuick() will break if running under
+    // the debugger. In other builds it sends a debug report
+
+    bool shouldUpload = gIsDebugBuild || gIsPreReleaseBuild || gIsAsanBuild;
+    if (gIsStoreBuild && !isCrash) {
+        // those would probably be too frequent
+        shouldUpload = false;
+    }
+    if (!shouldUpload) {
+        if (IsDebuggerPresent()) {
+            DebugBreak();
+        }
+        return;
+    }
+
     // we want to avoid submitting multiple reports for the same
     // condition. I'm too lazy to implement tracking this granularly
     // so only allow once submission in a given session
@@ -386,7 +396,6 @@ void _uploadDebugReport(const char* condStr, bool isCrash, bool captureCallstack
     loga(s);
     loga("_uploadDebugReport() finished\n");
 }
-#endif
 
 static DWORD WINAPI CrashDumpThread(LPVOID) {
     WaitForSingleObject(gDumpEvent, INFINITE);
@@ -699,7 +708,6 @@ static void BuildSymbolPath(const char* symDir) {
 
     char* p = path.CStr();
     str::ReplaceWithCopy(&gSymbolPath, p);
-    logf("gSymbolPath: '%s'\n", gSymbolPath);
 }
 
 bool SetSymbolsDir(const char* symDir) {
@@ -736,7 +744,7 @@ int __cdecl _purecall() {
 static char* BuildSymbolsUrl() {
     const char* urlBase = "https://www.sumatrapdfreader.org/dl/";
     if (gIsPreReleaseBuild) {
-        const char* ver = QM(PRE_RELEASE_VER);
+        const char* ver = preReleaseVersion;
         urlBase = str::JoinTemp(urlBase, "prerel/", ver, "/SumatraPDF-prerel");
     } else {
         // assuming this is release version
@@ -855,3 +863,56 @@ void UninstallCrashHandler() {
     str::FreePtr(&gModulesInfo);
     delete gCrashHandlerAllocator;
 }
+
+// Tests that various ways to crash will generate crash report.
+// Commented-out because they are ad-hoc. Left in code because
+// I don't want to write them again if I ever need to test crash reporting
+#if 0
+#include <signal.h>
+static void TestCrashAbort()
+{
+    raise(SIGABRT);
+}
+
+struct Base;
+void foo(Base* b);
+
+struct Base {
+    Base() {
+        foo(this);
+    }
+    virtual ~Base() = 0;
+    virtual void pure() = 0;
+};
+struct Derived : public Base {
+    void pure() { }
+};
+
+void foo(Base* b) {
+    b->pure();
+}
+
+static void TestCrashPureCall()
+{
+    Derived d; // should crash
+}
+
+// tests that making a big allocation with new raises an exception
+static int TestBigNew()
+{
+    size_t size = 1024*1024*1024*1;  // 1 GB should be out of reach
+    char *mem = (char*)1;
+    while (mem) {
+        mem = new char[size];
+    }
+    // just some code so that compiler doesn't optimize this code to null
+    for (size_t i = 0; i < 1024; i++) {
+        mem[i] = i & 0xff;
+    }
+    int res = 0;
+    for (size_t i = 0; i < 1024; i++) {
+        res += mem[i];
+    }
+    return res;
+}
+#endif

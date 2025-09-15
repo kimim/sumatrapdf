@@ -2,7 +2,7 @@ AppTranslator: SumatraPDF
 AppTranslator: SumatraPDF
 :%s annotation. Ctrl+click to edit.
 am:%s մեկնաբանություն: Ctrl+քլիք՝ խմբագրելու համար:
-ar:ملاحظة %s. اضغط Ctrl للتحرير.
+ar:شرح %s. مفتاح التحكم Ctrl مع النقر للتحرير.
 az:Qeyd %s. Düzəliş etmək üçün Ctrl+düyməyə basın.
 br:Anotação %s. Ctrl+clique pra editar.
 ca:Anotació %s. Ctrl+clic per editar.
@@ -14,6 +14,7 @@ de:%s-Anmerkung. Strg+Klick zum Bearbeiten.
 el:%s σχολιασμός. Ctrl+κλικ για επεξεργασία.
 es:Comentario %s.
 fa:علامت گذاری %s. برای ویرایش Ctrl+click را بزنید
+fi:%s merkintä. Ctrl+klikkaa muokataksesi.
 fo:%s viðmerking. Ctrl+Klikkja fyri at rætta.
 fr:Annotation %s. Ctrl+clic pour modifier.
 ga:%s nóta mínithe. Brúigh Ctrl+gliogáil chun é a chur in eagar.
@@ -23,7 +24,7 @@ hi:%s एनोटेशन । संपादित करने के लि
 hu:Megjegyzés: %s. Szerkesztés: Ctrl+kattintás.
 id:%s anotasi. Ctrl+click untuk mengedit.
 it:Annotazione %s. Ctrl+clic per modificarla.
-ja:注釈 %s 。”Ctrl + クリック”で編集
+ja:%sの注釈です。編集するにはCtrl+左クリック
 kr:%s 주석. Ctrl+클릭으로 편집
 my:%s anotasi. Ctrl+klik untuk edit.
 nl:%s aantekening. Ctrl+klik om te bewerken
@@ -35,6 +36,7 @@ sat:%s ᱪᱤᱱᱦᱟᱹ ᱾ ᱥᱟᱯᱲᱟᱣ ᱞᱟᱹᱜᱤᱫ Ctrl+ᱚᱛ�
 sk:%s anotácia. Upravíte cez Ctrl+kliknutie.
 sl:Opomba %s. Ctrl+click za urejanje.
 sr-rs:%s белешка. Ctrl+клик за уређивање.
+sv:%s kommentar. Ctrl+klick för att ändra
 tw:%s註解. 按 Ctrl+滑鼠左鍵進行編輯.
 :&About
 am:&Ծրագրի մասին
@@ -84,6 +86,7 @@ sat:&ᱵᱟᱵᱚᱛ
 sk:&O programe...
 sl:&O programu
 sr-rs:&О програму
+sv:&Om
 ta:இந்நிரலைப் பற்றி (&A)
 th:&เกี่ยวกับ
 tl:&Tungkol sa
@@ -133,6 +136,7 @@ sat:&ᱢᱩᱞ ᱢᱟᱯ
 sk:&Aktuálna veľkosť
 sl:Dej&anska velikost
 sr-rs:&Стварна величина
+sv:&Faktisk storlek
 ta:&உண்மையான அளவு
 tl:&Actual na Sukat
 tr:&Gercek boyut
@@ -187,6 +191,7 @@ sat:&ᱩᱱᱱᱚᱛ ᱵᱟᱪᱷᱟᱣᱟᱜ ...
 sk:&Rozšírené možnosti...
 sl:N&apredne možnosti …
 sr-rs:&Напредне опције
+sv:&Avancerade inställningar...
 ta:மேம்பட்ட விருப்பத்தேர்வுகள் (A)
 th:&การตั้งค่าขั้นสูง
 tl:&Advanced na mga pagpipilian...
@@ -242,6 +247,7 @@ sat:ᱡᱷᱚᱛᱚ ᱵᱟᱪᱷᱟᱣ ᱠᱚᱱ ᱥᱟᱦᱴᱟᱠᱚ
 sk:&Tlačiť všetky strany
 sl:&Vse izbrane strani
 sr-rs:&Све изабране странице
+sv:&Alla valda sidor
 ta:அனைத்து தேர்ந்தெடுக்கப்பட்ட பக்கங்கள் (&A)
 th:&หน้าที่เลือกทั้งหมด
 tl:&Lahat ng napiling pahina
@@ -292,6 +298,7 @@ sat:&ᱛᱟᱭᱚᱢ
 sk:&Späť
 sl:Nazaj
 sr-rs:&Назад
+sv:&Tillbaka
 ta:&பின்
 tl:&Bumalik
 tr:&Geri
@@ -327,7 +334,7 @@ hr:&Knjiški pregled
 hu:&Könyvnézet
 id:Tampilan Buku
 it:Vista &libro
-ja:ブック ビュー(&B)
+ja:ブックビュー(&B)
 kr:책처럼 보기(&B)
 my:&Paparan Buku
 nl:&Boekweergave
@@ -340,6 +347,7 @@ sat:&ᱯᱚᱛᱚᱵ ᱧᱮᱞ
 sk:&Zobraziť ako knihu
 sl:Knjižni pogled
 sr-rs:Приказ &књиге
+sv:&Bokvisning
 ta:&புத்தகவுருக் காட்சி
 tl:&View ng libro
 tr:&Kitap Görünümü
@@ -393,6 +401,7 @@ sat:ᱵᱟᱹᱰᱨᱟᱹ
 sk:&Zrušiť
 sl:&Prekliči
 sr-rs:&Откажи
+sv:&Avbryt
 ta:&விலக்கிடுக
 th:&ยกเลิก
 tl:&Kanselahin
@@ -447,6 +456,7 @@ sat:ᱠᱟᱨᱮᱴ
 sk:&Vkladacia vsuvka
 sl:&Karet
 sr-rs:&Карет
+sv:&Markör
 ta:&இடையெச்சக்குறி
 th:&ผู้ดูแล
 tl:&Kareta
@@ -498,6 +508,7 @@ sat:&ᱵᱚᱸᱫᱚᱭ ᱢᱮ
 sk:&Zatvoriť
 sl:&Zapri
 sr-rs:&Затвори
+sv:&Stäng
 ta:&மூடிடுக
 tl:&Isara
 tr:&Kapat
@@ -549,6 +560,7 @@ sat:32-bit ᱟᱹᱨᱩ ᱵᱚᱦᱟᱞ ᱞᱟᱹᱜᱤᱫ ᱞᱟᱦᱟᱜ ᱢ�
 sk:&Pokračovať v inštalácii 32-bitovej verzie
 sl:&Nadaljuj z nameščanjem 32-bitne različice
 sr-rs:&Настави са инсталацијом 32-битне верзије
+sv:&Fortsätt installera 32-bitars version
 ta:&32-பிட் பதிப்பு நிறுவுதலைத் தொடர்க
 th:&กำลังติดตั้งรุ่น 32-บิต ต่อไป
 tl:&Magpatuloy sa pag-install ng 32-bit na bersyon
@@ -604,6 +616,7 @@ sat:ᱵᱟᱪᱷᱟᱣ ᱱᱚᱠᱚᱞ ᱢᱮ
 sk:&Kopírovať vybrané
 sl:&Kopiraj izbor
 sr-rs:&Копирај изабрано
+sv:&Kopiera markering
 ta:&தேர்ந்தெடுத்ததைப் படியெடுத்திடுக
 th:&คัดลอกตำแหน่งที่เลือก
 tl:Kopyahin ang napili
@@ -654,6 +667,7 @@ sat:ᱨᱮᱴᱚᱯᱵᱚᱨᱰ ᱛᱮ ᱱᱚᱠᱚᱞ ᱢᱮ
 sk:&Kopírovať do schránky
 sl:&Kopiraj v odložišče
 sr-rs:&Копирај у оставу (клипборд)
+sv:&Kopiera till urklipp
 ta:&குறிப்பலகைக்குப் படியெடுத்திடுக
 tl:&Kopyahin sa clipboard
 tr:Panoya &kopyala
@@ -662,6 +676,7 @@ uk:Скопіювати до буфера обміну
 vn:&Lưu Sao Chép
 :&Discard changes
 am:&Մերժել
+ar:أس&تبعد التغييرات
 az:Dəyişiklikləri &rədd et
 bg:От&хвърли промените
 br:&Descartar mudanças
@@ -705,6 +720,7 @@ sat:ᱵᱚᱫᱚᱞᱠᱚ ᱵᱟᱹᱨᱜᱤᱞ ᱢᱮ
 sk:&Zrušiť zmeny
 sl:&Zavrni spremembe
 sr-rs:Одба&ци промене
+sv:&Ångra ändringar
 ta:&மாற்றங்களைக் கழித்திடுக
 th:&ละทิ้งการเปลี่ยนแปลง
 tl:&Itapon ang mga pagbabago
@@ -717,7 +733,7 @@ am:&Այլևս չհարցնել
 ar:لا تسألني مرةً أخرى&
 az:Bir daha &soruşma
 bg:Без повтор&но питане
-br:&Não me perguntar de novo
+br:&Não me pergunte de novo
 by:Больш не пытаць
 ca:&No ho tornis a preguntar
 ca-xv:&No m'ho tornis a preguntar
@@ -760,6 +776,7 @@ sat:ᱟᱨᱦᱚᱸ ᱟᱞᱚᱢ ᱠᱩᱴᱤ ᱤᱧᱟ
 sk:&Nepýtať sa znova
 sl:&Ne sprašuj me več
 sr-rs:Не питај ме &поново
+sv:Fråga inte igen
 ta:மறுபடியும் கேட்காதே
 th:&ไม่ต้องถามอีกครั้ง
 tl:Huwag na akong tanunging muli
@@ -815,6 +832,7 @@ sat:&ᱥᱚᱢᱟᱱ ᱥᱟᱦᱴᱟ ᱠᱷᱟᱹᱞᱤ
 sk:&Tlačiť iba párne strany
 sl:Samo &parne strani
 sr-rs:Само &парне странице
+sv:Endast &jämna sidor
 ta:இரட்டைப்படை பக்கங்கள் மட்டும்
 th:& แม้แต่หน้าเท่านั้น
 tl:Mga &even na pahina lamang
@@ -862,6 +880,7 @@ sat:&ᱥᱟᱢᱟᱝ
 sk:&Dve strany
 sl:Dvostransko
 sr-rs:Д&ве странице
+sv:&Dubbelsidig
 ta:&எதிரெதிராக
 tl:Nakaharap
 tr:Her İki Yüz
@@ -916,6 +935,7 @@ sat:&ᱨᱮᱫᱽ
 sk:&Súbor
 sl:&Datoteka
 sr-rs:&Датотека
+sv:&Arkiv
 ta:கோப்பு
 th:&ไฟล์
 tl:&File
@@ -971,6 +991,7 @@ sat:ᱪᱮᱫ &ᱯᱟᱱᱛᱮᱭᱟᱢ ᱺ
 sk:&Vyhľadať:
 sl:&Najdi:
 sr-rs:П&ојам:
+sv:&Sök efter:
 ta:எதை தேடவும்
 th:&ค้นหาอะไร:
 tl:Hanapin ang:
@@ -1020,6 +1041,7 @@ sat:&ᱯᱩᱭᱞᱩ ᱥᱟᱦᱴᱟ
 sk:P&rvá strana
 sl:Prva stran
 sr-rs:П&рва страница
+sv:Anpassa till sida
 ta:&முதல் பக்கம்
 tl:&Unang pahina
 tr:İlk sayfa
@@ -1074,6 +1096,7 @@ sat:ᱪᱷᱟᱯᱟ ᱡᱟᱭᱜᱟ ᱨᱮ ᱥᱟᱦᱴᱟ &ᱯᱮᱨᱮᱡᱽ �
 sk:&Prispôsobiť strany na tlačiteľnú plochu
 sl:Prilagodi strani na področje tiskanja
 sr-rs:&Смести странице у област штампања
+sv:&Anpassa sidor till utskrivbart område
 ta:&பக்கங்களை அச்சிடும் வரம்புக்குள் பொருத்துக
 th:&ปรับหน้ากระดาษให้พอดีกับพื้นที่ที่สามารถพิมพ์ได้
 tl:Pagkasyahin ang mga pahina sa printable na area
@@ -1083,6 +1106,7 @@ uk:Припасовувати сторінки до зони друку
 vn:Vừa trang in
 :&Free Text
 am:&Ազատ գրվածք
+ar:نص &حر
 az:&Sərbəst mətn
 bg:С&вободен текст
 br:&Texto Livre
@@ -1126,6 +1150,7 @@ sat:&ᱯᱷᱨᱤ ᱚᱞ
 sk:&Voľný text
 sl:&Prosti tekst
 sr-rs:&Слободан текст
+sv:&Fritext
 ta:&கட்டற்ற உரை
 th:&ข้อความอิสระ
 tl:&Free Text
@@ -1181,6 +1206,7 @@ sat:&ᱛᱮ ᱪᱟᱞᱟᱜ
 sk:P&rejsť na
 sl:Po&jdi na
 sr-rs:&Иди
+sv:&Gå till
 ta:அங்கு செல்
 th:&ไปที่
 tl:Pumun&ta Sa...
@@ -1236,6 +1262,7 @@ sat:ᱥᱟᱦᱴᱟ ᱛᱮ &ᱪᱟᱞᱟᱜ ᱢᱮ ᱺ
 sk:&Prejsť na stranu:
 sl:Pojdi na &stran:
 sr-rs:&Иди на страницу:
+sv:&Gå till sida:
 ta:பக்கத்திற்குச் செல்:
 th:&ไปที่หน้า:
 tl:Pumunta sa pahina:
@@ -1291,6 +1318,7 @@ sat:&ᱜᱚᱲᱚ
 sk:&Pomoc
 sl:Po&moč
 sr-rs:Помо&ћ
+sv:&Hjälp
 ta:உதவி
 th:&ช่วยเหลือ
 tl:Tulong
@@ -1339,6 +1367,7 @@ sat:&ᱪᱤᱱᱦᱟᱹ
 sk:&Zvýrazniť
 sl:O&znači
 sr-rs:&Маркирај
+sv:&Markera
 ta:&சிறப்பாக்க நிறமிடு
 tl:I-&Highlight
 tr:&Vurgula
@@ -1347,6 +1376,7 @@ uk:Виділити
 vn:&Nổi Bật
 :&Keyboard Shortcuts
 am:&Հիմնաբառի դյուրանցումներ
+ar:اختصارات &لوحة المفاتيح
 az:&Klaviatura birləşmələri
 br:&Atalhos do Teclado
 ca:&Dreceres de teclat
@@ -1359,6 +1389,7 @@ dk:&keyboard genveje
 el:Συντομεύσεις πληκτρολογίου
 es:Atajos de teclado
 fa:میانبرهای &صفحه کلید
+fi:&Näppäimistön oikopolut
 fo:&Knappaborð Snarvegir
 fr:&Raccourcis clavier
 ga:&Aicearraí méarchláir
@@ -1368,7 +1399,7 @@ hi:&कीबोर्ड शॉर्टकट
 hu:&Gyorsbillentyűk
 id:&Pintasan Kibor
 it:&Tasti rapidi
-ja:キーボード ショートカット(&K)
+ja:キーボードショートカット(&K)
 kr:키보드 단축키(&K)
 lt:&Spartieji klavišai
 my:&Pintasan Papan Kekunci
@@ -1381,6 +1412,7 @@ sat:&ᱠᱟᱹᱴᱷᱤᱵᱚᱰ ᱥᱚᱴᱠᱚᱴᱠᱚ
 sk:&Klávesové skratky
 sl:Bližnjice tip&kovnice
 sr-rs:&Пречице на тастатури
+sv:Kortkommandon
 tw:鍵盤快速鍵(&K)
 :&Last Page
 am:&Վերջին էջ
@@ -1424,6 +1456,7 @@ sat:ᱢ&ᱩᱪᱟᱹᱫ ᱥᱟᱦᱴᱟ
 sk:Posl&edná strana
 sl:Zadnja stran
 sr-rs:&Задња страница
+sv:&Sista sidan
 ta:&கடைசி பக்கம்
 tl:Hu&ling pahina
 tr:Son sayfa
@@ -1478,6 +1511,7 @@ sat:&ᱢᱟᱨᱟᱝᱦᱚᱪᱚ ᱺ
 sk:&Zobrazenie:
 sl:&Povečava:
 sr-rs:Уве&ћање:
+sv:&Förstoring:
 ta:பெரிதாக்கம்
 th:&การขยาย:
 tl:&Laki
@@ -1533,6 +1567,7 @@ sat:&ᱜᱚᱲᱚᱯᱩᱛᱷᱤ
 sk:&Príručka
 sl:P&riročnik
 sr-rs:&Упутство
+sv:&Manual
 ta:செய்முறை ஏடு
 th:&คู่มือการใช้งาน
 tl:Gabay
@@ -1588,6 +1623,7 @@ sat:ᱪᱤᱠᱤ &ᱢᱮᱲᱟᱣ ᱢᱮ
 sk:&Podľa zadaných kritérií
 sl:Razlikuj &med velikimi/malimi črkami
 sr-rs:&Разликуј мала и велика слова
+sv:Matcha &versaler/gemener
 ta:தட்டுப் பொருத்தம்
 th:&จับคู่
 tl:&Itugma ang laki ng mga letra
@@ -1637,6 +1673,7 @@ sat:&ᱤᱱᱟᱹ ᱛᱟᱭᱚᱢ ᱥᱟᱦᱴᱟ
 sk:Ďal&šia strana
 sl:Naslednja stran
 sr-rs:&Следећа страница
+sv:&Nästa sida
 ta:&அடுத்த பக்கம்
 tl:&Next na pahina
 tr:Sonraki sayfa
@@ -1691,6 +1728,7 @@ sat:&ᱵᱟᱝ
 sk:&Nie
 sl:&Ne
 sr-rs:&Не
+sv:&Nej
 ta:இல்லை
 th:&ไม่ใช่
 tl:Hindi
@@ -1746,6 +1784,7 @@ sat:&ᱯᱷᱩᱴᱭᱟᱹ ᱥᱟᱦᱴᱟ ᱜᱮ
 sk:&Tlačiť iba nepárne strany
 sl:Samo &lihe strani
 sr-rs:Само &непарне странице
+sv:Endast &udda sidor
 ta:ஒற்றைபடை பக்கங்கள் மட்டும்
 th:&เพิ่มหน้าแตกต่างเท่านั้น
 tl:Mga &Odd na pahina lamang
@@ -1801,6 +1840,7 @@ sat:ᱫᱚᱞᱤᱞ &ᱠᱷᱩᱞᱟᱹᱭ ᱢᱮ
 sk:&Otvoriť dokument
 sl:&Odpri dokument
 sr-rs:&Отвори документ
+sv:&Öppna dokument
 ta:&ஆவணத்தைத் திற
 th:&เปิดเอกสาร
 tl:I-&Open ang Document
@@ -1852,6 +1892,7 @@ sat:ᱡ&ᱷᱤᱡᱽ ᱢᱮ ...
 sk:&Otvoriť…
 sl:&Odpri …
 sr-rs:&Отвори...
+sv:&Öppna
 ta:திற...
 tl:I-&Open...
 tr:Aç...
@@ -1906,6 +1947,7 @@ sat:&ᱵᱟᱪᱷᱟᱣᱟᱜᱠᱚ
 sk:&Možnosti
 sl:M&ožnosti
 sr-rs:&Опције
+sv:Alternativ
 ta:&விருப்பத்தேர்வுகள்
 th:&ตัวเลือก
 tl:Mga &Options
@@ -1961,6 +2003,7 @@ sat:&ᱢᱚᱱᱮ ᱛᱮᱭᱟᱜᱠᱚ ...
 sk:&Možnosti...
 sl:&Možnosti …
 sr-rs:&Опције...
+sv:Alternativ...
 ta:&விருப்பத்தேர்வுகள்...
 th:&ตัวเลือก...
 tl:Mga Pagpipilian
@@ -2016,6 +2059,7 @@ sat:&ᱫᱟᱱᱟᱝ ᱥᱟᱵᱟᱫᱽ ᱺ
 sk:&Heslo:
 sl:&Geslo:
 sr-rs:&Лозинка
+sv:&Lösenord:
 ta:கடவுச்சொல்
 th:&รหัสผ่าน:
 tl:&Password:
@@ -2071,6 +2115,7 @@ sat:ᱫᱚᱞᱤᱞ &ᱞᱟᱴᱷᱟᱭ ᱢᱮ
 sk:&Pripnúť dokument
 sl:&Pritrdi dokument
 sr-rs:П&рикачи документ
+sv:&Fäst dokument
 ta:கோப்பை குத்திவை
 th:&เอกสาร Pin
 tl:I-&Pin ang Document
@@ -2120,6 +2165,7 @@ sat:&ᱢᱟᱲᱟᱝ ᱥᱟᱦᱴᱟ
 sk:&Predchádzajúca strana
 sl:&Prejšnja stran
 sr-rs:&Претходна страница
+sv:F&öregående sida
 ta:&முந்தைய பக்கம்
 tl:&Previous na pahina
 tr:Önceki sayfa
@@ -2174,6 +2220,7 @@ sat:&ᱪᱷᱟᱯᱟ ...
 sk:&Tlač...
 sl:&Natisni …
 sr-rs:&Штампај...
+sv:&Skriv ut...
 ta:அச்சிடு...
 th:&พิมพ์...
 tl:I-&print
@@ -2229,6 +2276,7 @@ sat:&ᱪᱷᱟᱯᱟ ... (ᱢᱟᱱᱟ ᱮᱱᱟ)
 sk:&Tlač... (odmietnutá)
 sl:&Natisni … (onemogočeno)
 sr-rs:&Штампај... (одбијено)
+sv:&Utskrift... (nekad)
 ta:அகசிடல்... (நிராகரிக்கப்பட்டது)
 th:&พิมพ์... (ถูกปฏิเสธ)
 tl:&I-print... (hindi maaari)
@@ -2267,7 +2315,7 @@ hr:&Zapamti lozinku za ovaj dokument
 hu:Jelszó megjegyzése a dokumentumhoz
 id:&Ingat kata sandi untuk dokumen ini
 it:&Memorizza password per questo documento
-ja:このドキュメントのパスワードを記憶する(&R)
+ja:この文書のパスワードを記憶する(&R)
 kr:이 문서의 비밀번호 기억(&R)
 kw:&Perthi kov a'n ger tremena rag an skriven ma
 lt:Įsiminti šio dokumento &slaptažodį
@@ -2284,6 +2332,7 @@ sat:ᱱᱚᱶᱟ ᱫᱚᱞᱤᱞ ᱞᱟᱹᱜᱤᱫ ᱛᱮ ᱫᱟᱱᱟᱝ ᱥ�
 sk:&Zapamätať si heslo pre tento dokument
 sl:&Zapomni si geslo za ta dokument
 sr-rs:&Запамти лозинку за овај документ
+sv:&Kom ihåg lösenordet för detta dokument
 ta:கடவுச்சொல்லை நினைவில் வை
 th:&จำรหัสผ่านสำหรับเอกสารนี้
 tl:Tandaan ang password para sa dokumentong ito
@@ -2322,7 +2371,7 @@ hr:&Upamti ove postavke za svaki pojedini dokument
 hu:Eltérő nézetbeállítások megjegyzése dokumentumonként
 id:&Ingat setelan ini untuk setiap dokumen
 it:&Memorizza queste impostazioni per ogni documento
-ja:ドキュメントごとにこれらの設定を記憶する(&R)
+ja:文書ごとにこれらの設定を記憶する(&R)
 kr:각 문서의 설정 기억(&R)
 kw:Gwitha an etholy&ow ma rag pub restren
 lt:Įsiminti šias &nuostatas kiekvienam dokumentui
@@ -2339,6 +2388,7 @@ sat:ᱡᱷᱚᱛᱚ ᱫᱚᱞᱤᱞ ᱯᱤᱪᱷᱟ ᱱᱚᱶᱟ ᱥᱟᱡᱟᱣ
 sk:&Zapamätať si tieto nastavenia pre každý dokument
 sl:Zapomni si te &nastavitve za vsak dokument
 sr-rs:&Запамти ова подешавања за сваки појединачни документ
+sv:Kom ihåg dessa inställningar för &varje dokument
 ta:அமைப்புகளை ஞாபகம் கொள்
 th:&จดจำการตั้งค่าเหล่านี้สำหรับแต่ละเอกสาร
 tl:Tandaan ang settings ng bawat dokumento
@@ -2393,6 +2443,7 @@ sat:ᱱᱟᱜᱟᱢ ᱠᱷᱚᱱ &ᱚᱪᱚᱜᱽ ᱢᱮ
 sk:&Odstrániť z histórie
 sl:Odst&rani iz zgodovine
 sr-rs:&Уклони из историје
+sv:&Radera från historik
 ta:வரலாற்றிலிருந்து நீக்கு
 th:&ย้ายออกจากประวัติ
 tl:I-&Remove sa History
@@ -2448,6 +2499,7 @@ sat:ᱞᱮᱠᱷᱟ &ᱥᱟᱧᱪᱟᱣ ᱢᱮ ...
 sk:&Uložiť ako...
 sl:Shrani &kot …
 sr-rs:&Сачувај као...
+sv:&Spara som...
 ta:எனச் சேமி...
 th:&บันทึกเป็น...
 tl:I-&save bilang...
@@ -2501,6 +2553,7 @@ sat:ᱢᱟᱲᱟᱝ ᱠᱷᱚᱱ ᱢᱮᱱᱟᱜ PDF ᱨᱮ &ᱥᱟᱧᱪᱟᱣ 
 sk:&Uložiť do existujúceho PDF
 sl:&Shrani v obstoječo PDF datoteko
 sr-rs:&Сачувај у постојећи PDF
+sv:&Spara till existerande PDF
 ta:&நடப்பிலுள்ள PDFஇல் சேமித்திடுக
 th:&บันทึกไปที่ PDF ที่เปิดอยู่
 tl:I-&Save sa existing PDF
@@ -2553,6 +2606,7 @@ sat:&ᱜᱩᱜᱚᱞ(Google) ᱥᱟᱶᱛᱮ ᱥᱮᱸᱫᱽᱨᱟᱭ ᱢᱮ
 sk:&Hľadať pomocou Google
 sl:&Išči z Google
 sr-rs:&Претражи помоћу Google-а
+sv:&Sök med Google
 ta:&Google உடன் தேடுக
 th:&ค้นหาด้วย Google
 tl:I-&Search gamit ang Google
@@ -2608,6 +2662,7 @@ sat:&ᱥᱟᱡᱟᱣᱠᱚ
 sk:&Nastavenia
 sl:&Nastavitve
 sr-rs:П&одешавања
+sv:Alternati&v
 ta:அமைப்புகள்
 th:&การตั้งค่า
 tl:Mga Setting
@@ -2620,7 +2675,7 @@ am:&Հարմարեցնել էջը տպելու համար (եթե պահանջվ
 ar:(تقليص الصفحات إلى منطقة قابلة للطباعة (إذا لزم الأمر&
 az:Ehtiyac varsa, səhifələri çap sahəsinin ölçüsünə görə kiçilt
 bg:&Намали страниците в мястото за отпечатване (при необходимост)
-br:&Reduzir as páginas pra área imprimível (se necessário)
+br:&Encolher as páginas pra área imprimível (se necessário)
 by:&Сціскаць старонкі да вобласці друку (калі неабходна)
 ca:&Reduïu les pàgines a l'àrea imprimible (si és necessari)
 ca-xv:&Reduïu les pàgines a l'àrea imprimible (si és necessari)
@@ -2663,6 +2718,7 @@ sat:ᱪᱷᱟᱯᱟ ᱡᱟᱭᱜᱟ ᱞᱮᱠᱟᱛᱮ ᱥᱟᱦᱴᱟ ᱦ&ᱩ�
 sk:&Zmenšiť strany na tlačiteľnú plochu (ak je to potrebné)
 sl:&Skrči strani na področje tiskanja (če je potrebno)
 sr-rs:&Скупи странице на област штампања (уколико је неопходно)
+sv:&Krymp sidor till utskrivbart område (om nödvändigt)
 ta:கோப்பை அச்சிடும் அளவிற்கு சுருக்கு (தேவைபட்டால்)
 th:&ย่อขนาดหน้ากระดาษไปยังพื้นที่ที่สามารถพิมพ์ได้ (ถ้าจำเป็น)
 tl:Paliitin ang pahina sa printable na area (kung kinakailangan)
@@ -2712,6 +2768,7 @@ sat:&ᱢᱤᱫᱴᱟᱹᱝ ᱥᱟᱦᱴᱟ
 sk:Jedna &strana
 sl:Eno&stransko
 sr-rs:&Једна страница
+sv:Enkelsida
 ta:&ஒற்றைப் பக்கம்
 tl:&Single na pahina
 tr:Tek sayfa
@@ -2720,6 +2777,7 @@ uk:Одна сторінка
 vn:&Trang Đơn
 :&Stamp
 am:&Կնիք
+ar:خ&تم
 az:Mö&hürlə
 bg:&Подпечатване
 br:&Carimbo
@@ -2764,6 +2822,7 @@ sat:&ᱥᱴᱟᱢᱯ
 sk:P&ečiatka
 sl:&Žig
 sr-rs:Пе&чат
+sv:&Stämpel
 ta:&பொறிப்பு
 th:&ประทับตรา
 tl:&Stamp
@@ -2773,6 +2832,7 @@ uk:Штамп
 vn:&Tem
 :&Strike Out
 am:&Ջնջած
+ar:ش&طب
 az:&Qarala
 bg:Зач&еркнато
 br:&Riscar
@@ -2816,6 +2876,7 @@ sat:&ᱛᱟᱞᱟᱜᱟᱨ
 sk:P&rečiarknuť
 sl:&Prečrtano
 sr-rs:Пре&цртано
+sv:Gen&omstruken
 ta:&அடித்தவாறு
 th:&ตีออก
 tl:&Strike Out
@@ -2825,6 +2886,7 @@ uk:Викреслити
 vn:&Làm Văng Ra
 :&Text
 am:&Գրվածք
+ar:&نص
 az:Mə&tn
 bg:&Текст
 br:&Texto
@@ -2869,6 +2931,7 @@ sat:&ᱚᱞ
 sk:&Text
 sl:&Besedilo
 sr-rs:&Текст
+sv:&Text
 ta:&உரை
 th:&ข้อความ
 tl:&Text
@@ -2924,6 +2987,7 @@ sat:&ᱛᱷᱤᱢ
 sk:&Téma
 sl:&Tema
 sr-rs:&Тема
+sv:&Tema
 ta:கருப்பொருள் (&T)
 th:&ธีม
 tl:&Tema
@@ -2977,6 +3041,7 @@ sat:ᱜᱩᱜᱩᱞ(Google) ᱥᱟᱶᱛᱮ &ᱛᱚᱨᱡᱚᱢᱟᱭ ᱢᱮ
 sk:&Preložiť pomocou Google
 sl:Prevedi z &Google
 sr-rs:Пре&веди помоћу Google-а
+sv:Översätt med Google
 ta:&கூகுளுடன் மொழிபெயர்த்திடுக
 th:&แปลด้วย Google
 tl:I-&Translate gamit ang Google
@@ -2986,6 +3051,7 @@ uk:Перекласти за допомогою Google
 vn:&Dịch Với Google
 :&Underline
 am:&Ընդգծված
+ar:&تحته خط
 az:&Altdan xətt
 bg:&Подчертавка
 br:S&ublinhar
@@ -3029,6 +3095,7 @@ sat:&ᱞᱟᱛᱟᱨᱜᱟᱨ
 sk:Podčiarkn&uť
 sl:&Podčrtano
 sr-rs:Под&вуци
+sv:&Understruken
 ta:&அடிக்கோடு
 th:&ขีดเส้นใต้
 tl:&Underline
@@ -3084,6 +3151,7 @@ sat:ᱢᱤᱞ ᱥᱟᱦᱴᱟ ᱢᱟᱯᱠᱚ &ᱵᱮᱵᱷᱟᱨ ᱢᱮ
 sk:Použiť originálne veľkosti strán
 sl:&Uporabi izvirno velikost strani
 sr-rs:&Употреби оригиналне величине страница
+sv:Använd u&rsprungliga sidstorlekar
 ta:&மூல பக்க அளவுகளைப் பயன்படுத்துக
 th:&ใช้ขนาดหน้าดั้งเดิม
 tl:Gamitin ang orihinal na laki ng mga pahina
@@ -3139,6 +3207,7 @@ sat:&ᱧᱮᱞ
 sk:&Zobraziť
 sl:&Pogled
 sr-rs:&Приказ
+sv:Vi&sa
 ta:நோக்கு
 th:&มุมมอง
 tl:Tignan
@@ -3194,6 +3263,7 @@ sat:&ᱡᱷᱚᱨᱠᱟ
 sk:&Okno
 sl:&Okno
 sr-rs:П&розор
+sv:Fönster
 ta:&சாளரம்
 th:&หน้าต่าง
 tl:&Window
@@ -3249,6 +3319,7 @@ sat:&ᱦᱚᱭ
 sk:&Áno
 sl:&Da
 sr-rs:&Да
+sv:&Ja
 ta:ஆம்
 th:&ใช่
 tl:&Oo
@@ -3304,6 +3375,7 @@ sat:&ᱦᱩᱰᱤᱧᱢᱟᱨᱟᱝ
 sk:&Zväčšenie
 sl:Po&večava
 sr-rs:&Увећање
+sv:&Zoom
 ta:&காணுருவளவு
 th:&ขยายเข้าออก
 tl:Mag-&Zoom
@@ -3359,6 +3431,7 @@ sat:(ᱨᱮᱭᱟᱜ %d)
 sk:(z %d)
 sl:(od %d)
 sr-rs:(од %d)
+sv:(av %d)
 ta:(இன் %d)
 th:(จาก %d)
 tl:(ng %d)
@@ -3414,6 +3487,7 @@ sat:(ᱥᱟᱦᱴᱟ %s)
 sk:(strana %s)
 sl:(stran %s)
 sr-rs:(%s. страница)
+sv:(sida %s)
 ta:(பக்கம் %s)
 th:(หน้า %s)
 tl:(Pahina %s)
@@ -3469,6 +3543,7 @@ sat:SumatraPDF ᱵᱟᱵᱚᱛ
 sk:O programe SumatraPDF
 sl:O programu SumatraPDF
 sr-rs:О програму SumatraPDF
+sv:Om SumatraPDF
 ta:சுமத்ராPDF-ஐ பற்றி
 th:เกี่ยวกับ SumatraPDF
 tl:Tungkol sa SumatraPDF
@@ -3524,6 +3599,7 @@ sat:ᱠᱩᱥᱤᱠᱚᱨᱮ ᱥᱮᱞᱮᱫ ᱢᱮ
 sk:Pridať obľúbenú položku
 sl:Dodaj Priljubljene
 sr-rs:Додавање у фаворите
+sv:Lägg till Favorit
 ta:பிடித்ததைச் சேர்த்திடுக
 th:เพิ่มรายการโปรด
 tl:Idagdag sa Favorite
@@ -3562,7 +3638,7 @@ hr:Dodaj stranicu %s u favorite
 hu:%s. oldal hozzáadása a kedvencekhez
 id:Tambah halaman %s ke favorit
 it:Aggiungi pagina '%s' ai preferiti
-ja:ページ %s を追加
+ja:お気に入りにページ%sを追加
 kr:%s 페이지를 즐겨찾기에 추가
 kw:Keworra folen %s dhe daklow drudh
 lt:Sukurti žymę į %s puslapį
@@ -3579,6 +3655,7 @@ sat:ᱥᱟᱦᱴᱟ %s ᱫᱚ ᱠᱩᱥᱤᱠᱚᱨᱮ ᱥᱮᱞᱮᱫ ᱢᱮ
 sk:Pridať stranu %s k obľúbeným
 sl:Dodaj stran %s med priljubljene
 sr-rs:&Додај страницу %s међу одабране
+sv:Lägg till sida %s i Favoriter
 ta:பிடித்தவற்றில் பக்கம் %s-ஐ சேர்த்திடுக
 th:เพิ่มหน้า %s ไปยังรายการโปรด
 tl:Magdagdag ng pahina %s sa mga paborito
@@ -3634,6 +3711,7 @@ sat:%s ᱥᱟᱦᱴᱟ ᱧᱩᱛᱩᱢ ᱥᱟᱶᱛᱮ ᱠᱩᱥᱤᱠᱚᱨᱮ 
 sk:Pridať stranu %s k obľúbeným s (voliteľným) názvom:
 sl:Dodaj stran %s med priljubljene z (neobveznim) imenom:
 sr-rs:Додај страницу %s међу одабране под (опционо) именом:
+sv:Lägg till sida %s i Favoriter med (valfritt) namn:
 ta:பிடித்தவையில்  பக்கம் %s-ஐ (விருப்ப) பெயருடன் சேர்:
 th:เพิ่มหน้า %s ไปยังรายการโปรดพร้อมชื่อ (สามารถเลือกได้) :
 tl:Magdagdag ng pahina %s sa mga paborito na may (opsyonal) na pangalan:
@@ -3689,6 +3767,7 @@ sat:ᱠᱩᱥᱤᱠᱚᱨᱮ ᱥᱮᱞᱮᱫ ᱢᱮ
 sk:Pridať k obľúbeným
 sl:Dodaj med priljubljene
 sr-rs:Додај у фаворите
+sv:Lägg till i Favoriter
 ta:பிடித்தவையில் சேர்
 th:เพิ่มไปยังรายการโปรด
 tl:Idagdag sa mga paborito
@@ -3744,6 +3823,7 @@ sat:ᱩᱱᱱᱚᱛ
 sk:Pokročilé
 sl:Napredno
 sr-rs:Додатно
+sv:Avancerat
 ta:மேம்பட்ட அமைப்புகள்
 th:ขั้นสูง
 tl:Advanced
@@ -3799,6 +3879,7 @@ sat:ᱡᱷᱚᱛᱚ ᱨᱮᱫᱽᱠᱚ
 sk:Všetky súbory
 sl:Vse datoteke
 sr-rs:Све датотеке
+sv:Alla filer
 ta:அனைத்து கோப்புகள்
 th:ไฟล์ทั้งหมด
 tl:Lahat ng files
@@ -3854,6 +3935,7 @@ sat:ᱡᱷᱚᱛᱚ ᱥᱚᱦᱚᱫ ᱫᱚᱞᱤᱞᱠᱚ
 sk:Všetky podporované dokumenty
 sl:Vse podprte dokumente
 sr-rs:Сви подржани документи
+sv:Alla dokument som stöds
 ta:அனைத்து ஏற்புடைய ஆவணங்கள்
 th:เอกสารสนับสนุนทั้งหมด
 tl:Lahat ng suportadong dokumento
@@ -3908,6 +3990,7 @@ sat:ᱪᱤᱱᱦᱟᱹᱠᱚ
 sk:Anotácie
 sl:Pripombe
 sr-rs:Белешке
+sv:Kommentarer
 ta:குறிப்புரைகள்
 th:อธิบายประกอบ
 tl:Mga anotasyon
@@ -3946,7 +4029,7 @@ hr:Aplikacija:
 hu:Alkalmazás:
 id:Aplikasi:
 it:Applicazione:
-ja:アプリケーション:
+ja:アプリ:
 kr:프로그램:
 kw:Towlen:
 lt:Programa:
@@ -3963,6 +4046,7 @@ sat:ᱮᱯᱞᱤᱠᱮᱥᱚᱱ:
 sk:Program:
 sl:Aplikacija:
 sr-rs:Апликација:
+sv:Programvara:
 ta:செயலி
 th:โปรแกรมใช้งาน:
 tl:Pangalan ng aplikasyon:
@@ -4018,6 +4102,7 @@ sat:ᱟᱢ ᱥᱟᱹᱨᱤᱛᱮ SumatraPDF ᱚᱪᱚᱜ ᱜᱤᱰᱤ ᱥᱟᱱ�
 sk:Naozaj chcete odinštalovat SumatraPDF?
 sl:Ali ste prepričani, da želite odstraniti SumatraPDF?
 sr-rs:Да ли сигурно желите да деинсталирате SumatraPDF?
+sv:Är du säker på att du vill avinstallera SumatraPDF?
 ta:சுமத்ரா PDF நிறுவலை நீக்கவா?
 th:คุณแน่ใจหรือไม่ว่าต้องการถอนการติดตั้ง SumatraPDF?
 tl:Sigurado ka bang gusto mong i-uninstall ang SumatraPDF?
@@ -4073,6 +4158,7 @@ sat:PDF ᱨᱮᱫᱽᱠᱚ ᱥᱟᱞᱟᱜ ᱡᱚᱲᱟᱣ ᱠᱟᱱᱟ ?
 sk:Asociovať s PDF súbormi?
 sl:Povežem s PDF datotekami?
 sr-rs:Придружити PDF датотекама?
+sv:Koppla ihop med PDF-filer?
 ta:PDF கோப்புகளுடன் இணை
 th:เชื่อมกับไฟล์ PDF หรือไม่?
 tl:I-associate sa mga PDF file?
@@ -4128,6 +4214,7 @@ sat:ᱞᱟᱴᱷᱟᱺ %s
 sk:Príloha: %s
 sl:Priponka: %s
 sr-rs:Прилог : %s
+sv:Bilaga: %s
 ta:இணைப்பு %s
 th:เอกสารแนบ: %s
 tl:Nakasama: %s
@@ -4183,6 +4270,7 @@ sat:ᱚᱱᱚᱞᱤᱭᱟᱹ:
 sk:Tvorca:
 sl:Avtor:
 sr-rs:Аутор:
+sv:Författare:
 ta:ஆக்கியவர்:
 th:ผู้แต่ง:
 tl:May-akda:
@@ -4237,6 +4325,7 @@ sat:ᱚᱱᱚᱞᱤᱭᱟᱹ: %s
 sk:Autor: %s
 sl:Avtor: %s
 sr-rs:Аутор: %s
+sv:Författare: %s
 ta:ஆக்கியவர்: %s
 tl:May-akda: %s
 tr:Yazar: %s
@@ -4291,6 +4380,7 @@ sat:ᱟᱡ ᱛᱮ
 sk:Automaticky
 sl:Samodejno
 sr-rs:Аутоматски
+sv:Automatiskt
 ta:தானியங்கி
 th:อัตโนมัติ
 tl:Awtomatiko
@@ -4329,7 +4419,7 @@ hr:Provjeravaj &nadogradnje automatski
 hu:&Frissítések automatikus keresése
 id:Periksa &pembaruan secara otomatis
 it:Controlla a&utomaticamente aggiornamenti
-ja:自動的に更新をチェックする(&U)
+ja:自動的に更新を確認する(&U)
 kr:자동으로 업데이트 확인(&U)
 kw:Checkya rag nowedhyansow yn awtomatek
 lt:Automatiškai &tikrinti, ar yra naujinimų
@@ -4346,6 +4436,7 @@ sat:ᱟᱡ ᱛᱮ ᱦ&ᱟᱹᱞᱤᱭᱟᱹᱠ ᱧᱮᱞ ᱢᱮ
 sk:Automaticky kontrolovať &aktualizácie
 sl:&Samodejno preveri za posodobitve
 sr-rs:Аутоматски проверавај &ажурирања
+sv:Sök &automatiskt efter uppdateringar
 ta:&தானாக இற்றைப் பதிப்புகளைத் தேடுக
 th:ตรวจสอบโดยอัตโนมัติ &อัพเดท
 tl:Awtomatikong tignan kung may mga pagbabago
@@ -4401,6 +4492,7 @@ sat:ᱛᱟᱭᱚᱢ ᱥᱮᱫᱟᱜ ᱨᱚᱝ:
 sk:Farba pozadia:
 sl:Barva ozadja:
 sr-rs:Позадинска боја:
+sv:Bakgrundsfärg:
 ta:பின்புல நிறம்:
 th:สีพื้นหลัง
 tl:Kulay ng background:
@@ -4439,7 +4531,7 @@ hr:Knjiški pregled
 hu:Könyv (oldalpár címlappal)
 id:Tampilan Buku
 it:Vista libro
-ja:ブック ビュー
+ja:ブックビュー
 kr:책처럼 보기
 kw:Gwel-lyver
 lt:Knyga
@@ -4456,6 +4548,7 @@ sat:ᱯᱩᱛᱷᱤ ᱧᱮᱞ
 sk:Zobraziť ako knihu
 sl:Knjižni pogled
 sr-rs:Изглед књиге
+sv:Bokvy
 ta:புத்தகவுருக் காட்சி
 th:แสดงแบบหนังสือ
 tl:Pang-aklat na tingin
@@ -4511,6 +4604,7 @@ sat:ᱠᱷᱟᱴᱚᱠᱚ ᱯᱩᱛᱷᱤᱪᱤᱱᱦᱟᱹᱭ ᱢᱮ
 sk:Zástupca záložiek
 sl:Zaznamki bližnjic
 sr-rs:Пречица ка обележивачу
+sv:Bokmärkesgenvägar
 ta:புத்தகக்குறி இடுக
 th:ทางลัดคั่นหน้า
 tl:Mga shortcut sa bookmark
@@ -4566,6 +4660,7 @@ sat:%s ᱠᱷᱚᱱ %s ᱥᱟᱦᱴᱟ ᱨᱮ ᱠᱷᱟᱴᱚ ᱯᱩᱛᱷᱤᱪ
 sk:Zástupca záložky na stranu %s z %s
 sl:Zaznamek bližnjice na stran %s od %s
 sr-rs:Обележи пречицу на страни %s од %s
+sv:Bokmärk genväg till sida %s av %s
 ta:%s / %s பக்கத்தின் புத்தகக்குறிக்கு குறுக்குவழி
 th:ทางลัดคั่นหน้าไปยังหน้า %s ของ %s
 tl:I-Bookmark shortcut sa page %s of %s
@@ -4621,6 +4716,7 @@ sat:ᱯᱩᱛᱷᱤᱪᱤᱱᱦᱟᱹᱠᱚ
 sk:Záložky
 sl:Zaznamki
 sr-rs:Обележивачи
+sv:Bokmärken
 ta:புத்தகக்குறிகள்
 th:คั่นหน้า
 tl:Mga Pananda
@@ -4674,6 +4770,7 @@ sat:ᱵᱚᱰᱚᱨᱺ %d
 sk:Okraj: %d
 sl:Rob: %d
 sr-rs:Ивица: %d
+sv:Ram: %d
 ta:ஓரம்: %d
 tl:Gilid: %d
 tr:Kenarlık: %d
@@ -4728,6 +4825,7 @@ sat:Bytes
 sk:Bajtov
 sl:Bajtov
 sr-rs:бајтова
+sv:Byte
 ta:பைட்டுகள்
 th:ไบต์
 tl:Bytes
@@ -4783,6 +4881,7 @@ sat:CHM ᱫᱚᱞᱤᱞ
 sk:CHM dokumenty
 sl:CHM dokumenti
 sr-rs:CHM документи
+sv:CHM-dokument
 ta:CHM ஆவணங்கள்
 th:เอกสาร CHM
 tl:Mga CHM documents
@@ -4838,6 +4937,7 @@ sat:ᱤᱱᱴᱚᱨᱱᱮᱴ ᱥᱟᱞᱟᱜ ᱡᱩᱲᱟᱹᱣ ᱵᱟᱭ ᱜᱟ
 sk:Pripojenie k internetu zlyhalo (chyba %#x).
 sl:Ne morem se povezati na internet (napaka %#x).
 sr-rs:Повезивање на интернет није могуће (грешка %#x).
+sv:Kan ej ansluta till Internet (fel %#x).
 ta:இணையத்துடன் இணைக்க முடியவில்லை (பிழை %#x).
 th:ไม่สามารถเชื่อมต่ออินเตอร์เน็ต (ข้อผิดพลาด %#x).
 tl:Hindi makakonekta sa Internet (error %#x).
@@ -4893,6 +4993,7 @@ sat:ᱵᱟᱹᱰᱨᱟᱹ
 sk:Zrušiť
 sl:Prekliči
 sr-rs:Откажи
+sv:Avbryt
 ta:விலக்கிடுக
 th:ยกเลิก
 tl:Ikansela
@@ -4948,6 +5049,7 @@ sat:ᱱᱚᱶᱟ ᱨᱮᱫᱽ ᱫᱚ ᱪᱷᱟᱯᱟ ᱵᱟᱭ ᱜᱟᱱᱚᱜ�
 sk:Tlač súboru zlyhala
 sl:Te datoteke ni mogoče natisniti
 sr-rs:Штампање ове датотеке није могуће
+sv:Kan ej skriva ut denna fil
 ta:இந்தக் கோப்பை அச்சிட முடியவில்லை
 th:ไม่สามารถพิมพ์ไฟล์นี้
 tl:Hindi mai-print ang file
@@ -4986,7 +5088,7 @@ hr:Ne mogu pokrenuti naredbu unazadnog pretraživanja. Molim provjerite naredben
 hu:Nem indítható a fordított keresési parancs. Ellenőrizze a parancssorban a beállításokat.
 id:Tidak dapat memulai perintah pencarian terbalik. Harap periksa baris perintah di bagian pengaturan.
 it:Impossibile eseguire il comando di ricerca inversa.\nControlla la riga di comando usata nelle impostazioni.
-ja:逆順検索コマンドを開始できません。設定でコマンド ラインをチェックしてください。
+ja:逆検索コマンドを開始できません。設定でコマンドラインを確認してください。
 kr:역방향 검색 명령을 시작할 수 없습니다.  설정에서 명령줄을 확인하세요.
 kw:Ny yllir dalleth gorhemmyn gorthhwilas.  Check an linen gorhemmyn y'n settyansow mar pleg.
 lt:Nepavyko pradėti atvirkščios paieškos komandos. Patikrinkite kompandinę eilutę nuostatose.
@@ -5003,6 +5105,7 @@ sat:ᱩᱞᱚᱴ ᱥᱮᱸᱫᱽᱨᱟ ᱟᱫᱮᱥ ᱫᱚ ᱮᱛᱦᱚᱵ ᱵ�
 sk:Príkaz inverzné hľadanie zlyhal. Skontrolujte príkazový riadok v nastaveniach.
 sl:Ukaza za obratno iskanje ni mogoče zagnati. Preverite ukazno vrstico v nastavitvah.
 sr-rs:Није могуће покренути инверзну претрагу. Проверите командну линију у подешавањима.
+sv:Kan ej starta omvänd sökning. Kontrollera inställningarna för kommandoraden.
 ta:தலைகீழ் தேடல் கட்டளையைத் தொடங்க முடியவில்லை. தயவுசெய்து அமைப்புகளில் உள்ள கட்டளை வரியைச் சரிபார்த்திடுக.
 th:ไม่สามารถค้นหาคำสั่งที่ตรงกันข้าม โปรดตรวจสอบแถวคำสั่งในการตั้งค่า
 tl:Hindi ma-execute ang command para sa inverse search. Pakitingnan ang command line sa settings.
@@ -5041,7 +5144,7 @@ hr:Promijeni jezik (Change Language)
 hu:Nyelv kiválasztása (Change Language)
 id:Ubah Bahasa (Change Language)
 it:Lingua interfaccia utente (UI Language)
-ja:言語の変更 (Change Language)
+ja:言語を変更 (Change Language)
 kr:언어 바꾸기(Change Language)
 kw:Chanjya yeth (Change Language)
 lt:Keisti kalbą (Change Language)
@@ -5058,6 +5161,7 @@ sat:ᱯᱟᱹᱨᱥᱤ ᱵᱚᱫᱚᱞ ᱢᱮ
 sk:Zmeniť jazyk (Change Language)
 sl:Spremeni jezik (Change Language)
 sr-rs:Промени језик (Change Language)
+sv:Byt språk (Change Language)
 ta:மொழியை மாற்று (Change Language)
 th:เปลี่ยนภาษา
 tl:Ibahin ang Wika (Change Language)
@@ -5096,7 +5200,7 @@ hr:Provjeri ažuriranje
 hu:&Frissítések keresése
 id:Periksa Versi Terbar&u
 it:Controlla &aggiornamenti
-ja:更新のチェック(&U)
+ja:更新を確認(&U)
 kr:업데이트 확인(&U)
 kw:&Checkya rag versyon nowydh
 lt:Tikrinti, ar yra &naujinimų
@@ -5113,6 +5217,7 @@ sat:&ᱦᱟᱹᱞᱤᱭᱟᱹᱠ ᱧᱮᱞ ᱵᱤᱲᱟᱹᱣ ᱢᱮ
 sk:&Skontrolovať novú verziu
 sl:&Preveri za posodobitve
 sr-rs:Провери &ажурирања
+sv:&Sök efter ny version
 ta:&இற்றைப் பதிப்புகளுக்காக சரிபார்த்திடுக
 th:ตรวจสอบ &อัพเดท
 tl:Tignan kung may bagong &bersyon
@@ -5166,6 +5271,7 @@ sat:ᱦᱟᱹᱞᱤᱭᱟᱹᱠ ᱞᱟᱹᱜᱤᱫ ᱧᱮᱞ ᱢᱮ ...
 sk:Kontrolujú sa aktualizácie…
 sl:Preverjanje posodobitev …
 sr-rs:Провера ажурирања...
+sv:Söker efter uppdatering...
 ta:இற்றைப் பதிப்புக்காகச் சரிபார்க்கப்படுகிறது...
 th:ตรวจสอบการอัพเดท
 tl:Nagsusuri ng update...
@@ -5221,6 +5327,7 @@ sat:ᱜᱩᱞᱟᱹᱭ
 sk:Kruh
 sl:Krog
 sr-rs:Круг
+sv:Cirkel
 ta:வட்டம்
 th:วงกลม
 tl:Bilog
@@ -5242,6 +5349,7 @@ de:Verlauf von %d Dateien gelöscht, Miniaturansichten gelöscht.
 el:Εκκαθάριση Ιστορικού %d αρχείων,διαγραφή μικρογραφιών.
 es:Eliminado historial de %d ficheros, miniaturas eliminadas.
 fa:تاریخچه %d پرونده حذف شد. تصاویر بند انگشتی حذف شدند.
+fi:%d tiedostojen historia tyhjennetty ja pikkukuvat poistettu.
 fo:ruddað yvirlit av %d fílum, strikað smámyndir.
 fr:Historique de %d fichiers effacé, vignettes supprimées.
 ga:Glanadh an t-oireas de %d comhad, mionsamhlacha scriosta.
@@ -5264,6 +5372,7 @@ sat:%d ᱨᱮᱫᱽ ᱨᱮᱱᱟᱜ ᱱᱟᱜᱟᱢ ᱯᱷᱟᱨᱪᱟ ᱟᱠᱟ
 sk:Vymazaná história %d súborov, odstránené náhľady.
 sl:Izbrisana zgodovina %d datotek, izbrisane sličice.
 sr-rs:Историја од %d датотека очишћена, сличице обрисане.
+sv:Rensade filhistorik för %d filer, tog bort miniatyrbilder
 tw:已清除 %d 個檔案的歷史記錄，已刪除縮圖。
 vn:Đã dọn lịch sử của %d tập tin, đã xóa hình thu nhỏ.
 :Clearing history...
@@ -5282,6 +5391,7 @@ dk:Rydder historik
 el:Καθάρισμα Ιστορικού...
 es:Borrando historial...
 fa:پاک کردن تاریخجه
+fi:Tyhjennetään historiaa...
 fo:Ruddað yvirlit...
 fr:Effacement de l'historique…
 ga:Tá an t-oireas á ghlanadh...
@@ -5304,6 +5414,7 @@ sat:ᱱᱟᱜᱟᱢ ᱢᱮᱴᱟᱣᱜ ᱠᱟᱱᱟ ...
 sk:Vymazávanie histórie…
 sl:Čiščenje zgodovine …
 sr-rs:Чишћење историје...
+sv:Rensa historik
 tw:正在清除歷史記錄...
 vn:Đang dọn dẹp lịch sử...
 :Close
@@ -5354,6 +5465,7 @@ sat:ᱵᱚᱸᱫᱚᱭ ᱢᱮ
 sk:Zatvoriť
 sl:Zapri
 sr-rs:Затвори
+sv:Stäng
 ta:மூடு
 th:ปิด
 tl:Isara
@@ -5365,6 +5477,7 @@ vn:Đóng lại
 am:Փակել բոլոր ներդիրները
 ar:اغلق كل علامات التبويب
 br:Fechar Todas as Abas
+by:Закрыць усе ўкладкі
 ca:Tanca totes les pestanyes
 cn:关闭所有标签页
 co:Chjode tutte l’unghjette
@@ -5374,6 +5487,7 @@ de:Alle Tabs schließen
 dk:Luk Alle Faner
 el:Κλείσιμο όλων των καρτελών
 es:Cerrar todas las pestañas
+fi:Sulje kaikki välilehdet
 fo:Sløkk øll varðabløð
 fr:Fermer tous les onglets
 ga:Dún Gach Cluaisín
@@ -5393,6 +5507,7 @@ ru:Закрыть все вкладки
 sat:ᱡᱷᱚᱛᱚ ᱴᱮᱵᱽᱠᱚ ᱵᱚᱸᱫᱚᱭ ᱢᱮ
 sk:Zatvoriť všetky karty
 sl:Zapri vse zavihke
+sv:Stäng alla flikar
 tw:關閉全部分頁
 :Close Other Tabs
 am:Փակել այլ ներդիրները
@@ -5436,6 +5551,7 @@ sat:ᱮᱴᱟᱜ ᱴᱮᱵᱽᱠᱚ ᱵᱚᱸᱫᱚᱭ ᱢᱮ
 sk:Zatvoriť ostatné karty
 sl:Zapri druge zavihke
 sr-rs:Затвори остале картице
+sv:Stäng andra flikar
 ta:பிற கீற்றுகளை மூடிடுக
 tl:I-Close ang ibang Tabs
 tr:Diğer Sekmeleri Kapat
@@ -5446,6 +5562,7 @@ vn:Đóng các tab khác
 am:Փակել ձախ կողմի ներդիրները
 ar:اغلق علامة التبويب اليسري
 br:Fechar Abas a Esquerda
+by:Закрыць укладку злева
 ca:Tanca totes les pestanyes de l'esquerra
 cn:关闭左侧标签页
 co:Chjode l’unghjette versu a manca
@@ -5455,6 +5572,7 @@ de:Tabs links schließen
 dk:Luk fane til venstre
 el:Κλείσιμο καρτελών στα αριστερά
 es:Cerrar pestañas a la izquierda
+fi:Sulje vasemmanpuoleiset välilehdet
 fo:Sløkk varðabløð vinstrumegin
 fr:Fermer les onglets sur la gauche
 ga:Dún cluaisíní ar chlé
@@ -5474,6 +5592,7 @@ ru:Закрыть вкладки слева
 sat:ᱞᱮᱝᱜᱟᱛᱤ ᱯᱟᱦᱴᱟ ᱴᱮᱵᱽᱠᱚ ᱵᱚᱸᱫᱚᱭ ᱢᱮ
 sk:Zatvoriť karty vľavo
 sl:Zapri zavihke na levi
+sv:Stäng flikar till vänster
 tw:關閉左側分頁
 :Close Tabs To The Right
 am:Փակել աջի ներդիրները
@@ -5493,7 +5612,7 @@ el:Κλείσιμο καρτελών στα δεξιά
 es:Cerrar pestañas a la derecha
 eu:Itxi eskuineko hegatsak
 fa:بستن سربرگ‌های سمت راست
-fi:Sulje välilehdet oikealle
+fi:Sulje oikeanpuoleiset välilehdet
 fo:Enda Spjøldur Til Høgru
 fr:Fermer les onglets sur la droite
 ga:Dún cluaisíní ar dheis
@@ -5504,7 +5623,7 @@ hr:Zatvori kartice zdesna
 hu:Jobbra lévő lapok bezárása
 id:Tutup Tab Ke Kanan
 it:Chiudi schede a destra
-ja:右側のタブを閉じる
+ja:右のタブをすべて閉じる
 kr:오른쪽 탭 닫기
 my:Tutup Tab Di Sebelah Kanan
 nl:Sluit Tabbladen Rechts
@@ -5517,6 +5636,7 @@ sat:ᱡᱚᱡᱚᱢᱛᱤ ᱯᱟᱦᱴᱟ ᱴᱮᱵᱽᱠᱚ ᱵᱚᱸᱫᱚᱭ 
 sk:Zatvoriť karty vpravo
 sl:Zapri zavihke na desni
 sr-rs:Затвори картице са десне стране
+sv:Stäng flikar till höger
 ta:வலதுபுறம் உள்ள கீற்றுகளை மூடிடுக
 tl:I-Close ang Tabs sa kanan
 tr:Sağdaki sekmeleri kapat
@@ -5569,6 +5689,7 @@ sat:ᱡᱷᱚᱛᱚ ᱦᱩᱰᱤᱧᱪᱷᱚᱭ ᱢᱮ
 sk:Zbaliť všetko
 sl:Strni vse
 sr-rs:Скупи све
+sv:Minimera alla
 ta:அனைத்தையும் மறை
 th:ยุบทั้งหมด
 tl:I-collapse lahat
@@ -5624,6 +5745,7 @@ sat:ᱨᱚᱝᱺ
 sk:Farba:
 sl:Barva:
 sr-rs:Боја:
+sv:Färg:
 ta:நிறம்:
 th:สี:
 tl:Kulay:
@@ -5679,6 +5801,7 @@ sat:ᱠᱟᱴᱩᱱ ᱯᱚᱛᱚᱵ
 sk:Komiksy
 sl:Stripi
 sr-rs:Стрипови
+sv:Serier
 ta:சித்திரக்கதை புத்தகங்கள்
 th:หนังสือการ์ตูน
 tl:Mga komiks
@@ -5688,6 +5811,7 @@ uk:Документи CBR, CBZ (комікси)
 vn:Truyện tranh
 :Command Palette
 am:Հրամանի նախշ
+ar:لوح الأوامر
 az:Komandalar palitrası
 bg:Списък с команди
 br:Paleta de Comandos
@@ -5728,6 +5852,7 @@ sat:ᱟᱫᱮᱥ ᱛᱮᱞᱮᱴ
 sk:Paleta príkazov
 sl:Ukazna paleta
 sr-rs:&Палета команди
+sv:Kommandopalett
 ta:கட்டளைப் பந்தி
 tl:Command Palette
 tr:Komut paleti
@@ -5782,6 +5907,7 @@ sat:ᱥᱩᱥᱚᱝ
 sk:Kompatibilita
 sl:Združljivost
 sr-rs:Компатибилност
+sv:Kompatibilitet
 ta:இணக்கத்தன்மை
 th:ความสอดคล้องกัน
 tl:Pagkakatugma
@@ -5790,7 +5916,7 @@ tw:相容性
 uk:Сумісність
 vn:Tính tương thích
 :Contents:
-am:Բովանդակություններ.
+am:Բովանդակություն.
 ar:المحتويات:
 az:Məzmun:
 bg:Съдържание:
@@ -5819,7 +5945,7 @@ hr:Sadržaj:
 hu:Tartalom:
 id:Isi:
 it:Contenuti:
-ja:コンテンツ:
+ja:内容:
 kr:내용:
 kw:Dalghow:
 lt:Turinys:
@@ -5836,6 +5962,7 @@ sat:ᱡᱤᱱᱤᱥᱠᱚᱺ
 sk:Obsah:
 sl:Vsebina:
 sr-rs:Садржај:
+sv:Innehåll:
 ta:உள்ளடக்கங்கள்:
 tl:Nilalaman:
 tr:İçerikler:
@@ -5890,6 +6017,7 @@ sat:ᱞᱟᱦᱟ
 sk:Priebežne
 sl:Nepretrgano
 sr-rs:Непрекидно
+sv:Fortlöpande
 ta:தொடர்
 th:ต่อเนื่อง
 tl:Tuloy-tuloy
@@ -5928,7 +6056,7 @@ hr:Slijedni knjiški pogled
 hu:Folyamatos könyv
 id:Tampilan Buku Bersambung
 it:Vista libro continua
-ja:連続ブック ビュー
+ja:連続ブックビュー
 kr:이어서 책처럼 보기
 kw:Gwel-lyver heb aswa
 lt:Nenutrūkstama knygos peržiūra
@@ -5945,6 +6073,7 @@ sat:ᱞᱮᱛᱟᱲ ᱵᱚᱦᱤ ᱧᱮᱞ
 sk:Priebežný knižný pohľad
 sl:Nepretrgan knjižni pogled
 sr-rs:Непрекидно, изглед књиге
+sv:Fortlöpande bokvy
 ta:தொடர் புத்தகவுருக் காட்சி
 th:แสดงแบบหนังสือต่อเนื่อง
 tl:Tuluy-tuloy na tinging pang-aklat
@@ -6000,6 +6129,7 @@ sat:ᱞᱮᱛᱟᱲ ᱥᱟᱢᱟᱝ
 sk:Dve strany priebežne
 sl:Nepretrgano dvostransko
 sr-rs:Непрекидно, две странице
+sv:Fortlöpande uppslag
 ta:தொடர்ந்து எதிரெதிராக
 th:เป็นหน้าต่อเนื่อง
 tl:Tuloy-tuloy na Magkaharap
@@ -6055,6 +6185,7 @@ sat:ᱛᱚᱨᱡᱚᱢᱟ ᱨᱮ ᱮᱱᱮᱢ
 sk:Prispieť k prekladu programu
 sl:Prispevaj prevod
 sr-rs:Учествуј у превођењу
+sv:Bidra med översättning
 ta:மொழிபெயர்ப்புக்கு பங்களி
 th:ร่วมช่วยเหลือในการแปลภาษา
 tl:Magbigay ng Saling-wika
@@ -6110,6 +6241,7 @@ sat:ᱪᱤᱛᱟᱹᱨ ᱱᱚᱠᱚᱞ ᱢᱮ
 sk:Kopírovať &obrázok
 sl:Kopiraj &sliko
 sr-rs:Копирај &слику
+sv:Kop&iera bild
 ta:&படிமத்தைப் படியெடுத்திடுக
 th:คัดลอก &รูปภาพ
 tl:Kopyahin ang &Larawan
@@ -6165,6 +6297,7 @@ sat:ᱞᱤᱝ ᱴᱷᱤᱠᱬᱟᱹ ᱱᱚᱠᱚᱞ ᱢᱮ
 sk:Kopírovať odkaz
 sl:Kopiraj nas&lov povezave
 sr-rs:Копирај адресу &везе
+sv:Kopiera länkadress
 ta:&இணைப்பு முகவரியைப் படியெடுத்திடுக
 th:คัดลอก &ที่อยู่เชื่อมโยง
 tl:Kopyahin nag address ng &link
@@ -6220,6 +6353,7 @@ sat:ᱴᱤᱯᱚᱬᱤ ᱱᱚᱠᱚᱞ ᱢᱮ
 sk:Kopírovať ko&mentár
 sl:Kopiraj ko&mentar
 sr-rs:Копирај ко&ментар
+sv:Kopiera kommentar
 ta:&கருத்துரையைப் படியெடுத்திடுக
 th:คัดลอก &ความเห็น
 tl:Kopyahin ang komento
@@ -6242,6 +6376,7 @@ dk:Kopiér Fil Sti
 el:Αντιγραφή Τοποθεσίας Αρχείου
 es:Copiar dirección del archivo
 fa:کپی کردن مسیر فایل
+fi:Kopioi tiedostopolku
 fo:Kopiera fílu rás
 fr:Copier le chemin du fichier
 ga:Cóipeáil Conair an Chomhaid
@@ -6266,6 +6401,7 @@ sat:ᱨᱮᱫᱽ ᱦᱚᱨ ᱱᱚᱠᱚᱞ ᱢᱮ
 sk:Kopírovať cestu k súboru
 sl:Kopiraj pot datoteke
 sr-rs:Копирај путању датотеке
+sv:Kopiera sökväg
 ta:கோப்பு பாதை நகலெடு
 tl:Kopyahin ang File Path
 tw:複製檔案路徑
@@ -6312,6 +6448,7 @@ sat:ᱨᱮᱴᱚᱯᱵᱚᱨᱰ ᱨᱮ &ᱱᱚᱠᱚᱞ ᱢᱮ
 sk:Kopírovať do schránky
 sl:Kopiraj v odložišče
 sr-rs:Копирај у оставу (клипборд)
+sv:Kopiera till urklipp
 ta:குறிப்பலகைக்குப் படியெடுத்திடுக
 tl:Kopyahin sa clipboard
 tr:Panoya kopyala
@@ -6366,6 +6503,7 @@ sat:ᱨᱮᱫᱽ ᱱᱚᱠᱚᱞ ᱫᱚ ᱱᱟᱱᱟ ᱞᱮᱱᱟ (ᱪᱤᱛᱟ�
 sk:Kopírovanie textu odmietnuté (iba ako obrázok)
 sl:Kopiranje besedila je bilo zavrnjeno (kopiranje samo kot slika)
 sr-rs:Копирање текста је одбијено (може се копирати само као слика)
+sv:Textkopiering tilläts ej (kopierar som bild)
 ta:உரை படியெடுப்பு மறுக்கப்பட்டுவிட்டது (படமாக மட்டும் படியெடுக்கப்படுகிறது)
 th:การคัดลอกข้อความถูกปฏิเสธ (คัดลอกแบบรูปภาพเท่านั้น)
 tl:Hindi maaaring kopyahin ang mensahe (kinopya bilang isang imahe lamang)
@@ -6404,7 +6542,7 @@ hr:Autorsko pravo
 hu:Szerzői jog:
 id:Hak Cipta
 it:Copyright:
-ja:コピーライト:
+ja:著作権:
 kr:저작권:
 kw:Gwirpryntyans:
 lt:Autorinės teisės:
@@ -6421,6 +6559,7 @@ sat:ᱟᱭᱫᱟᱹᱨᱤ:
 sk:Autorské práva:
 sl:Avtorske pravice:
 sr-rs:Ауторска права:
+sv:Upphovsrätt:
 ta:காப்புரிமை:
 th:ลิขสิทธิ์:
 tl:Kapirayt:
@@ -6476,6 +6615,7 @@ sat:ᱪᱷᱟᱯᱟ ᱜᱩᱱ ᱵᱟᱭ ᱧᱟᱢ ᱞᱮᱱᱟ
 sk:Získanie vlastností tlačiarne zlyhalo
 sl:Ni bilo mogoče dobiti Lastnosti tiskalnika
 sr-rs:Није могуће приказати својства штампача
+sv:Kunde inte hämta egenskaper för skrivare
 ta:அச்சுப்பொறியின் பண்புகள் பெற முடியவில்லை
 th:ไม่ได้รับคุณสมบัติเครื่องพิมพ์
 tl:Hindi makuha ang Printer properties
@@ -6531,6 +6671,7 @@ sat:ᱵᱚᱦᱟᱞ ᱯᱚᱴᱚᱢ ᱛᱮᱭᱟᱨ ᱵᱟᱭ ᱜᱟᱱ ᱞᱮ�
 sk:Nie je možné vytvoriť inštalačný adresár
 sl:Ni bilo mogoče ustvariti mape za namestitev
 sr-rs:Инсталациони директоријум се не може креирати
+sv:Kunde inte skapa installationsmappen
 ta:நிறுவல் கோப்புறையினை உருவாக்க இயலவில்லை
 th:ไม่สามารถสร้างไดเรคทอรี่ติดตั้งได้
 tl:Hindi magawa ang installation directory
@@ -6540,6 +6681,7 @@ uk:Не вдалося створити папку для встановленн
 vn:Không tạo được thư mục cài đặt
 :Couldn't get printer name
 am:Հնարավոր չեղավ ստանալ տպիչի անունը
+ar:تعذّر الحصول على اسم الطابعة
 az:Printerin adını öyrənmək mümkün olmadı
 bg:Името на принтера не бе намерено
 br:Não pôde obter o nome da impressora
@@ -6581,6 +6723,7 @@ sat:ᱪᱷᱟᱯᱟ ᱧᱩᱛᱩᱢ ᱵᱟᱭ ᱧᱟᱢ ᱞᱮᱱᱟ
 sk:Nepodarilo sa získať názov tlačiarne
 sl:Ni bilo mogoče najti imena tiskalnika
 sr-rs:Није могуће добити име штампача
+sv:Kunde inte att hämta skrivarens namn
 ta:அச்சுப்பொறியின் பெயரைப் பெற முடியவில்லை
 th:ไม่ได้รับชื่อเครื่องพิมพ์
 tl:Hindi makuha ang pangalan ng printer
@@ -6636,6 +6779,7 @@ sat:ᱪᱷᱟᱯᱟ ᱞᱟᱫᱮ ᱵᱟᱭ ᱜᱟᱱ ᱞᱮᱱᱟ
 sk:Inicializácia tlačiarne zlyhala
 sl:Ni bilo mogoče inicializirati tiskalnika
 sr-rs:Није могуће покренути штампач
+sv:Kunde ej använda skrivare
 ta:அச்சுப்பொறியை தொடக்க முடியவில்லை
 th:ไม่สามารถเตรียมเครื่องพิมพ์
 tl:Hindi ma-initialize ang printer
@@ -6691,6 +6835,7 @@ sat:PDF ᱧᱮᱧᱮᱞᱤᱭᱟ ᱫᱚ ᱵᱚᱦᱟᱞ ᱵᱟᱭ ᱜᱟᱱ ᱞ�
 sk:Nie je možné nainštalovať PDF prehliadač rýchlych náhľadov
 sl:Ni bilo mogoče namestiti predogleda za PDF
 sr-rs:Прегледач ПДФ немогуће инсталирати
+sv:Kunde inte installera förhandstitt av PDF:er
 ta:PDF முன்னோட்டம் நிறுவ இயலவில்லை
 th:ไม่สามารถติดตั้งตัวแสดงตัวอย่าง PDF
 tl:Hindi ma-install ang PDF previewer
@@ -6746,6 +6891,7 @@ sat:PDF ᱥᱮᱸᱫᱽᱨᱟ ᱪᱷᱟᱹᱱᱤ ᱵᱚᱦᱟᱞ ᱵᱟᱭ ᱜ�
 sk:Nie je možné nainštalovať PDF vyhľadávací filter
 sl:Ni bilo mogoče namestiti filtra za PDF iskanje
 sr-rs:Немогуће инсталирати филтер за претрагу
+sv:Kunde inte installera sökfilter för PDF
 ta:PDF தேடலை நிறுவ இயலவில்லை
 th:ไม่สามารถติดตั้งตัวกรองค้นหา PDF
 tl:Hindi ma-install ang PDF search filter
@@ -6801,6 +6947,7 @@ sat:ᱥᱟᱦᱴᱟ ᱫᱮᱠᱷᱟᱣ ᱵᱟᱭ ᱜᱟᱱ ᱞᱮᱱᱟ
 sk:Nepodarilo sa načítať stranu
 sl:Ni bilo mogoče upodobiti strani
 sr-rs:Није могуће приказати страницу
+sv:Kunde ej visa sidan
 ta:பக்கத்தை அளிக்க முடியவில்லை
 th:ไม่สามารถแสดงผลหน้าเพจ
 tl:Hindi maipakita ang pahina
@@ -6856,6 +7003,7 @@ sat:PDF ᱧᱮᱧᱮᱞᱤᱭᱟ ᱚᱪᱚᱜᱽ ᱵᱟᱭ ᱜᱟᱱ ᱞᱮᱱ�
 sk:Nie je možné odinštalovať PDF prehliadač rýchlych náhľadov
 sl:Ni bilo mogoče odstraniti predogleda za PDF
 sr-rs:Немогуће деинсталирати ПДФ прегледач
+sv:Kunde inte avinstallera förhandstitt på PDF:er
 ta:PDF முன்னோட்டத்தை நீக்க முடியவில்லை
 th:ไม่สามารถถอนการติดตั้งโปรแกรมดูตัวอย่าง PDF
 tl:Hindi ma-uninstall ang PDF previewer
@@ -6910,6 +7058,7 @@ sat:Sumatra ᱥᱮᱸᱫᱽᱨᱟ ᱪᱷᱟᱹᱱᱤ ᱫᱚ ᱚᱪᱚᱜ ᱵᱟ�
 sk:Vyhľadávací filter Sumatra sa nedá odinštalovať
 sl:Ni bilo mogoče odstraniti iskalnega filtra Sumatra
 sr-rs:Деинсталација Sumatra филтера за претрагу није успела
+sv:Kunde inte avinstallera Sumatra sökfilter
 ta:சுமத்ரா தேடல் வடிப்பான் நிறுவலை நீக்கமுடியவில்லை
 th:ไม่สามารถถอนการติดตั้งตัวกรองการค้นหา Sumatra
 tl:Hindi ma-uninstall ang Sumatra search filter
@@ -6965,6 +7114,7 @@ sat:ᱵᱽᱨᱟᱣᱡᱚᱨ ᱯᱞᱚᱜᱤᱱ ᱚᱪᱚᱜᱽ ᱵᱟᱭ ᱜᱟ
 sk:Nie je možné odinštalovať plugin prehliadača
 sl:Ni bilo mogoče odstraniti vtičnika za brskalnik
 sr-rs:Немогуће уклонити плугин за прегледач
+sv:Kunde inte avinstallera webbläsarens insticksprogram
 ta:உலாவி உள்இடுக்கைளை நீக்க முடியவில்லை
 th:ไม่สามารถถอนปลั๊กอินบราวเซอร์
 tl:Hindi ma-uninstall ang browser plugin
@@ -7020,6 +7170,7 @@ sat:ᱰᱤᱥᱠ ᱨᱮ %s ᱚᱞ ᱵᱟᱭ ᱜᱟᱱ ᱞᱮᱱᱟ
 sk:Nie je možné zapísať %s na disk
 sl:Ni bilo mogoče napisati %s na disk
 sr-rs:Немогућ упис %s на диск
+sv:Kunde inte spara %s på hårddisken
 ta:%s ஐ எழுத  இயலவில்லை
 th:ไม่สามารถเขียน %s ไปยังดิสก์
 tl:Hindi maisulat ang %s sa disk
@@ -7029,6 +7180,7 @@ uk:Не вдалося записати %s на диск
 vn:Không thể ghi %s vào đĩa
 :Create Annotation &Under Cursor
 am:Ստեղծել մեկնաբանություն &նշորդի ներքո
+ar:أنشئ شرحًا &عند المؤشر
 az:Kursorun &altına qeyd düş
 bg:Създай анотация &под курсора
 br:Criar Anotação &Sob o Cursor
@@ -7057,7 +7209,7 @@ hr:Napravi bilješku &ispod kursora
 hu:Új megjegyzés &Kurzor alatt
 id:Buat catatan dengan kursor
 it:Crea annotazione sotto al c&ursore
-ja:カーソル位置に注釈を作成(&U)
+ja:注釈をカーソル位置に作成(&U)
 kr:커서 아래 주석 생성(&U)
 kw:Gwruthyl Notenyans &Yn-Dann Resor
 lt:Sukurti anotaciją žymeklio &vietoje
@@ -7072,6 +7224,7 @@ sat:ᱠᱚᱨᱥᱚᱨ ᱞᱟᱛᱟᱨ ᱨᱮ ᱪᱤᱱᱦᱟᱹ ᱛᱟᱭᱟᱨ
 sk:Vytvorenie anotácie pod k&urzorom
 sl:Ustvari pripombo &pod kurzorjem
 sr-rs:Направи белешку &испод курсора
+sv:Skapa kommentar under markör
 ta:&நிலைகாட்டியின் அடியில் குறிப்புரையை உருவாக்குக
 th:สร้างคำอธิบายประกอบ &​ใต้ตัวชี้ตำแหน่ง
 tl:Lumikha ng anotasyon &Ilalim ng Cursor
@@ -7081,6 +7234,7 @@ uk:Створити анотацію &Під курсором
 vn:Thêm Chú Thích &Gạch Chân
 :Create Annotation From Selection
 am:Ստեղծել ծանոթագրություններ ընտրվածից
+ar:أنشئ شرحا من التحديد
 az:Seçilmiş sahədən qeyd düzəlt
 bg:Създай Обяснение от избраното
 br:Criar Anotação da Seleção
@@ -7125,6 +7279,7 @@ sat:ᱵᱟᱪᱷᱟᱣᱟᱜ ᱠᱷᱚᱱ ᱪᱤᱱᱦᱟᱹ ᱛᱮᱭᱟᱨ ᱢ
 sk:Vytvoriť anotáciu z výberu
 sl:Ustvari pripombo iz izbire
 sr-rs:Направи белешку из селекције
+sv:Skapa kommentar vid markering
 ta:தேர்வு செய்ததிலிருந்து குறிப்புரையை உருவாக்குக
 th:สร้างคำอธิบายประกอบจากส่วนที่เลือก
 tl:Lumikha ng anotasyon mula sa pinili
@@ -7180,6 +7335,7 @@ sat:ᱛᱮᱭᱟᱨ ᱮᱱᱟ:
 sk:Vytvorený:
 sl:Ustvarjeno:
 sr-rs:Израђена:
+sv:Skapad:
 ta:உருவாக்கப்பட்டது
 th:สร้างแล้ว
 tl:Ginawa noong:
@@ -7235,6 +7391,7 @@ sat:ᱱᱤᱛᱚᱜᱟᱜ ᱨᱮᱫᱽ
 sk:Aktuálny súbor
 sl:Trenutna datoteka
 sr-rs:Текућа датотека
+sv:Aktuell fil
 ta:நடப்பு கோப்பு
 th:ไฟล์ปัจจุบัน
 tl:Kasalukuyang file
@@ -7290,6 +7447,7 @@ sat:ᱠᱚᱨᱥᱚᱨ ᱡᱟᱭᱜᱟᱺ
 sk:Pozícia kurzora:
 sl:Položaj kurzorja:
 sr-rs:Позиција курсора
+sv:Muspekarens position:
 ta:நிலைகாட்டியின் நிலை
 th:ตำแหน่งเคอร์เซอร์
 tl:Posisyon ng cursor:
@@ -7299,6 +7457,7 @@ uk:Позиція вказівника:
 vn:Vị trí con trỏ:
 :Custom &Zoom...
 am:Հարմարեցված &դիտափոխում...
+ar:تقريب م&خصص...
 az:Mi&qyas...
 bg:Увеличение по и&збор
 br:Zoom &Personalizado...
@@ -7338,6 +7497,7 @@ sat:ᱢᱚᱱᱮ ᱛᱮ ᱦᱩᱰᱤᱧ ᱢᱟᱨᱟᱝ ...
 sk:Vlastné &zväčšenie…
 sl:Povečava po &meri …
 sr-rs:Сопствено &увећање
+sv:Egen &Zoom
 ta:&வழமைக் காணுருவளவு
 tl:Pasadya &Mag-zoom
 tr:Özel &yakınlaştır
@@ -7392,6 +7552,7 @@ sat:ᱧᱩᱛ
 sk:Tmavý
 sl:Temna
 sr-rs:&Тамно
+sv:Mörk
 ta:இருள்
 th:เข้ม
 tl:Madilim
@@ -7447,6 +7608,7 @@ sat:ᱧᱩᱛ
 sk:Tmavší
 sl:Temnejša
 sr-rs:Там&није
+sv:Mörkare
 ta:மேலும் இருள்
 th:เข้มกว่า
 tl:Mas maitim
@@ -7501,6 +7663,7 @@ sat:ᱢᱟᱦᱟᱸᱺ
 sk:Dátum:
 sl:Datum:
 sr-rs:Датум:
+sv:Datum
 ta:நாள்:
 tl:Petsa:
 tr:Tarih:
@@ -7555,6 +7718,7 @@ sat:ᱢᱩᱞ &ᱞᱚᱠᱥᱟ ᱺ
 sk:Predvolené &zobrazenie:
 sl:&Privzeta postavitev:
 sr-rs:Подразумевани &приказ
+sv:Standard&utseende
 ta:கோட நிலை வடிவமைப்பு
 th:รูปแบบ &ค่าเริ่มต้น:
 tl:Default na Ayos:
@@ -7610,6 +7774,7 @@ sat:ᱢᱩᱞ &ᱦᱩᱰᱤᱧ ᱢᱟᱨᱟᱝ :
 sk:Predvolená &veľkosť
 sl:Pri&vzeta povečava:
 sr-rs:Подразумевано &увећање
+sv:Standard&zoomläge
 ta:கோட நிலை உரு அளவு
 th:การขยายเข้าออก &ค่าเริ่มต้น:
 tl:Default na Laki:
@@ -7619,7 +7784,9 @@ uk:Масштаб за замовчуванням:
 vn:Kích thước mặc định
 :Delete
 am:Ջնջել
+ar:حذف
 br:Apagar
+by:Выдаліць
 ca:Suprimeix
 cn:删除
 co:Squassà
@@ -7629,6 +7796,7 @@ de:Löschen
 dk:Slet
 el:Διαγραφή
 es:Eliminar
+fi:Poista
 fo:Strika
 fr:Supprimer
 ga:Scrios
@@ -7648,9 +7816,11 @@ ru:Удалить
 sat:ᱢᱮᱴᱟᱣ
 sk:Odstrániť
 sl:Zbriši
+sv:Radera
 tw:刪除
 :Delete Annotation
 am:Ջնջել մեկնաբանությունը
+ar:احذف الشرح
 az:Qeydi sil
 br:Apagar Anotação
 ca:Suprimeix l'anotació
@@ -7663,6 +7833,7 @@ dk:Slet annotering
 el:Διαγραφή Σχολιασμού
 es:Eliminar anotación
 fa:حذف علامت‌گذاری‌
+fi:Poista huomautus
 fo:Strika Viðmerking
 fr:Supprimer l'annotation
 ga:Scrios an nóta mínithe
@@ -7686,6 +7857,7 @@ sat:ᱪᱤᱱᱦᱟᱹ ᱢᱮᱴᱟᱣ ᱢᱮ
 sk:Odstrániť anotáciu
 sl:Izbriši opombo
 sr-rs:Обриши белешку
+sv:Radera kommentar
 tw:刪除註解
 uk:Видалити анотацію
 :Denied Permissions:
@@ -7736,6 +7908,7 @@ sat:ᱦᱚᱠ ᱢᱟᱱᱟ ᱮᱱᱟᱺ
 sk:Odmietnuté povolenia:
 sl:Zavrnjena dovoljenja:
 sr-rs:Није допуштено:
+sv:Nekade tillstånd:
 ta:அனுமதி மறுக்கப்பட்டது
 th:ปฏิเสธการอนุญาต:
 tl:Mga hindi maaaring gawin:
@@ -7791,6 +7964,7 @@ sat:DjVu ᱫᱚᱞᱤᱞᱠᱚ
 sk:DjVu dokumenty
 sl:DjVu dokumenti
 sr-rs:DjVu документи
+sv:DjVu-dokument
 ta:DjVu ஆவணங்கள்
 th:เอกสาร DjVu
 tl:Mga dokumento ng DjVu
@@ -7829,7 +8003,7 @@ hr:Svojstva dokumenta
 hu:A dokumentum tulajdonságai
 id:Properti Dokumen
 it:Proprietà documento
-ja:ドキュメントのプロパティ
+ja:文書のプロパティ
 kr:문서 속성
 kw:Gnasow Skriven
 lt:Dokumento savybės
@@ -7846,6 +8020,7 @@ sat:ᱫᱚᱞᱤᱞ ᱜᱩᱱ
 sk:Vlastnosti dokumentu
 sl:Lastnosti dokumenta
 sr-rs:Својства документа
+sv:Dokumentegenskaper
 ta:ஆவணப் பண்புகள்
 th:คุณสมบัติเอกสาร
 tl:Mga katangian ng dokumento
@@ -7855,6 +8030,7 @@ uk:Властивості документа
 vn:Thuộc tính tập tin
 :Don't install
 am:Չտեղադրել
+ar:لا تثبّت
 az:Quraşdırma
 bg:Не инсталирай
 br:Não instalar
@@ -7898,6 +8074,7 @@ sat:ᱟᱞᱚᱢ ᱵᱚᱦᱟᱞ ᱟ
 sk:Neinštalovať
 sl:Ne nameščaj
 sr-rs:Не инсталирај
+sv:Installera inte
 ta:நிறுவ வேண்டாம்
 th:ติดตั้งไม่ได้
 tl:Huwag i-install
@@ -7951,6 +8128,7 @@ sat:64-bit ᱵᱷᱚᱨᱥᱚᱱ ᱰᱟᱣᱩᱱᱞᱚᱰ ᱢᱮ
 sk:Stiahnuť 64-bitovú verziu
 sl:Prenesi 64-bitno različico
 sr-rs:Преузми 64-битну верзију
+sv:Ladda ner 64-bitars version
 ta:64-பிட் பதிப்பைப் பதிவிறக்குக
 th:ดาวน์โหลดรุ่น 64 บิต
 tl:I-download ang 64-bit na bersyon
@@ -8002,6 +8180,7 @@ sat:ᱵ&ᱟᱹᱜᱤ
 sk:U&končiť
 sl:I&zhod
 sr-rs:Иза&ђи
+sv:Avsluta
 ta:வெளியேறுக
 tl:&Lumabas
 tr:Çık
@@ -8056,6 +8235,7 @@ sat:ᱯᱩᱨᱟᱥᱠᱨᱤᱱ ᱵᱟᱹᱜᱤ ᱢᱮ
 sk:U&končiť zobrazenie na celú obrazovku
 sl:&Izhod iz celozaslonskega načina
 sr-rs:Иза&ђи из целог екрана
+sv:A&vsluta helskärm
 ta:முழுத்திரை வெளியேறு
 th:&ออกจากโหมดเต็มหน้าจอ
 tl:&Lumabas sa fullscreen
@@ -8111,6 +8291,7 @@ sat:EPUB ebooks
 sk:EPUB dokumenty
 sl:EPUB dokumenti
 sr-rs:EPUB документи
+sv:EPUB-dokument
 ta:EPUB மின்புத்தகங்கள்
 th:หนังสืออิเล็คทรอนิกส์ EPUB
 tl:EPUB ebooks
@@ -8120,6 +8301,7 @@ uk:Документи EPUB
 vn:Tập tin EPUB
 :Edit %s Annotation
 am:Խմբագրել %s մեկնաբանությունը
+ar:حرر شرح %s
 az:%s qeydinə düzəliş et
 br:Editar a Anotação %s
 ca:Edita l'anotació %s
@@ -8132,6 +8314,7 @@ dk:Redigér %s annotering
 el:Επεξεργασία %s Σχολιασμού
 es:Editar %s anotación
 fa:ویرایش %s علامت‌گذاری‌
+fi:Muokkaa %s merkintää
 fo:Rætta %s Viðmerking
 fr:Modifier l'annotation %s
 ga:Cuir an nóta mínithe %s in eagar
@@ -8142,7 +8325,7 @@ hr:Uredi %s bilješku
 hu:%s. megjegyzés szerkesztése
 id:Edit %s Anotasi
 it:Modifica annotazione %s
-ja:注釈 %s を編集
+ja:%sの注釈を編集
 kr:주석 편집 (%s)
 my:Edit %s Anotasi
 nl:Bewerk %s Aantekening
@@ -8154,6 +8337,7 @@ sat:%s ᱪᱤᱱᱦᱟᱹ ᱥᱟᱯᱲᱟᱣ ᱢᱮ
 sk:Upraviť %s anotáciu
 sl:Uredi opombo %s
 sr-rs:Уреди %s белешку
+sv:Redigera %s kommentar
 tw:編輯 %s 註解
 :Edit Annotations
 am:Խմբագրել ծանոթագրությունները
@@ -8186,7 +8370,7 @@ hr:Uredi bilješke
 hu:Megjegyzések szerkesztése
 id:Tambah catatan
 it:Modifica annotazioni
-ja:注釈を編集する
+ja:注釈を編集
 kr:주석 편집
 kw:Golegi notenyans
 lt:Redaguoti anotacijas
@@ -8202,6 +8386,7 @@ sat:ᱪᱤᱱᱦᱟᱹᱠᱚ ᱥᱟᱯᱲᱟᱣ ᱢᱮ
 sk:Upraviť anotáciu
 sl:Uredi opombe
 sr-rs:&Уреди белешке
+sv:Redigera kommentarer
 ta:குறிப்புரைகளைத் திருத்துக
 th:ปรับแต่งคำอธิบายประกอบ
 tl:I-edit ang mga anotasyon
@@ -8257,6 +8442,7 @@ sat:ᱫᱟᱱᱟᱝ ᱥᱟᱵᱟᱫ ᱟᱫᱮᱨ ᱢᱮ
 sk:Zadať heslo
 sl:Vnesite geslo
 sr-rs:Унесите лозинку
+sv:Ange lösenord
 ta:கடவுச்சொல்லை வழங்கு
 th:ป้อนรหัสผ่าน
 tl:Ipasok ang password
@@ -8312,6 +8498,7 @@ sat:%s ᱞᱟᱹᱜᱤᱫ ᱫᱟᱱᱟᱝ ᱥᱟᱵᱟᱫ ᱟᱫᱮᱨ ᱢᱮ
 sk:Zadať heslo pre %s
 sl:Vnesite geslo za %s
 sr-rs:Унесите лозинку за %s
+sv:Ange lösenord för %s
 ta:%s  க்கான கடவுச்சொல்லை வழங்கு
 th:ป้อนรหัสผ่านสำหรับ %s
 tl:Ipasok ang password ng %s
@@ -8350,7 +8537,7 @@ hr:Unesite naredbenu liniju za pokretanje kod dvostrukog klika na PDF dokumentu:
 hu:Írja be a parancsot, ami a PDF dokumentumra való dupla kattintáskor fut le:
 id:Masukkan baris perintah untuk dijalankan ketika Anda mengklik dua kali pada dokumen PDF:
 it:Inserisci linea di comando da eseguire quando si fa doppio clic su un documento PDF:
-ja:PDF ドキュメント上でダブルクリックしたときに呼び出すコマンドラインを入力:
+ja:PDF文書上でダブルクリックしたときに実行するコマンドライン
 kr:PDF 문서를 더블 클릭할 때 호출할 명령줄 입력:
 kw:Enter an linen-gorhemmyn dh'y elwel pan wre'ta klyck dewblek war an skriven PDF:
 lt:Įveskite komandinę eilutę, vykdomą atverčiant PDF dokumentą:
@@ -8367,6 +8554,7 @@ sat:PDF ᱫᱚᱞᱤᱞ ᱨᱮ ᱵᱟᱨ ᱡᱮᱠᱷᱟ ᱚᱛᱟ ᱞᱮᱠᱷ�
 sk:Dvojité kliknutie na PDF dokument vykoná zadaný príkazový riadok:
 sl:Vnesite ukazno vrstico, ki se bo izvedla, ko boste dvokliknili na PDF dokument:
 sr-rs:Унесите параметре командне линије који ће се извршити приликом двоклика на PDF документ:
+sv:Ange kommandorad som körs när du dubbelklickar på PDF-dokumentet:
 ta:நீங்கள் PDF ஆவணத்தின் மீது இரட்டை சொடுக்கும் போது செயலாக்க கட்டளை வரி உள்ளிடவும்:
 th:ป้อนบรรทัดคำสั่งเพื่อเรียกใช้เมื่อคุณดับเบิลคลิกที่เอกสาร PDF:
 tl:Pakisulat ang command na gagawin kapag dalawang beses na kli-nik ang dokumentong PDF:
@@ -8376,8 +8564,10 @@ uk:Введіть командну стрічку, що викликається
 vn:Nhập dòng lệnh gọi khi bạn nhấp đúp vào tập tin PDF:
 :Error
 am:Սխալ
+ar:خطأ
 az:Xəta
 br:Erro
+by:Памылка
 ca:Error
 cn:错误
 co:Sbagliu
@@ -8387,6 +8577,7 @@ de:Fehler
 dk:Fejl
 el:Σφάλμα
 es:Error
+fi:Virhe
 fo:Villa
 fr:Erreur
 ga:Earráid
@@ -8408,6 +8599,7 @@ sat:ᱵᱷᱩᱞ
 sk:Chyba
 sl:Napaka
 sr-rs:Грешка
+sv:Fel
 tw:錯誤
 :Error loading %s
 am:Սխալ բեռնելիս %s
@@ -8457,6 +8649,7 @@ sat:%s ᱞᱟᱫᱮ ᱨᱮ ᱵᱷᱩᱞ ᱦᱩᱭᱮᱱᱟ
 sk:Chyba pri načítaní %s
 sl:Napaka pri nalaganju %s
 sr-rs:Дошло је до грешке приликом учитавања датотеке %s
+sv:Fel vid öppning av %s
 ta:ஏற்றுவதில் பிழை %s
 th:เกิดข้อผิดพลาดในการโหลด %s
 tl:Error sa paglo-load ng %s
@@ -8511,6 +8704,7 @@ sat:ᱡᱷᱚᱛᱚ ᱯᱟᱥᱱᱟᱣ ᱢᱮ
 sk:Rozbaliť všetko
 sl:Razširi vse
 sr-rs:Рашири све
+sv:Expandera alla
 ta:அனைத்தையும் விரி
 th:ขยายทั้งหมด
 tl:Palawakin lahat
@@ -8566,6 +8760,7 @@ sat:&ᱠᱩᱥᱤᱠᱚ
 sk:&Obľúbené položky
 sl:Priljubljeni
 sr-rs:&Фаворити
+sv:&Favoriter
 ta:பிடித்தவை
 th:&รายการโปรด
 tl:&Mga paborito
@@ -8575,6 +8770,7 @@ uk:Закладки
 vn:Ưa thích
 :F&orward
 am:Ա&ռաջ
+ar:للأ&مام
 az:İ&rəli
 bg:Н&апред
 br:A&vançar
@@ -8614,6 +8810,7 @@ sat:&ᱞᱟᱦᱟ
 sk:&Dopredu
 sl:&Naprej
 sr-rs:Н&апред
+sv:Fr&amåt
 ta:முன்
 tl:&Pasulong
 tr:İleri
@@ -8663,6 +8860,7 @@ sat:ᱯ&ᱩᱨᱟᱹᱥᱠᱨᱤᱱ
 sk:Celá o&brazovka
 sl:Celozaslonsko
 sr-rs:&Цео екран
+sv:Helskärm
 ta:முழுத்திரை
 tl:I-F&ullscreen
 tr:Tam ekran
@@ -8717,6 +8915,7 @@ sat:ᱥᱟᱢᱟᱝ
 sk:Dve strany
 sl:Dvostransko
 sr-rs:Две странице
+sv:Uppslag
 ta:எதிரெதிராக
 th:เป็นหน้า
 tl:Magkaharap
@@ -8772,6 +8971,7 @@ sat:ᱚᱪᱚᱜᱽ ᱜᱤᱰᱤ ᱨᱤᱡᱤᱥᱴᱨᱤ ᱪᱟᱹᱵᱤᱠᱚ 
 sk:Vymazanie odinštalačných kľúčov v registroch bolo neúspešné
 sl:Brisanje registrskih ključev odstranjevalnega programa ni uspelo
 sr-rs:Неуспело брисање кључева из регистра
+sv:Misslyckades med att ta bort registernycklar
 ta:நிறுவி நீக்கியின் பதிவை அழிக்க முடியவில்லை
 th:ไม่สามารถลบรีจิสตรีคีย์ของตัวถอนการติดตั้งได้
 tl:Nabigong tanggalin ang mga registry key ng uninstaller
@@ -8827,6 +9027,7 @@ sat:ᱨᱮᱫᱽ ᱫᱩᱦᱲᱟᱹ ᱧᱩᱛᱩᱢ ᱨᱮ ᱵᱷᱩᱞ ᱦᱩ�
 sk:Premenovanie súboru bolo neúspešné!
 sl:Preimenovanje datoteke ni uspelo!
 sr-rs:Немогуће је преименовати датотеку!
+sv:Kunde inte döpa om filen!
 ta:கோப்புக்கு மறுபெயரிட முடியவில்லை!
 th:ไม่สามารถเปลี่ยนชื่อไฟล์ได้!
 tl:Nabigong palitan ang pangalan ng file!
@@ -8882,6 +9083,7 @@ sat:ᱢᱤᱫᱴᱟᱹᱝ ᱨᱮᱫᱽ ᱥᱟᱧᱪᱟᱣ ᱨᱮ ᱵᱷᱩᱞ �
 sk:Uloženie súboru bolo neúspešné
 sl:Shranjevanje datoteke ni uspelo
 sr-rs:Чување датотеке није успело
+sv:Kunde inte spara filen.
 ta:கோப்பு சேமிப்பு தோற்பு
 th:การบันทึกไฟล์ล้มเหลว
 tl:Hindi ma-i-save ang file
@@ -8937,6 +9139,7 @@ sat:ᱨᱮᱡᱤᱥᱴᱨᱤ ᱨᱮ ᱵᱟᱹᱲᱛᱤ ᱨᱮᱫᱽ ᱮᱠᱥᱴ
 sk:Zápis rozšírených informácií o prípone súboru do registrov bolo neúspešné
 sl:Pisanje v register informacij o razširjenem podaljšku datoteke ni uspelo
 sr-rs:Неуспео упис проширене информације о екстензији фајла у регистар
+sv:Misslyckades med att spara registernycklar för den utökade filhanteringen
 ta:பதிவு செய்ய விரிவாக்கப்பட்ட கோப்பு நீட்டிப்பு தகவலை எழுத முடியவில்லை
 th:ไม่สามารถเขียนข้อมูลส่วนขยายไฟล์เพิ่มเติมไปยังรีจิสทรี
 tl:Nabigong isulat ang impormasyon ng extended file extension sa registry
@@ -8992,6 +9195,7 @@ sat:ᱨᱮᱡᱤᱥᱴᱨᱤ ᱨᱮ ᱚᱪᱚᱜᱽ ᱜᱤᱰᱤ ᱠᱟᱛᱷᱟ
 sk:Uloženie informácií pre odinštalovanie do registrov bolo neúspešné
 sl:Pisanje v register informacij o odstranitvi ni uspelo
 sr-rs:Неуспео упис информација о деинсталацији у регистар
+sv:Misslyckades med att spara data för avinstallation i registret
 ta:நிறுவி நீக்கும் தகவலை பதிவில் எழுத முடியவில்லை
 th:ไม่สามารถเขียนข้อมูลการถอนการติดตั้งไปยังรีจิสทรี
 tl:Nabigong isulat ang impormasyon ng uninstallation sa registry
@@ -9047,6 +9251,7 @@ sat:ᱞᱮᱛᱟᱲ ᱣᱮᱵᱽ ᱞᱮᱠᱷᱟ ᱫᱮᱠᱷᱟᱣ
 sk:Rýchle zobrazovanie z internetu
 sl:Hiter spletni prikaz
 sr-rs:Брзи преглед на мрежи
+sv:Snabb webbvy
 ta:வேகமான வலை பார்வை
 th:มุมมองเว็บที่รวดเร็ว
 tl:Mabilis na Web View
@@ -9102,6 +9307,7 @@ sat:ᱠᱩᱥᱤᱛᱮᱭᱟᱜᱠᱚ
 sk:Obľúbené položky
 sl:Priljubljeni
 sr-rs:Фаворити
+sv:Favoriter
 ta:பிடித்தவை
 th:รายการโปรด
 tl:Mga paborito
@@ -9140,7 +9346,7 @@ hr:FictionBook dokumenti
 hu:FictionBook fájlok
 id:Dokumen FictionBook
 it:Documenti FictionBook
-ja:フィクション文章
+ja:FictionBook文書
 kr:FictionBook 문서
 kw:Skrivennow FictionBook
 lt:FictionBook dokumentai
@@ -9157,6 +9363,7 @@ sat:ᱯᱷᱤᱠᱥᱚᱱᱵᱩᱠ ᱫᱚᱞᱤᱞᱠᱚ
 sk:FictionBook dokumenty
 sl:FictionBook dokumenti
 sr-rs:FictionBook докуменат
+sv:FictionBook-dokument
 ta:புனைவு புத்தக ஆவணம்
 th:เอกสาร FictionBook
 tl:Mga dokumento sa FictionBook
@@ -9212,6 +9419,7 @@ sat:ᱨᱮᱫᱽ %s ᱵᱟᱭ ᱧᱟᱢ ᱞᱮᱱᱟ
 sk:Súbor %s nenájdený
 sl:Datoteka %s ni bila najdena
 sr-rs:Датотека %s није пронађена
+sv:Fil %s hittades inte
 ta:%s கோப்பு கிடைக்கவில்லை
 th:ไม่พบไฟล์ %s
 tl:Hindi nahanap ang file %s
@@ -9267,6 +9475,7 @@ sat:ᱨᱮᱫᱽ ᱞᱟᱴᱷᱟ
 sk:Príloha súboru
 sl:Datotečna priloga
 sr-rs:Прилог
+sv:Bifogad fil
 ta:கோப்பு இணைப்பு
 th:แนบไฟล์
 tl:Attachment ng file
@@ -9322,6 +9531,7 @@ sat:ᱨᱮᱫᱽ ᱢᱟᱯ:
 sk:Veľkosť súboru:
 sl:Velikost datoteke:
 sr-rs:Величина:
+sv:Filstorlek:
 ta:கோப்பின் அளவு:
 th:ขนาดไฟล์ข้อมูล
 tl:Laki ng file:
@@ -9377,6 +9587,7 @@ sat:ᱨᱮᱫᱽ:
 sk:Súbor:
 sl:Datoteka:
 sr-rs:Датотека:
+sv:Fil:
 ta:கோப்பு
 th:ไฟล์
 tl:File:
@@ -9426,6 +9637,7 @@ sat:ᱯ&ᱟᱱᱛᱮ ᱢᱮ ...
 sk:&Hľadať…
 sl:Naj&di …
 sr-rs:Прона&ђи...
+sv:Sök
 ta:தேடுக
 tl:&Hanapin
 tr:Bul
@@ -9480,6 +9692,7 @@ sat:ᱯᱟᱱᱛᱮ
 sk:Hľadať
 sl:Najdi
 sr-rs:Пронађи
+sv:Sök
 ta:தேடு
 th:ค้นหา
 tl:Hanapin
@@ -9535,6 +9748,7 @@ sat:ᱤᱱᱟᱹ ᱛᱟᱭᱚᱢ ᱯᱟᱱᱛᱮ
 sk:Hľadať ďalšie
 sl:Najdi naslednje
 sr-rs:Пронађи следеће
+sv:Sök nästa
 ta:அடுத்ததை தேடு
 th:ค้นหาต่อไป
 tl:Hanapin ang Susunod
@@ -9590,6 +9804,7 @@ sat:ᱢᱟᱲᱟᱝᱟᱜ ᱯᱟᱱᱛᱮ
 sk:Hľadať predchádzajúce
 sl:Najdi prejšnje
 sr-rs:Пронађи претходно
+sv:Sök föregående
 ta:முந்தையதை தேடு
 th:ค้นหาก่อนหน้า
 tl:Hanapin ang Nauna
@@ -9645,6 +9860,7 @@ sat:ᱯᱟᱱᱛᱮ ᱢᱮ ᱺ
 sk:Hľadať:
 sl:Najdi:
 sr-rs:Пронађи:
+sv:Sök:
 ta:தேடு:
 th:ค้นหา:
 tl:Hanapin:
@@ -9654,6 +9870,7 @@ uk:Знайти:
 vn:Tìm kiếm:
 :Fit &Content
 am:Հարմարեցնել &բովանդակությունը
+ar:لائم ال&محتوى
 az:&Məzmuna görə sığışdır
 bg:Побиране по &съдържание
 br:Ajustar ao &Conteúdo
@@ -9693,6 +9910,7 @@ sat:&ᱡᱤᱱᱤᱥ ᱠᱷᱟᱯ
 sk:Prispôsobiť &obsahu
 sl:Prilagodi vsebino
 sr-rs:Смести &садржај
+sv:Anpassa till &innehåll
 ta:&உள்ளடக்கத்தைப் பொருத்துக
 tl:akma sa &nilalaman
 tr:Sayfa düzeyine yakınlaştır
@@ -9701,6 +9919,7 @@ uk:Підігнати вміст
 vn:Vừa &Nội Dung
 :Fit &Page
 am:Հարմարեցնել &էջը
+ar:لائم ال&صفحة
 az:&Səhifəyə sığışdır
 bg:По&биране в страницата
 br:Ajustar na &Página
@@ -9740,6 +9959,7 @@ sat:&ᱥᱟᱦᱴᱟ ᱠᱷᱟᱯ
 sk:Prispôsobiť stra&ne
 sl:&Prilagodi stran
 sr-rs:Смести с&трану
+sv:Anpassa till &sida
 ta:&பக்கத்தைப் பொருத்துக
 tl:Akma &Pahina
 tr:Tam Sayfayı Pencereye Sığdır
@@ -9748,6 +9968,7 @@ uk:Підігнати сторінку
 vn:Vừa &Trang
 :Fit &Width
 am:Հարմարեցնել &լայնությունը
+ar:لائم العُ&رض
 az:&Genişliyə görə sığışdır
 bg:Поб&иране по ширина
 br:Ajustar pela &Largura
@@ -9787,6 +10008,7 @@ sat:&ᱚᱥᱟᱨ ᱠᱷᱟᱯ
 sk:Prispôsobiť šír&ke
 sl:P&rilagodi po širini
 sr-rs:Смести по &ширини
+sv:Anpassa till bredd
 ta:&அகலத்தைப் பொருத்துக
 tl:I-Fit sa &Width
 tr:Genişliğe Sığdır
@@ -9841,6 +10063,7 @@ sat:ᱡᱤᱱᱤᱥ ᱠᱷᱟᱯ ᱢᱮ
 sk:Prispôsobiť obsah
 sl:Prilagodi vsebino
 sr-rs:Смести садржај
+sv:Anpassa efter innehåll
 ta:உள்ளடக்கத்தைப் பொருத்துக
 th:เต็มจอตามเนื้อหา
 tl:Pagkasyahin ang laman
@@ -9896,6 +10119,7 @@ sat:ᱥᱟᱦᱴᱟ ᱠᱷᱟᱯ
 sk:Prispôsobiť strane
 sl:Prilagodi stran
 sr-rs:Смести страну
+sv:Anpassa efter helsida
 ta:பக்கத்தைப் பொருத்துக
 th:พอดีหน้า
 tl:Ipagkasya ang Pahina
@@ -9951,6 +10175,7 @@ sat:ᱚᱥᱟᱨ ᱨᱮ ᱠᱷᱟᱯ
 sk:Na šírku obrazovky
 sl:Prilagodi po širini
 sr-rs:Смести по ширини
+sv:Anpassa efter bredd
 ta:அகலத்திற்கு பொருத்து
 th:พอดีความกว้าง
 tl:Ipagkasya ang Lapad
@@ -10006,6 +10231,7 @@ sat:ᱚᱥᱟᱨ ᱠᱷᱟᱯ ᱟᱨ ᱥᱟᱦᱴᱟᱠᱚ ᱞᱮᱛᱟᱲ ᱥ�
 sk:Prispôsobiť šírke okna
 sl:Prilagodi po širini in prikaži strani nepretrgano
 sr-rs:Смести по ширини и прикажи странице без прекида
+sv:Anpassa efter bredd och visa sidor fortlöpande
 ta:அகலம் பொருத்தி பக்கங்கள் காட்டுக
 th:พอดีกับความกว้างและแสดงหน้าอย่างต่อเนื่อง
 tl:Pagkasyahin ang lapad at ipakita nang tuluy-tuloy ang mga pahina
@@ -10061,6 +10287,7 @@ sat:ᱢᱤᱫᱴᱟᱹᱝ ᱯᱩᱨᱟᱹ ᱥᱟᱦᱴᱟ ᱵᱟᱹᱭᱥᱟᱣ 
 sk:Prispôsobiť a zobraziť celú stranu v okne
 sl:Prilagodi enostransko
 sr-rs:Смести једну страницу
+sv:Anpassa till helsida
 ta:ஒற்றை பக்கமாகப் பொருத்துக
 th:เต็มจอหน้าเดียว
 tl:Pagkasyahin ang isang pahina
@@ -10116,6 +10343,7 @@ sat:ᱪᱤᱠᱤᱠᱚ :
 sk:Písma:
 sl:Pisave:
 sr-rs:Фонтови:
+sv:Typsnitt:
 ta:எழுத்துரு:
 th:ตัวหนังสือ
 tl:Mga font:
@@ -10154,7 +10382,7 @@ hr:Tekst je pronađen na %s. stranici
 hu:Találat a(z) %s. oldalon
 id:Teks ditemukan pada halaman %s
 it:Testo trovato a pagina %s
-ja:ページ %s でテキストが見つかりました
+ja:%s ページに文字列が見つかりました
 kr:%s 페이지에서 텍스트 발견
 kw:Tekst kevys war folen %s
 lt:Ieškoti teksto %s puslapyje
@@ -10171,6 +10399,7 @@ sat:ᱥᱟᱦᱴᱟ %s ᱨᱮ ᱚᱞ ᱧᱟᱢ ᱮᱱᱟ
 sk:Text bol nájdený na strane %s
 sl:Besedilo najdeno na strani %s
 sr-rs:Текст је пронађен на %s. страници
+sv:Hittade text på sidan %s
 ta:வாசகத்தை %s பக்கத்தில் கண்டுபிடிக்கப்பட்டுள்ளது
 th:พบข้อความที่หน้า %s
 tl:Nakita ang salita sa pahina %s
@@ -10209,7 +10438,7 @@ hr:Tekst pronađen na stranici %s (opet)
 hu:Találat a(z) %s. oldalon (ismét)
 id:Teks ditemukan pada halaman %s (lagi)
 it:Testo trovato a pagina %s (ancora)
-ja:%s ページに指定された文字列が見つかりました（一周）
+ja:%s ページに文字列が見つかりました（一周）
 kr:%s 페이지에서 텍스트 발견(다시)
 kw:Y hevir tekst orth folen %s (arta)
 lt:Rastas tekstas %s puslapyje (vėl)
@@ -10226,6 +10455,7 @@ sat:ᱥᱟᱦᱴᱟ %s ᱨᱮ ᱚᱞ ᱧᱟᱢ ᱮᱱᱟ (ᱟᱨᱦᱚᱸ)
 sk:Text bol nájdený na strane %s (znova)
 sl:Besedilo najdeno na strani %s (ponovno)
 sr-rs:Пронађи текст на %s. страници (поново)
+sv:Hittade text på sida %s (igen)
 ta:உரை %s(மீண்டும்) இருக்கிறது
 th:พบข้อความที่หน้า %s (อีกครั้ง)
 tl:Natagpuan ang teksto sa pahina %s (muli)
@@ -10281,6 +10511,7 @@ sat:ᱜᱷᱤᱲᱜᱮ ᱯᱟᱲᱦᱟᱣ
 sk:Často čítané dokumenty
 sl:Pogosto brani
 sr-rs:Недавно читано
+sv:Mest lästa
 ta:அடிக்கடி படிப்பது
 th:อ่านบ่อยครั้ง
 tl:Madalas basahin
@@ -10336,6 +10567,7 @@ sat:GB
 sk:GB
 sl:GB
 sr-rs:GB
+sv:GB
 ta:ஜிகா பைட்டு
 th:กิกะไบต์
 tl:GB
@@ -10386,6 +10618,7 @@ sat:ᱪᱤᱠᱤ ᱵᱤᱵᱨᱚᱬ ᱵᱟᱲᱟᱭ ᱢᱮ
 sk:Získať informácie o písmach
 sl:Pridobi informacije o pisavah
 sr-rs:Информације о фонтовима
+sv:Hämta information om typsnitt
 ta:எழுத்துருக்களைப் பற்றிய தகவல்களைப் பெறுக
 tl:Kumuha ng impormasyon ng mga font
 tr:Yazı tipi bilgisi
@@ -10440,6 +10673,7 @@ sat:ᱥᱟᱦᱴᱟ ᱛᱮ ᱪᱟᱞᱟᱜ ᱢᱮ
 sk:Ísť na stranu
 sl:Pojdi na stran
 sr-rs:Иди на страницу
+sv:Gå till sida
 ta:பக்கத்திற்குச் செல்
 th:ไปที่หน้า
 tl:Pumunta sa Pahina
@@ -10495,6 +10729,7 @@ sat:&ᱵᱟᱪᱷᱟᱣᱠᱚ ᱩᱠᱩᱭ ᱢᱮ
 sk:Skryť &Možnosti
 sl:Skrij M&ožnosti
 sr-rs:Сакриј &опције
+sv:Göm Alternativ
 ta:&விருப்பத்தேர்வுகளை மறை
 th:ซ่อน &ตัวเลือก
 tl:Itago ang &Options
@@ -10550,6 +10785,7 @@ sat:ᱜᱷᱤᱲᱜᱮ ᱯᱟᱲᱦᱟᱣᱟᱜ ᱩᱠᱩᱭ ᱢᱮ
 sk:Skryť často čítané dokumenty
 sl:Skrij pogosto brane
 sr-rs:Сакриј „недавно читано”
+sv:Dölj mest lästa
 ta:அடிக்கடி வாசிப்பதை மறைக்க
 th:ซ่อนอ่านบ่อยๆ
 tl:Itago ang madalas basahin
@@ -10605,6 +10841,7 @@ sat:ᱩᱫᱩᱜ : ᱫᱩᱦᱲᱟᱹ ᱯᱟᱱᱛᱮ ᱞᱟᱹᱜᱤᱫ F3 ᱵ�
 sk:Rada: Použite klávesu F3 pre ďalšie hľadanie
 sl:Namig: uporabite tipko F3 za ponovno iskanje
 sr-rs:Савет: Користите тастер F3 за наставак претраге
+sv:Tips: Tryck F3 för att söka vidare
 ta:சிறுகுறிப்பு: மீண்டும் தேட F3 விசையைப் பயன்படுத்துக
 th:คำแนะนำ: ใช้ปุ่ม F3 เพื่อค้นหาอีกครั้ง
 tl:Payo: Pindutin ang F3 para maghanap muli
@@ -10659,6 +10896,7 @@ sat:ᱪᱤᱱᱦᱟᱹ :
 sk:Ikona:
 sl:Ikona:
 sr-rs:Икона:
+sv:Ikon:
 ta:படக்குறி:
 tl:Icon:
 tr:Simge:
@@ -10713,6 +10951,7 @@ sat:ᱪᱤᱛᱟᱹᱨ ᱨᱮᱫᱽᱠᱚ (*.%s)
 sk:Súbory obrázkov (*.%s)
 sl:Slikovne datoteke (*.%s)
 sr-rs:Датотеке слика (*.%s)
+sv:Bildfiler (*.%s)
 ta:பட கோப்புகள் (*.%s)
 th:ไฟล์รูปภาพ (*.%s)
 tl:Mga file ng image (*.%s)
@@ -10768,6 +11007,7 @@ sat:ᱪᱤᱛᱟᱹᱨᱠᱚ
 sk:Obrázky
 sl:Slike
 sr-rs:Слике
+sv:Bilder
 ta:படங்கள்
 th:รูปภาพ
 tl:Mga imahe
@@ -10823,6 +11063,7 @@ sat:ᱥᱩᱦᱤ
 sk:Atrament
 sl:Črnilo
 sr-rs:Мастило
+sv:Bläck
 ta:மை
 th:น้ำหมึก
 tl:Tinta
@@ -10878,6 +11119,7 @@ sat:SumatraPDF ᱵᱚᱦᱟᱞ ᱢᱮ
 sk:Inštaluj SumatraPDF
 sl:Namesti SumatraPDF
 sr-rs:Инсталација СуматраПДФ
+sv:Installera SumatraPDF
 ta:சுமத்ராPDFஐ நிறுவு
 th:ติดตั้ง SumatraPDF
 tl:I-install ang SumatraPDF
@@ -10916,7 +11158,7 @@ hr:Instaliraj SumatraPDF u &mapu:
 hu:SumatraPDF telepítése a következő &könyvtárba:
 id:Install SumatraPDF ke &folder:
 it:Installa SumatraPD&F nella cartella:
-ja:SumatraPDF インストール先フォルダ(&F)
+ja:SumatraPDF をインストールするフォルダ(&F)
 kr:SumatraPDF 설치 폴더(&F):
 kw:Lea SumatraPDF yn &restren:
 lt:Įdiegti SumatraPDF į &katalogą:
@@ -10933,6 +11175,7 @@ sat:SumatraPDF ᱫᱚ &ᱯᱚᱴᱚᱢ ᱨᱮ ᱵᱚᱦᱚᱞ ᱢᱮ ᱺ
 sk:Inštaluj SumatraPDF do &adresára:
 sl:Namesti SumatraPDF v mapo:
 sr-rs:Инсталација СуматраПДФ у &фасциклу:
+sv:Installera SumatraPDF i katalog:
 ta:சுமத்ராPDFஐ &கோப்புறையில் நிறுவவும்:
 th:ติดตั้ง SumatraPDF ใน &โฟลเดอร์:
 tl:I-install ang SumatraPDF sa &folder:
@@ -10942,6 +11185,7 @@ uk:Встановити SumatraPDF у папку
 vn:Cài đặt SumatraPDF trong &thư mục:
 :Install and relaunch
 am:Տեղադրել և վեաթողարկել
+ar:ثبّت وأعد التشغيل
 az:Quraşdır və təkrar aç
 bg:Инсталирай и рестартирай програмата
 br:Instalar e reiniciar
@@ -10984,6 +11228,7 @@ sat:ᱵᱚᱦᱟᱞ ᱟᱨ ᱫᱩᱦᱲᱟᱹ ᱯᱟᱨᱥᱟᱞ
 sk:Nainštalovať a znovu spustiť
 sl:Namesti in ponovno zaženi
 sr-rs:Инсталирај и поново покрени
+sv:Installera och starta om
 ta:நிறுவுக பின் மீண்டும் தொடங்கிடுக
 th:ติดตั้ง และ เรียกใช้งาน
 tl:I-install at muling ilunsad
@@ -11034,6 +11279,7 @@ sat:ᱡᱷᱚᱛᱚ ᱵᱮᱵᱷᱟᱨᱤᱭᱟᱹ ᱞᱟᱹᱜᱤᱫ ᱵᱚᱦ�
 sk:Nainštalovať pre všetkých používateľov
 sl:Namesti za vse uporabnike
 sr-rs:Инсталирај за све кориснике
+sv:Installera för alla användare
 ta:அனைத்து பயனர்களுக்கும் நிறுவிடுக
 tl:I-install para sa lahat ng user
 tr:Tüm kullanıcılar için kur
@@ -11088,6 +11334,7 @@ sat:ᱵᱚᱦᱟᱞ ᱰᱤᱜᱟᱹᱣ ᱮᱱᱟ!
 sk:Inštalácia sa nepodarila!
 sl:Namestitev ni uspela!
 sr-rs:Инсталација неуспела!
+sv:Installationen misslyckades!
 ta:நிறுவல் தோல்வி!
 th:การติดตั้งล้มเหลว!
 tl:Nabigo ang pag-install!
@@ -11143,6 +11390,7 @@ sat:ᱵᱚᱦᱟᱞ ᱪᱟᱹᱞᱩ ᱠᱟᱱᱟ …
 sk:Prebieha inštalácia...
 sl:Namestitev poteka …
 sr-rs:Инсталација у току...
+sv:Installerar...
 ta:நிறுவல் செயலில் உள்ளது...
 th:กำลังติดตั้ง ...
 tl:Kasalukuyang isinasagawa ang pag-install...
@@ -11152,6 +11400,7 @@ uk:Встановлення триває...
 vn:Đang cài đặt...
 :Installing 32-bit SumatraPDF on 64-bit OS
 am:Տեղադրել 32 բիթային SumatraPDF-ը 64 բիթային OS-ում
+ar:تثبيت قارئ SumatraPDF‏ 32-بت على نظام تشغيل 64-بت
 az:32-bitlik SumatraPDF 64-bitlik əməliyyat sistemində quraşdırılır
 bg:Инсталира се 32-битова версия на SumatraPDF на 64-битова ОС
 br:Instalando o SumatraPDF de 32 bits num SO de 64 bits
@@ -11194,6 +11443,7 @@ sat:64-bit OS ᱨᱮ 32-bit SumatraPDF ᱵᱚᱦᱟᱞᱚᱜ ᱠᱟᱱᱟ
 sk:Inštalácia 32-bitovej verzie SumatraPDF na 64-bitový operačný systém
 sl:Nameščanje 32-bitne različice SumatraPDF na 64-bitni OS
 sr-rs:Инсталација 32-битног SumatraPDF на 64-битном ОС-у
+sv:Installerar 32-bitars SumatraPDF på 64-bitars OS
 ta:32-பிட் சுமத்ராPDF 64-பிட் இயங்குதளத்தில் நிறுவப்படுகிறது
 th:กำลังติดตั้ง SumatraPDF รุ่น 32 บิต บนระบบปฏิบัติการ 64 บิต
 tl:Pag-install ng 32-bit SumatraPDF sa 64-bit OS
@@ -11203,6 +11453,7 @@ uk:Встановлення 32-розрядної SumatraPDF на 64-розря�
 vn:Cài đặt SumatraPDF 32-bit trên hệ điều hành 64-bit
 :Interior Color:
 am:Ներքին գույնը.
+ar:لون الداخل:
 az:İç rəngi:
 bg:Вътрешен цвят:
 br:Cor Interior:
@@ -11245,6 +11496,7 @@ sat:ᱵᱷᱤᱛᱤᱨ ᱨᱚᱝ :
 sk:Farba vnútra:
 sl:Barva notranjosti:
 sr-rs:Унутрашња боја:
+sv:Inre färg:
 ta:உட்புற நிறம்:
 tl:Kulay ng panloob:
 tr:İç Renk:
@@ -11299,6 +11551,7 @@ sat:KB
 sk:KB
 sl:KB
 sr-rs:kB
+sv:KB
 ta:KB
 th:กิโลไบต์
 tl:KB
@@ -11354,6 +11607,7 @@ sat:ᱣᱤᱱᱰᱚ ᱰᱮᱥᱠᱴᱚᱯ &ᱥᱮᱸᱫᱽᱨᱟ ᱫᱚ PDF ᱫ�
 sk:Povoliť, aby Windows Desktop Search &vyhľadával PDF dokumenty
 sl:Naj Windows Desktop Search išče PDF dokumente
 sr-rs:Нека Windows претрага &претражује PDF документе
+sv:Låt Windows inbyggda sökfunktion indexera PDF-dokument
 ta:விண்டோஸ் டெஸ்க்டாப் தேடல் &PDF ஆவணங்களைத் தேட விடுக
 th:ให้ Windows Desktop Search &ค้นหาเอกสาร PDF
 tl:Hayaan ang Windows Desktop Search na i-&search ang mga PDF documents
@@ -11409,6 +11663,7 @@ sat:ᱣᱤᱱᱰᱚ ᱫᱚ PDF ᱫᱚᱞᱤᱞᱠᱚ &ᱧᱮᱞᱵᱤᱲᱟᱹ�
 sk:Povoliť, aby Windows zobrazoval &náhľad PDF dokumentov
 sl:Naj Windows prikazuje predogled PDF dokumentov
 sr-rs:Нека Windows приказује &прегледе ПДФ докумената
+sv:Visa förhandstitt av PDF-dokument i Windows
 ta:&PDF ஆவணங்களின் முற்காட்சியை விண்டாஸ் காட்ட விடுக
 th:ให้ Windows แสดง &ตัวอย่างของเอกสาร PDF
 tl:Hayaan ang Windows na ipakita ang &previews ng mga PDF documents
@@ -11464,6 +11719,7 @@ sat:ᱟᱨᱥᱟᱞ
 sk:Svetlý
 sl:Svetla
 sr-rs:&Светло
+sv:Ljus
 ta:ஒளி
 th:สว่าง
 tl:Liwanag
@@ -11519,6 +11775,7 @@ sat:ᱜᱟᱨ
 sk:Čiara
 sl:Črta
 sr-rs:Ред
+sv:Linje
 ta:கோடு
 th:ไลน์
 tl:Linya
@@ -11528,6 +11785,7 @@ uk:Лінія
 vn:Dòng
 :Line End:
 am:Տողի ավարտը.
+ar:نهاية السطر:
 az:Xəttin sonu
 bg:Край на реда:
 br:Fim da Linha:
@@ -11571,6 +11829,7 @@ sat:ᱜᱟᱨ ᱢᱩᱪᱟᱹᱫ ᱮᱱᱟ :
 sk:Koniec čiary:
 sl:Konec črte:
 sr-rs:Крај реда
+sv:Radslut
 ta:வரி முடிவு:
 tl:Dulo ng linya:
 tr:Satır Bitişi:
@@ -11579,6 +11838,7 @@ uk:Кінець рядка:
 vn:Dòng Kết Thúc:
 :Line Start:
 am:Տողի մեկնարկը.
+ar:بداية السطر:
 az:Xəttin əvvəli
 bg:Начало на реда:
 br:Começo da Linha:
@@ -11622,6 +11882,7 @@ sat:ᱜᱟᱨ ᱮᱛᱦᱚᱵ :
 sk:Začiatok čiary:
 sl:Začetek črte:
 sr-rs:Почетак реда
+sv:Radstart
 ta:வரித் தொடக்கம்:
 tl:Simula ng linya:
 tr:Satır Başlangıcı:
@@ -11630,6 +11891,7 @@ uk:Початок рядка:
 vn:Dòng Bắt Đầu:
 :Loading %s ...
 am:%s-ի բեռնում...
+ar:يحمّل %s ...
 az:Yüklənir %s ...
 bg:Зареждане %s ...
 br:Carregando o %s ...
@@ -11670,6 +11932,7 @@ sat:%s ᱞᱟᱫᱮᱜ ᱠᱟᱱᱟ …
 sk:Načítava sa %s…
 sl:Nalaganje %s …
 sr-rs:Учитавање %s...
+sv:Laddar %s ...
 ta:%s ஏற்றப்படுகிறது ...
 tl:Naglo-loading %s ...
 tr:Yükleniyor %s ...
@@ -11723,6 +11986,7 @@ sat:MB
 sk:MB
 sl:MB
 sr-rs:MB
+sv:MB
 ta:MB
 th:เมกะไบต์
 tl:MB
@@ -11761,7 +12025,7 @@ hr:Postaviti SumatruPDF pretpostavljenim preglednikom PDF datoteka?
 hu:Legyen a SumatraPDF az alapértelmezett PDF-megnyitó program?
 id:Jadikan SumatraPDF sebagai aplikasi standar untuk membuka berkas PDF?
 it:Vuoi impostare SumatraPDF come programma predefinito per i file PDF?
-ja:SumatraPDF を PDF ファイルの既定のアプリケーションにしますか?
+ja:SumatraPDFをPDFファイルの既定アプリにしますか？
 kr:SumatraPDF를 PDF 파일의 기본 프로그램으로 만들까요?
 kw:Gul SumatraPDF towlen savonek rag restrennow PDF?
 lt:Ar nustatyti „SumatraPDF“ kaip numatytąją PDF žiūryklę?
@@ -11778,6 +12042,7 @@ sat:SumatraPDF ᱫᱚ PDF ᱨᱮᱫᱽᱠᱚ ᱞᱟᱹᱜᱤᱫ ᱛᱮ ᱢᱩᱞ
 sk:Nastaviť SumatraPDF ako predvolený prehliadač PDF súborov?
 sl:Naj bo SumatraPDF privezti program za datoteke PDF?
 sr-rs:Поставити SumatraPDF као подразумевану апликацију за PDF датотеке?
+sv:Ställa in SumatraPDF som standardprogram för PDF-filer?
 ta:சுமத்ராPDFயை கோட நிலை PDF படிப்பியாக மாற்றவா?
 th:ตั้ง SumatraPDF เป็นโปรแกรมมาตรฐานสำหรับเปิดไฟล์ PDF หรือไม่
 tl:Gawin ang SumatraPDF bilang default na pambukas ng mga PDF files?
@@ -11833,6 +12098,7 @@ sat:ᱢᱟ&ᱝᱜᱟ ᱢᱳᱰ
 sk:Man&ga mód
 sl:Način Man&ga
 sr-rs:Ман&га мод
+sv:Man&ga-läge
 ta:மேங்கா முறை
 th:โหมด Man&ga
 tl:Man&ga Mode
@@ -11842,6 +12108,7 @@ uk:Режим манги
 vn:Kiểu &Manga
 :Manual On Website
 am:Ձեռնարկը կայքում
+ar:دليل الاستخدام في الموقع
 br:Manual no Site da Web
 ca:Manual al lloc web
 cn:在线手册
@@ -11852,6 +12119,7 @@ de:Handbuch im Internet
 dk:Manual på hjemmeside
 el:Εγχειρίδιο στον ιστότοπο
 es:Manual en la Web
+fi:Ohjekirja verkkosivuilla
 fo:Vegleiðing á Vevsíðu
 fr:Manuel sur le site web
 ga:Lámhleabhar ar an Láithreán Gréasáin
@@ -11861,7 +12129,7 @@ hi:वेबसाइट पर मैनुअल
 hu:Kézikönyv a weboldalon
 id:Manual di Situs Web
 it:Manuale (sito web)
-ja:Web サイトのマニュアル(&A)
+ja:ウェブサイト上のマニュアル(&A)
 my:Manual Di Tapak Web
 nl:Handleiding op Website
 pl:Instrukcja obsługi na stronie internetowej
@@ -11871,6 +12139,7 @@ ru:Руководство на веб-сайте
 sat:ᱣᱮᱵᱽᱥᱟᱭᱤᱴ ᱨᱮ ᱥᱟᱹᱠᱷᱤ
 sk:Manuál na webovej stránke
 sl:Priročnik na spletni strani
+sv:Manual på webbsida
 tw:線上說明
 :Match Case
 am:Հաշվի առնել մեծատառ/փոքրատառը
@@ -11920,6 +12189,7 @@ sat:ᱪᱤᱠᱤ ᱢᱮᱲᱟᱣ
 sk:Rozlišovať veľké/malé písmená
 sl:Razlikuj med velikimi/malimi črkami
 sr-rs:Разликуј мала и велика слова
+sv:Matcha versaler/gemener
 ta:தட்டுப்பொருத்தம்
 th:จับคู่
 tl:Ipantay ang Laki ng Titik
@@ -11975,6 +12245,7 @@ sat:Mobi ᱫᱚᱞᱤᱞᱠᱚ
 sk:Mobi dokumenty
 sl:Mobi dokumenti
 sr-rs:Mobi документи
+sv:Mobi-dokument
 ta:Mobi ஆவணங்கள்
 th:ข้อมูลมือถือ
 tl:Mga dokumento ng mobi
@@ -12030,6 +12301,7 @@ sat:ᱵᱚᱫᱚᱞᱠᱟᱱᱟ :
 sk:Upravené:
 sl:Spremenjeno:
 sr-rs:Измењена:
+sv:Ändrad:
 ta:மாற்றப்பட்டது:
 th:ได้ปรับแต่งแล้ว:
 tl:Nabago noong:
@@ -12081,6 +12353,7 @@ sat:ᱱᱟᱶᱟ &ᱡᱷᱚᱨᱠᱟ
 sk:&Nové okno
 sl:Novo okno
 sr-rs:Нови &прозор
+sv:Nytt fönster
 ta:புதிய சாளரம்
 tl:Bagong &window
 tr:Yeni pencere
@@ -12133,6 +12406,7 @@ sat:ᱱᱟᱶᱟ ᱦᱟᱹᱞᱤᱭᱟᱹᱠ ᱢᱮᱱᱟᱜ ᱠᱟᱫᱟ
 sk:Dostupná nová verzia
 sl:Na voljo je nova različica
 sr-rs:Нова верзија је доступна
+sv:Ny version tillgänglig
 ta:புதிய பதிப்பு கிடைக்கப்பெறுகிறது
 th:มีรุ่นใหม่พร้อมให้บริการ
 tl:Bagong bersyon na magagamit
@@ -12188,6 +12462,7 @@ sat:ᱤᱱᱟᱹ ᱛᱟᱭᱚᱢ ᱥᱟᱦᱴᱟ :
 sk:Ďalšia strana
 sl:Naslednja stran
 sr-rs:Следећа страница
+sv:Nästa sida
 ta:அடுத்த பக்கம்
 th:หน้าถัดไป
 tl:Sunod na Pahina
@@ -12197,7 +12472,9 @@ uk:Наступна сторінка
 vn:Trang sau
 :No
 am:Ոչ
+ar:كلا
 br:Não
+by:Не
 ca:No
 cn:否
 co:Nò
@@ -12207,6 +12484,7 @@ de:Nein
 dk:Nej
 el:Όχι
 es:No
+fi:Ei
 fo:Nei
 fr:Non
 ga:Níl
@@ -12226,6 +12504,7 @@ ru:Нет
 sat:ᱵᱟᱝᱟ
 sk:Nie
 sl:Ne
+sv:Nej
 tw:否
 :No matches were found
 am:Ոչինչ չի գտնվել
@@ -12258,7 +12537,7 @@ hr:Pojam nije pronađen
 hu:Nem található a dokumentumban
 id:Tidak ditemukan kesamaan
 it:Nessuna corrispondenza trovata
-ja:一致が見つかりませんでした
+ja:一致するものが見つかりませんでした
 kr:일치하는 항목을 찾을 수 없습니다.
 kw:Ny veu keyvys par vyth
 lt:Nerasta atitikmenų
@@ -12275,6 +12554,7 @@ sat:ᱪᱮᱫ ᱦᱚᱸ ᱢᱮᱲᱟᱣ ᱞᱮᱠᱷᱟᱱ ᱵᱟᱭ ᱧᱟᱢ �
 sk:Nenájdené podľa zodpovedajúcich kritérií
 sl:Ni zadetkov
 sr-rs:Појам није пронађен
+sv:Inga träffar hittades
 ta:ஒரு பொருத்தமும் இல்லை
 th:ไม่พบที่ตรงกัน
 tl:Walang makitang kapareha
@@ -12330,6 +12610,7 @@ sat:%u ᱞᱟᱹᱭᱤᱱ ᱨᱮᱭᱟᱜ %s ᱨᱮᱫᱽᱨᱮ ᱪᱮᱫ ᱛᱮ
 sk:Nenájdené žiadne výsledky na riadku %u v súbore %s
 sl:Okoli vrstice %u v datoteki %s ni zadetkov
 sr-rs:Резултати око линије %u у датотеци %s нису пронађени
+sv:Inget resultat hittades vid rad %u i fil %s
 ta:%u வரியில் %s கோப்பில் முடிவுகள் கிடைக்கவில்லை
 th:ไม่พบผลลัพธ์รอบๆ บรรทัด %u ในไฟล์ %s
 tl:Walang nakitang resulta sa line %u ng file %s
@@ -12385,6 +12666,7 @@ sat:ᱪᱮᱫ ᱦᱚᱸ ᱟᱹᱭᱩᱨᱢᱤᱫ ᱨᱮᱫᱽᱠᱚ ᱵᱟᱭ �
 sk:Súbor synchronizácie nenájdený
 sl:Datoteka sinhronizacije ni bila najdena
 sr-rs:Усклађивачка датотека није нађена
+sv:Ingen synkroniseringsfil hittad
 ta:ஒத்தியங்கு கோப்பு எதுவும் கண்டுபிடிக்கவில்லை
 th:ไม่พบไฟล์การซิงโครไนซ์
 tl:Walang makitang synchronization file
@@ -12440,6 +12722,7 @@ sat:ᱱᱚᱶᱟ ᱡᱟᱭᱜᱟ ᱨᱮ ᱪᱮᱫ ᱦᱚᱸ ᱟᱹᱭᱩᱨᱢ�
 sk:Chýba informácia o synchronizácii
 sl:Na tem mestu ni sinhronizacijskih podatkov
 sr-rs:Нема података о усклађености на овој позицији
+sv:Synkroniseringsinformation saknas här
 ta:ஒத்தியங்கு தகவல் எதுவும் இந்த நிலையில் இல்லை
 th:ไม่มีข้อมูลการซิงโครไนซ์ที่ตำแหน่งนี้
 tl:Walang makitang detalye ng synchronization dito
@@ -12495,6 +12778,7 @@ sat:ᱥᱟᱦᱴᱟ ᱨᱮᱭᱟᱜ ᱮᱞ :
 sk:Počet strán:
 sl:Število strani:
 sr-rs:Број страница:
+sv:Antal sidor:
 ta:பக்கங்களின் எண்ணிக்கை
 th:จำนวนของหน้า:
 tl:Bilang ng mga pahina:
@@ -12550,6 +12834,7 @@ sat:ᱴᱷᱤᱠ
 sk:Nastaviť
 sl:V redu
 sr-rs:У реду
+sv:OK
 ta:சரி
 th:ตกลง
 tl:OK
@@ -12603,6 +12888,7 @@ sat:ᱚᱯᱟᱥᱤᱴᱭ :
 sk:Priehľadnosť:
 sl:Motnost:
 sr-rs:Прозрачност
+sv:Opacitet:
 ta:மழுக்கம்:
 tl:Kalabuan:
 tr:Opaklık:
@@ -12611,6 +12897,7 @@ uk:Непрозорість
 vn:Làm mờ:
 :Opacity: %d
 am:Մգություն. %d
+ar:العتامة: %d
 az:Tutğunluq: %d
 bg:Прозрачност: %d
 br:Opacidade: %d
@@ -12627,7 +12914,7 @@ es:Opacidad: %d
 et:Läbipaistvus: %d
 eu:Iragazkaiztasuna: %d
 fa:شفافیت: %d
-fi:Läåinäkyvyys: %d
+fi:Läpinäkyvyys: %d
 fo:Óskygni: %d
 fr:Opacité : %d
 ga:Teimhneacht: %d
@@ -12654,6 +12941,7 @@ sat:ᱚᱯᱟᱥᱤᱴᱭ :  %d
 sk:Priehľadnosť: %d
 sl:Motnost: %d
 sr-rs:Прозрачност: %d
+sv:Genomskinlighet: %d
 ta:மழுக்கம்: %d
 tl:Kalabuan: %d
 tr:Opaklık: %d
@@ -12708,6 +12996,7 @@ sat:ᱠᱷᱩᱞᱟᱹᱭ ᱢᱮ
 sk:Otvoriť
 sl:Odpri
 sr-rs:Отвори
+sv:Öppna
 ta:திற
 th:เปิด
 tl:Buksan
@@ -12763,6 +13052,7 @@ sat:PDF-XChange ᱨᱮ ᱠ&ᱷᱩᱞᱟᱹᱭ ᱢᱮ
 sk:Otvoriť v programe PDF-XChange
 sl:Odpri s programom PDF-XChange
 sr-rs:Отвори &у PDF-XChange-у
+sv:Öppna i PDF-XChange
 ta:PDF-XChange இல் திற
 th:เปิด &ใน PDF-XChange
 tl:Buksan sa PDF-XChange
@@ -12772,6 +13062,7 @@ uk:Відкрити у PDF-XChange
 vn:Mở bằng PDF-XChange
 :Open Attachment
 am:Բացել կցորդը
+ar:افتح المرفق
 az:Qoşmanı aç
 bg:Отваряне на прикачения файл
 br:Abrir Anexo
@@ -12812,6 +13103,7 @@ sat:ᱠᱟᱴᱷᱟ ᱠᱷᱩᱞᱟᱹᱭ ᱢᱮ
 sk:Otvoriť prílohu
 sl:Odpri prilogo
 sr-rs:Отвори прилог
+sv:Öppna bilaga
 ta:இணைப்பைத் திறந்திடுக
 tl:Buksan ang Attachment
 tr:Eki aç
@@ -12819,6 +13111,7 @@ tw:開啟附件
 uk:Відкрити вкладення
 :Open Directory in &Double Commander
 am:Բացել գրացուցակը &Double Commander-ում
+ar:افتح الم&جلد في Double Commander
 az:Qovluğu &Double Commander-də aç
 br:Abrir o Diretório no &Double Commander
 by:Адкрыць каталог у &Double Commander
@@ -12856,6 +13149,7 @@ sat:&ᱰᱚᱵᱚᱞ ᱟᱫᱮᱥᱤᱭᱟᱹ ᱨᱮ ᱯᱚᱴᱚᱢ ᱡᱷᱤ�
 sk:Otvoriť priečinok v aplikácii &Double Commander
 sl:Odpri mapo v &Double Commander
 sr-rs:Отвори фасциклу у Double Commander-у (&К)
+sv:Öppna mapp i &Double Commander
 ta:டபுள் கமாண்டரில் கோப்புறை திற
 tl:Buksan ang Directory sa &Double Commander
 tr:Dizini &Double Commander ile aç
@@ -12863,6 +13157,7 @@ tw:在 Double Commander 中開啟資料夾(&D)
 uk:Відкрити папку в &Double Commander
 :Open Directory in &Explorer
 am:Բացել գրացուցակը &Explorer-ում
+ar:افتح الم&جلد في المتصفح Explorer
 az:Qovluğu &Explorer-də aç
 br:Abrir o Diretório no &Explorer
 by:Адкрыць каталог у &Правадніку
@@ -12901,6 +13196,7 @@ sat:&ᱮᱠᱥᱯᱞᱚᱨᱤᱨ ᱨᱮ ᱯᱚᱴᱚᱢ ᱡᱷᱤᱡᱽ ᱢᱮ
 sk:Otvoriť priečinok v Pri&eskumníkovi
 sl:Odpri mapo v &Explorerju
 sr-rs:Отвори фасциклу у Истра&живачу
+sv:Öppna mapp i &Utforskaren
 ta:எக்ஸ்ப்ளோரரில் கோப்புறை திற
 tl:Buksan ang Directory sa &Explorer
 tr:Dizini &Explorer ile aç
@@ -12908,6 +13204,7 @@ tw:在檔案總管中開啟資料夾(&E)
 uk:Відкрити папку в &Провіднику
 :Open Directory in &Total Commander
 am:Բացել գրացուցակը &Total Commander-ում
+ar:افتح المج&لد في Total Commander
 az:Qovluğu &Total Commander-də aç
 br:Abrir o Diretório no &Total Commander
 by:Адкрыць каталог у &Total Commander
@@ -12946,6 +13243,7 @@ sat:&ᱢᱩᱴ ᱠᱚᱢᱟᱱᱰᱚᱨ ᱨᱮ ᱯᱚᱴᱚᱢ ᱡᱷᱤᱡᱽ �
 sk:Otvoriť priečinok v aplikácii &Total Commander
 sl:Odpri mapo v &Total Commanderju
 sr-rs:Отвори фасциклу у Total Commander-у (&Т)
+sv:Öppna mapp i &Total Commander
 ta:டோட்டல் கமாண்டரில் கோப்புறை திற
 tl:Buksan ang Directory sa &Total Commander
 tr:Dizini &Total Commander ile aç
@@ -12953,6 +13251,7 @@ tw:在 Total Commander 中開啟資料夾(&T)
 uk:Відкрити папку в &Total Commander
 :Open Directory in Directory &Opus
 am:Բացել գրացուցակը Directory &Opus-ում
+ar:افتح المجل&د في Directory Opus
 az:Qovluğu Directory &Opus-da aç
 br:Abrir o Diretório no Directory &Opus
 by:Адкрыць каталог у Directory &Opus
@@ -12989,6 +13288,7 @@ sat:ᱰᱟᱭᱨᱮᱠᱴᱚᱨᱤ &Opus ᱨᱮ ᱰᱟᱭᱨᱮᱠᱴᱚᱨᱤ �
 sk:Otvoriť priečinok v aplikácii &Opus
 sl:Odpri mapo v Directory &Opus
 sr-rs:Отвори фасциклу у Directory Opus-у (&Д)
+sv:Öppna mapp i Directory &Opus
 ta:டைரக்டரி ஓபஸில் கோப்புறை திற
 tl:Buksan ang Directory sa Directory &Opus
 tr:Dizini Directory &Opus ile aç
@@ -13041,6 +13341,7 @@ sat:ᱠᱷᱚᱧᱡᱟ PDF ᱠᱷᱩᱞᱟᱹᱭ ᱢᱮ
 sk:Otvoriť vložené PDF
 sl:Odpri vdelani PDF
 sr-rs:Отвори уграђени PDF
+sv:Öppna inbäddad PDF
 ta:பொதிந்துள்ள PDFஐத் திறந்திடுக
 th:เปิด PDF ฝังรหัส
 tl:Buksan ang naka-embed na PDF
@@ -13050,6 +13351,7 @@ uk:Відкрити вкладений PDF
 vn:Mở PDF Đã Nhúng
 :Open In New Window
 am:Բացել նոր պատուհանում
+ar:افتح في نافذة جديدة
 az:Yeni pəncərədə aç
 br:Abrir numa Nova Janela
 by:Адкрыць у новым акне
@@ -13063,6 +13365,7 @@ dk:Åben i nyt vindue
 el:Άνοιγμα Σε Νέο Παράθυρο
 es:Abrir en nueva ventana
 fa:بازکردن در پنجره جدید
+fi:Avaa uudessa ikkunassa
 fo:Opna í Nýggjum Glugga
 fr:Ouvrir dans une nouvelle fenêtre
 ga:Oscail i bhfuinneog nua
@@ -13087,10 +13390,13 @@ sat:ᱱᱟᱶᱟ ᱡᱷᱚᱨᱠᱟ ᱨᱮ ᱡᱷᱤᱡᱽ ᱢᱮ
 sk:Otvoriť v novom okne
 sl:Odpri v novem oknu
 sr-rs:Отвори у новом прозору
+sv:Öppna i nytt fönster
 ta:புதிய சாளரத்தில் திற
 tl:Buksan sa bagong Window
 tw:在新視窗中開啟
 :Open Next File In Folder
+am:Բացել հաջորդ ֆայլը պանակից
+ar:افتح الملف التالي في المجلد
 br:Abrir o Próximo Arquivo na Pasta
 cn:打开文件夹中的下一个文件
 co:Apre u schedariu seguente in u cartulare
@@ -13099,6 +13405,7 @@ cz:Otevřít další soubor ve složce
 de:Nächste Datei im Ordner öffnen
 dk:Åben næste fil i mappe
 el:Άνοιγμα επόμενου αρχείου στο φάκελο
+fi:Avaa seuraava tiedosto kansiossa
 fo:Opna Næstu Fílu í Mappuna
 fr:Ouvrir le fichier suivant dans le dossier
 gl:Abrir seguinte ficheiro en pasta
@@ -13117,8 +13424,11 @@ ru:Открыть следующий файл в папке
 sat:ᱯᱚᱴᱚᱢ ᱨᱮ ᱤᱱᱟᱹ ᱛᱟᱭᱚᱢᱟᱜ ᱨᱮᱫᱽ ᱡᱷᱤᱡᱽ ᱢᱮ
 sk:Otvoriť nasledujúci súbor v priečinku
 sl:Odpri naslednjo datoteko v mapi
+sv:Öppna nästa fil i mapp
 tw:開啟資料夾內的下一個檔案
 :Open Previous File In Folder
+am:Բացել նախորդ ֆայլը պանակից
+ar:افتح الملف السابق في المجلد
 br:Abrir o Arquivo Anterior na Pasta
 cn:打开文件夹中的上一个文件
 co:Apre u schedariu precedente in u cartulare
@@ -13127,6 +13437,7 @@ cz:Otevřít předchozí soubor ve složce
 de:Vorherige Datei im Ordner öffnen
 dk:Åbne tidligere fil i mappe
 el:Άνοιγμα προηγούμενου αρχείου στο φάκελο
+fi:Avaa edellinen tiedosto kansiossa
 fo:Opna Fyrru Fílu í Mappuna
 fr:Ouvrir le fichier précédent dans le dossier
 gl:Abrir ficheiro previo na pasta
@@ -13145,6 +13456,7 @@ ru:Открыть предыдущий файл в папке
 sat:ᱯᱚᱴᱚᱢ ᱨᱮ ᱢᱟᱲᱟᱝᱟᱜ ᱨᱮᱫᱽ ᱡᱷᱤᱡᱽ ᱢᱮ
 sk:Otvoriť predchádzajúci súbor v priečinku
 sl:Odpri prejšnjo datoteko v mapi
+sv:Öppna föregående fil i mapp
 tw:開啟資料夾內的上一個檔案
 :Open a document...
 am:Բացել փաստաթուղթ...
@@ -13194,6 +13506,7 @@ sat:ᱢᱤᱫᱴᱟᱹᱝ ᱫᱚᱞᱤᱞ ᱠᱷᱩᱞᱟᱹᱭ ᱢᱮ …
 sk:Otvoriť dokument...
 sl:Odpri dokument …
 sr-rs:Отвори документ...
+sv:Öppna ett dokument...
 ta:ஓர் ஆவணத்தைத் திற...
 th:เปิดข้อมูล
 tl:magbukas ng dokumento...
@@ -13249,6 +13562,7 @@ sat:%s ᱨᱮ ᱡᱷᱤᱡᱽ ᱢᱮ
 sk:Otvoriť v %s
 sl:Odpri v %s
 sr-rs:Отворити у %s
+sv:Öppna med %s
 ta:திற %s
 th:เปิดด้วย %s
 tl:Buksan sa %s
@@ -13304,6 +13618,7 @@ sat:&ᱮᱰᱚᱵᱤ ᱨᱤᱰᱚᱨ ᱨᱮ ᱡᱷᱤᱡᱽ ᱢᱮ
 sk:Otvoriť v programe &Adobe Reader
 sl:Odpri s programom &Adobe Reader
 sr-rs:Отвори у Adobe Reader-у (&А)
+sv:Öppna i Adobe &Reader
 ta:&Adobe Reader இல் திற
 th:เปิดด้วย &Adobe Reader
 tl:Buksan sa Adobe Reader
@@ -13359,6 +13674,7 @@ sat:&Foxit Reader ᱨᱮ ᱡᱷᱤᱡᱽ ᱢᱮ
 sk:Otvoriť v programe &Foxit Reader
 sl:Odpri s programom &Foxit Reader
 sr-rs:Отвори у Foxit Reader-у (&Ф)
+sv:Öppna i Foxit Reader
 ta:&Foxit Reader இல் திற
 th:เปิดด้วย &Foxit Reader
 tl:Buksan sa Foxit Reader
@@ -13414,6 +13730,7 @@ sat:&Microsoft XPS-Viewer ᱨᱮ ᱡᱷᱤᱡᱽ ᱢᱮ
 sk:Otvoriť v programe Microsoft XPS-Viewer
 sl:Odpri s programom Microsoft XPS-Viewer
 sr-rs:Отвори у Microsoft XPS Viewer-у (&Џ)
+sv:Öppna i Microsoft XPS-Viewer
 ta:Microsoft XPS-Viewer இல் திற
 th:เปิดด้วย &Microsoft XPS-Viewer
 tl:Buksan sa Microsoft XPS-Viewer
@@ -13423,6 +13740,7 @@ uk:Відкрити у Microsoft XPS-Viewer
 vn:Mở bằng Microsoft XPS-Viewer
 :Open in Microsoft &HTML Help
 am:Բացել Microsoft &HTML Օգնությունում
+ar:افتح في برنامج م&ساعدة HTML مايكروسوفت
 az:Microsoft &HTML Help-də aç
 br:Abrir no Microsoft &HTML Help
 by:Адкрыць у Microsoft &HTML Help
@@ -13459,6 +13777,7 @@ sat:Microsoft &HTML ᱜᱚᱲᱚ ᱨᱮ ᱡᱷᱤᱡᱽ ᱢᱮ
 sk:Otvoriť v Microsoft pomocník &HTML
 sl:Odpri s programom Microsoft &HTML Help
 sr-rs:Отвори у Microsoft HTML Help-у (&Х)
+sv:Öppna i Microsoft &HTML Hjälp
 ta:மைக்ரோசாப்ட் HTML ஹெல்பில் திற
 tl:Buksan sa Microsoft &HTML Help
 tr:Dizini Microsoft &HTML ile aç
@@ -13511,6 +13830,7 @@ sat:&ᱜᱩᱱᱠᱚ
 sk:&Vlastnosti
 sl:Lastnosti
 sr-rs:С&војства
+sv:E&genskaper
 ta:பண்புகள்
 th:&คุณสมบัติ
 tl:Mga katangian
@@ -13566,6 +13886,7 @@ sat:PDF ᱫᱚᱞᱤᱞ
 sk:PDF Dokument
 sl:Dokument PDF
 sr-rs:PDF документ
+sv:PDF-dokument
 ta:PDF கோப்பு
 th:เอกสาร PDF
 tl:PDF Document
@@ -13621,6 +13942,7 @@ sat:PDF ᱯᱷᱮᱨᱵᱚᱫᱚᱞᱠᱚ :
 sk:PDF Optimalizácia:
 sl:Optimizacije PDF:
 sr-rs:PDF оптимизација
+sv:PDF-optimeringar:
 ta:PDF மேம்படுத்தல்கள்
 th:การเพิ่มประสิทธิภาพ PDF:
 tl:PDF Optimizations:
@@ -13659,7 +13981,7 @@ hr:Proizvođač PDF-a:
 hu:PDF-et létrehozta:
 id:Pembuat PDF:
 it:Produttore PDF:
-ja:PDF 出力:
+ja:PDF生成ソフト:
 kr:PDF 제작자:
 kw:Askorrer PDF:
 lt:PDF leidėjas:
@@ -13676,6 +13998,7 @@ sat:PDF ᱛᱮᱭᱟᱨᱤᱭᱟᱹ ᱺ
 sk:Vytvorené v:
 sl:PDF izdelovalec:
 sr-rs:PDF израдио
+sv:PDF-programvara:
 ta:PDF உருவாக்கர்:
 th:ผู้ผลิต PDF:
 tl:Gumawa ng PDF:
@@ -13714,7 +14037,7 @@ hr:Inačica PDF-a:
 hu:PDF verzió:
 id:Versi PDF:
 it:Versione PDF:
-ja:PDF バージョン:
+ja:PDFバージョン:
 kr:PDF 버전:
 kw:Versyon PDF:
 lt:PDF versija:
@@ -13731,6 +14054,7 @@ sat:PDF ᱦᱟᱹᱞᱤᱭᱟᱹᱠ ᱺ
 sk:PDF Verzia:
 sl:Verzija PDF:
 sr-rs:PDF верзија:
+sv:PDF-version:
 ta:PDF பதிப்பு
 th:รุ่น PDF:
 tl:Bersyon ng PDF:
@@ -13786,6 +14110,7 @@ sat:PDF ᱫᱚᱞᱤᱞᱠᱚ
 sk:PDF dokumenty
 sl:PDF dokumenti
 sr-rs:PDF документи
+sv:PDF-dokument
 ta:PDF கோப்புகள்
 th:เอกสาร PDF
 tl:Mga PDF na dokumento
@@ -13795,6 +14120,7 @@ uk:Документи PDF
 vn:Tập tin PDF
 :Pa&ge...
 am:Է&ջ...
+ar:ال&صفحة...
 az:Sə&hifə
 bg:Ст&раница...
 br:Pá&gina
@@ -13821,7 +14147,7 @@ hr:St&ranica...
 hu:&Oldal…
 id:Halaman
 it:Pa&gina...
-ja:ページ(&G)...
+ja:ページを指定(&G)...
 kr:페이지(&G)...
 my:Ha&laman...
 nl:Pa&gina
@@ -13835,6 +14161,7 @@ sat:&ᱥᱟᱦᱴᱟ ...
 sk:Stra&na…
 sl:Stran …
 sr-rs:С&траница...
+sv:Si&da
 ta:பக்கம்
 tl:Pa&ge...
 tr:Sayfaya...
@@ -13889,6 +14216,7 @@ sat:ᱥᱟᱦᱴᱟ %s
 sk:Strana %s
 sl:Stran %s
 sr-rs:Страница %s
+sv:Sida %s
 ta:பக்கம் %s
 th:หน้า %s
 tl:Pahina %s
@@ -13927,7 +14255,7 @@ hr:Veličina stranice:
 hu:Oldalméret
 id:Ukuran Halaman:
 it:Formato pagina:
-ja:ページ サイズ:
+ja:ページサイズ:
 kr:페이지 크기:
 kw:Braster Folen:
 lt:Puslapio dydis:
@@ -13944,6 +14272,7 @@ sat:ᱥᱟᱦᱴᱟ ᱢᱟᱯ :
 sk:Veľkosť strany:
 sl:Velikost strani:
 sr-rs:Димензије странице:
+sv:Sidstorlek:
 ta:பக்க அளவு
 th:ขนาดหน้า:
 tl:Laki ng Page
@@ -13999,6 +14328,7 @@ sat:ᱥᱟᱦᱴᱟ ᱮᱞ %u ᱫᱚ ᱵᱟᱹᱱᱩᱜ ᱠᱟᱫᱟ
 sk:Číslo strany %u neexistuje
 sl:Stran številka %u ne obstaja
 sr-rs:Страница број %u не постоји
+sv:Sidnummer %u finns ej
 ta:பக்க எண் %u இருக்கவில்லை
 th:หมายเลขหน้า %u ไม่เข้ากัน
 tl:Walang pahinang %u
@@ -14054,6 +14384,7 @@ sat:ᱥᱟᱦᱴᱟ ᱢᱟᱯ
 sk:Mierka strany
 sl:Merilo strani
 sr-rs:Подешавање величине странице
+sv:Skala om vid utskrift
 ta:பக்கம் அளவுமாற்றம்
 th:การปรับหน้า
 tl:Pagkalaki ng pahina
@@ -14109,6 +14440,7 @@ sat:ᱥᱟᱦᱴᱟ :
 sk:Strana:
 sl:Stran:
 sr-rs:Страница:
+sv:Sida:
 ta:பக்கம்:
 th:หน้า:
 tl:Pahina:
@@ -14164,6 +14496,7 @@ sat:PalmDoc ᱫᱚᱞᱤᱞᱠᱚ
 sk:PalmDoc dokumenty
 sl:PalmDoc dokumenti
 sr-rs:PalmDoc документи
+sv:PalmDoc-dokument
 ta:PalmDOC ஆவணங்கள்
 th:เอกสาร PalmDoc
 tl:Mga dokumento ng PalmDoc
@@ -14219,6 +14552,7 @@ sat:ᱞᱟᱦᱟ ᱞᱟᱹᱜᱤᱫ ᱫᱟᱭᱟᱠᱟᱛᱮ %s ᱵᱚᱸᱫᱚ�
 sk:Prosím zatvorte %s pre pokračovanie!
 sl:Prosimo, izberite %s za nadaljevati!
 sr-rs:Затворите %s за наставак!
+sv:Vänligen stäng %s innan du fortsätter!
 ta:தயவு செய்து %s மூடிவிட்டு தொடரவும்!
 th:โปรดปิด %s เพื่อดำเนินการต่อ!
 tl:mangyaring isara ang %s upang magpatuloy!
@@ -14228,6 +14562,7 @@ uk:Будь ласка закрийте %s, щоб продовжити!
 vn:Hãy đóng %s lại để tiến hành!
 :Please wait - loading...
 am:Սպասեք, բեռնվում է...
+ar:الرجاء الانتظار - يحمّل...
 az:Lütfən gözləyin - yüklənir...
 br:Por favor aguarde - carregando...
 by:Пачакайце – загружаецца…
@@ -14266,6 +14601,7 @@ sat:ᱫᱟᱭᱟᱠᱟᱛᱮ ᱛᱟᱹᱝᱜᱤ ᱢᱮ ᱼ ᱞᱟᱫᱮᱜ ᱠ�
 sk:Počkajte, prosím - načítava sa…
 sl:Prosimo počakajte - nalagam
 sr-rs:Молимо сачекајте – учитавање…
+sv:Vänligen vänta - laddar...
 ta:தயவுசெய்து காத்திருக்கவும் - செயல்பாட்டில்...
 tl:Mangyaring maghintay - naglo-loading...
 tr:Yükleniyor lütfen bekleyin...
@@ -14319,6 +14655,7 @@ sat:ᱫᱟᱭᱟᱠᱟᱛᱮ ᱛᱟᱹᱝᱜᱤ ᱢᱮ ᱼ ᱨᱮᱱᱰᱚᱨᱤ
 sk:Prosím počkajte - zobrazovanie...
 sl:Počakajte trenutek, upodobitev poteka …
 sr-rs:Спремање приказа...
+sv:Ett ögonblick - förbereder...
 ta:தயவுசெய்து காத்திருக்கவும் - அளிக்கபட்டுவருகிறது...
 th:กรุณารอ - กำลังประมวลผล ... ...
 tl:Maghintay - pinapakita...
@@ -14372,6 +14709,7 @@ sat:ᱟᱭᱢᱟᱸ ᱜᱟᱨ
 sk:Polyčiara
 sl:Polilinija
 sr-rs:Поли-линија
+sv:Polylinje
 ta:பலகோடு
 th:โพลีไลน์
 tl:Poly Line
@@ -14427,6 +14765,7 @@ sat:ᱯᱚᱞᱤᱜᱚᱱ
 sk:Polygón
 sl:Poligon
 sr-rs:Многоугао
+sv:Polygon
 ta:பலகோணம்
 th:รูปหลายเหลี่ยม
 tl:Polygon
@@ -14435,7 +14774,8 @@ tw:多邊形
 uk:Багатокутник
 vn:Đa Hình
 :Popup: %d 0 R
-am:Ելնող. %d 0 R
+am:Ելնող՝ %d 0 R
+ar:المنبثقة: %d 0 R
 az:Sıçrayan element: %d 0 R
 bg:Изскачащ прозорец:  %d 0 R
 br:Popup: %d 0 R
@@ -14532,6 +14872,7 @@ sat:ᱯᱚᱥᱴᱥᱠᱨᱤᱯᱴ ᱫᱚᱞᱤᱞᱠᱚ
 sk:Postscript dokumenty
 sl:Postscript dokumenti
 sr-rs:Postscript документи
+sv:Postscript-dokument
 ta:போஸ்ட்ஸ்கிரிப்ட் ஆவணங்கள்
 th:เอกสาร Postscript
 tl:Mga dokumento ng Postscript
@@ -14581,6 +14922,7 @@ sat:ᱯ&ᱨᱮᱡᱮᱱᱴᱮᱥᱚᱱ
 sk:Prez&entácia
 sl:Pr&edstavitev
 sr-rs:Пр&езентација
+sv:Pr&esentation
 ta:&விளக்கக்காட்சி
 tl:Pr&esentasyon
 tr:Sunum
@@ -14635,6 +14977,7 @@ sat:ᱢᱟᱲᱟᱝ ᱥᱮᱦᱴᱟ
 sk:Predchádzajúca strana
 sl:Prejšnja stran
 sr-rs:Претходна страница
+sv:Föregående sida
 ta:முந்தைய பக்கம்
 th:หน้าก่อนหน้า
 tl:Naunang Pahina
@@ -14690,6 +15033,7 @@ sat:ᱪᱷᱟᱯᱟ
 sk:Tlač
 sl:Natisni
 sr-rs:Штампај
+sv:Skriv ut
 ta:அச்சிட்டு
 th:พิมพ์
 tl:Ilimbag
@@ -14745,6 +15089,7 @@ sat:ᱪᱷᱟᱯᱟ ᱛᱷᱚᱠ
 sk:Rozsah tlače
 sl:Natisni razpon
 sr-rs:Опсег штампања
+sv:Skriv ut urval
 ta:அச்சிடும் வரம்பு
 th:ช่วงพิมพ์
 tl:Mga ipi-print na pahina
@@ -14757,7 +15102,7 @@ am:Այս անվամբ տպիչ գոյություն չունի
 ar:طابعة بهذا الاسم غير موجودة
 az:Bu adda printer mövcud deyil
 bg:Принтер с това име не съществува
-br:Uma impressora com este nome dado não existe
+br:Não existe uma impressora com o nome dado
 by:Друкарка з такім імем не існуе
 ca:No existeix cap impressora amb el nom donat
 ca-xv:No existeix cap impressora amb aquest nom
@@ -14800,6 +15145,7 @@ sat:ᱚᱱᱟ ᱧᱩᱛᱩᱢ ᱨᱮᱭᱟᱜ ᱪᱷᱟᱯᱟ ᱫᱚ ᱵᱟᱹ�
 sk:Tlačiareň s uvedeným názvom neexistuje.
 sl:Tiskalnik z navedenim imenom ne obstaja
 sr-rs:Штампач са наведеним именом не постоји
+sv:Det finns ingen skrivade med angivet namn
 ta:குறிபிட்ட பெயரில் அச்சுப்பொறி இல்லை.
 th:ไม่มีเครื่องพิมพ์ที่มีชื่อที่กำหนด
 tl:Printer na may ibinigay na pangalan ay wala
@@ -14855,6 +15201,7 @@ sat:ᱪᱷᱟᱯᱟ ᱪᱟᱹᱞᱩ ᱠᱟᱱᱟ ᱾
 sk:Prebieha tlač...
 sl:Tiskanje v teku.
 sr-rs:Штампање у току!
+sv:Utskrift pågår.
 ta:அச்சு பணியில் உள்ளது
 th:กำลังพิมพ์
 tl:kasalukuyang napi-print
@@ -14910,6 +15257,7 @@ sat:ᱪᱷᱟᱯᱟ ᱱᱤᱛ ᱦᱚᱸ ᱪᱟᱹᱞᱩ ᱠᱟᱱᱟ ᱾ ᱵᱟ�
 sk:Prebieha tlač. Prerušiť a ukončiť tlač?
 sl:Tiskanje je še vedno v teku. Prekinem in končam?
 sr-rs:Штампање је и даље у току. Завршити и прекинути?
+sv:Utskrift pågår fortfarande. Avbryt och avsluta?
 ta:அச்சடித்தல் செயலில் உள்ளது. நிறுத்தி ரத்து செய்?
 th:การพิมพ์ยังอยู่ในระหว่างดำเนินการ ยกเลิกและหยุด?
 tl:Kasalukuyang isinasagawa ang pagpi-print. Itigil at huminto?
@@ -14965,6 +15313,7 @@ sat:ᱪᱷᱟᱯᱟ ᱱᱤᱛ ᱦᱚᱸ ᱪᱟᱹᱞᱩ ᱠᱟᱱᱟ ᱾ ᱵᱟ�
 sk:Prebieha tlač. Prerušiť a začať znova?
 sl:Tiskanje je še vedno v teku. Prekinem in začnem znova?
 sr-rs:Штампање је још увек у току. Желите ли да прекинете штампање и почнете поново?
+sv:Utskriften pågår fortfarande. Avbryt och börja om?
 ta:அச்சிடுதல் செயல்பாட்டில் உள்ளது. கைவிட்டு மீண்டும் தொடங்கவா?
 th:การพิมพ์ยังอยู่ในระหว่างดำเนินการ ยกเลิกและเริ่มต้นใหม่หรือไม่?
 tl:Kasalukuyang isinasagawa ang pagpi-print. itigil at magsimulang muli?
@@ -15020,6 +15369,7 @@ sat:%d ᱠᱷᱚᱱ %d ᱥᱟᱦᱴᱟ ᱪᱷᱟᱯᱟᱜ ᱠᱟᱱᱟ ...
 sk:Tlač strany %d z %d...
 sl:Tiskanje strani %d od %d …
 sr-rs:Штампање %d. странице од укупно %d...
+sv:Skriver ut sida %d av %d...
 ta:அச்சிடும் பக்கம் %d உள் %d
 th:กำลังพิมพ์หน้า %d จาก %d ...
 tl:Nagpi-print na pahina %d ng %d...
@@ -15075,6 +15425,7 @@ sat:ᱛᱪᱟᱯᱟ ᱟᱱᱟᱴ ᱾
 sk:Problém pri tlači.
 sl:Težave pri tiskanju.
 sr-rs:Проблем приликом штампања.
+sv:Utskriftsproblem.
 ta:அச்சுப்பொறி சிக்கல்
 th:การพิมพ์เกิดปัญหา
 tl:May Problema sa Pagpi-print.
@@ -15084,6 +15435,7 @@ uk:Помилка друкування.
 vn:Lỗi in.
 :Properties...
 am:Հատկություններ...
+ar:الخصائص...
 az:Xüsusiyyətlər...
 br:Propriedades...
 ca:Propietats...
@@ -15096,6 +15448,7 @@ dk:Egenskaber
 el:Ιδιότητες...
 es:Propiedades...
 fa:مشخصات
+fi:Ominaisuudet...
 fo:Eginleikar...
 fr:Propriétés…
 ga:Airíonna...
@@ -15120,6 +15473,7 @@ sat:ᱜᱩᱱᱠᱚ ...
 sk:Vlastnosti…
 sl:Lastnosti
 sr-rs:Својства...
+sv:Egenskaper...
 ta:பண்புகள்
 tl:Properties...
 tw:內容...
@@ -15153,7 +15507,7 @@ hr:Preime&nuj
 hu:&Átnevezés…
 id:Rubah Nama
 it:Ri&nomina...
-ja:ファイル名の変更(&N)...
+ja:ファイル名を変更(&N)...
 kr:이름 바꾸기(&N)...
 lt:&Pervadinti
 my:Na&makan Semula...
@@ -15167,6 +15521,7 @@ sat:ᱫᱩᱦᱲᱟᱹ &ᱧᱩᱛᱩᱢ ...
 sk:P&remenovať…
 sl:Preime&nuj …
 sr-rs:Пре&именуј...
+sv:Byt &namn...
 ta:பெயர்மாற்றுக
 tl:I-Re&name...
 tr:Yeniden adlandır
@@ -15174,7 +15529,7 @@ tw:重新命名(&N)...
 uk:Перейменувати...
 vn:Đổi &Tên
 :Rect: x=%d y=%d dx=%d dy=%d
-am:Ուղղ. x=%d y=%d dx=%d dy=%d
+am:Ուղղանկյուն` x=%d y=%d dx=%d dy=%d
 ar:المربع: x=%d y=%d dx=%d dy=%d
 az:Dördbucaq: x=%d y=%d dx=%d dy=%d
 bg:Правоъгълник: x=%d y=%d dx=%d dy=%d
@@ -15218,6 +15573,7 @@ sat:ᱯᱩᱱᱪᱤ: x=%d y=%d dx=%d dy=%d
 sk:Obdĺžnik: x=%d y=%d dx=%d dy=%d
 sl:Pravokotnik: x=%d y=%d dx=%d dy=%d
 sr-rs:Правоугаоник: x=%d y=%d dx=%d dy=%d
+sv:Rektangel: x=%d y=%d dx=%d dy=%d
 ta:செவ்வகம்:x=%d y=%d dx=%d dy=%d
 tl:Rect: x=%d y=%d dx=%d dy=%d
 tr:Dikdörtgen: x=%d y=%d dx=%d dy=%d
@@ -15308,7 +15664,7 @@ hr:Upamti &otvorene datoteke
 hu:Korábban megnyitott fájlok listájának tárolása
 id:Ingat &berkas yang pernah dibuka
 it:Salva elenc&o file aperti recentemente
-ja:開かれたファイルを記憶する(&O)
+ja:開いたファイルを記憶する(&O)
 kr:열었던 파일(들) 기억(&O)
 kw:Kovhe restrennow ygerys
 lt:Įsiminti &atvertus failus
@@ -15325,6 +15681,7 @@ sat:&ᱡᱷᱤᱡᱽ ᱠᱟᱱ ᱨᱮᱫᱽᱠᱚ ᱢᱚᱱᱮ ᱠᱟᱜ ᱢᱮ
 sk:Zapamätať si &otvorené súbory
 sl:&Zapomni si odprte datoteke
 sr-rs:Запамти &отваране датотеке
+sv:Kom ihåg öppnade &filer
 ta:திறந்த &கோப்புகளை நினைவுகொள்
 th:จดจำ &ไฟล์ที่เปิดอยู่
 tl:Alalahanin ang mga binuksang files
@@ -15380,6 +15737,7 @@ sat:ᱠᱩᱥᱤᱠᱚᱴᱷᱮᱱᱠᱷᱚᱱ ᱚᱪᱚᱜᱽ ᱢᱮ
 sk:Odobrať z obľúbených položiek
 sl:Odstrani iz priljubljenih
 sr-rs:&Уклони из одабраних
+sv:Ta bort från favoriter
 ta:பிடித்தவற்றில் இருந்து நீக்குக
 th:ลบออกจากรายการโปรด
 tl:Alisin mula sa mga paborito
@@ -15435,6 +15793,7 @@ sat:ᱠᱩᱥᱤᱭᱟᱜᱠᱚ ᱠᱷᱚᱱ ᱥᱟᱦᱴᱟ %s ᱚᱪᱚᱜᱽ 
 sk:Odobrať stranu %s z obľúbených položiek
 sl:Odstrani stran %s iz priljubljenih
 sr-rs:Уклони страницу %s из одабраних
+sv:Ta bort sida %s från favoriter
 ta:%s பக்கத்தைப் பிடித்தவற்றில் இருந்து நீக்குக
 th:ลบหน้า %s ออกจากรายการโปรด
 tl:I-Remove ang pahina %s sa favorites
@@ -15490,6 +15849,7 @@ sat:ᱛᱮ ᱧᱩᱛᱩᱢ ᱵᱚᱫᱚᱞ ᱢᱮ
 sk:Premenovať na
 sl:Preimenuj v
 sr-rs:Преименуј у
+sv:Döp om till
 ta:மறுபெயரிடு
 th:เปลี่ยนชื่อเป็น
 tl:Palitan ang pangalan sa
@@ -15499,6 +15859,7 @@ uk:Перейменувати в
 vn:Đổi tên thành
 :Rotate &Left
 am:Պտտել &ձախ
+ar:دوّ&ر يسارا
 az:So&la çevir
 bg:Завърти на&ляво
 br:Girar pra &Esquerda
@@ -15539,6 +15900,7 @@ sat:&ᱞᱮᱝᱜᱟᱛᱮ ᱟᱹᱪᱩᱨ
 sk:Otočiť vľav&o
 sl:Zasukaj v &levo
 sr-rs:Ротирај &лево
+sv:Rotera åt &vänster
 ta:&இடப்புறம் சுழற்று
 tl:Paikutin sa &Left
 tr:Sola döndür
@@ -15547,6 +15909,7 @@ uk:Повернути проти годинникової стрілки
 vn:Quay &Trái
 :Rotate &Right
 am:Պտտել &աջ
+ar:دوّر ي&مينا
 az:S&ağa çevir
 bg:Завърти на&дясно
 br:Girar pra &Direita
@@ -15587,6 +15950,7 @@ sat:&ᱡᱚᱡᱚᱢᱛᱮ ᱟᱹᱪᱩᱨ
 sk:Otočiť v&pravo
 sl:Zasukaj v &desno
 sr-rs:Ротирај &десно
+sv:Rotera åt &höger
 ta:&வலப்புறம் சுழற்று
 tl:Paikutin sa &Right
 tr:Sağa döndür
@@ -15595,6 +15959,7 @@ uk:Повернути за годинниковою стрілкою
 vn:Quay &Phải
 :S&election
 am:Ը&նտրում
+ar:ال&تحديد
 az:S&eçilmiş sahə
 bg:Се&лекция
 br:S&eleção
@@ -15638,6 +16003,7 @@ sat:&ᱵᱟᱪᱷᱟᱣ
 sk:&Výber
 sl:I&zbor
 sr-rs:И&збор
+sv:&Urval
 ta:தேர்வு
 th:&การเลือก
 tl:S&election
@@ -15743,6 +16109,7 @@ sat:SVG ᱫᱚᱞᱤᱞᱠᱚ
 sk:Dokumenty SVG
 sl:SVG dokumenti
 sr-rs:SVG документи
+sv:SVG dokument
 ta:SVG ஆவணங்கள்
 th:เอกสาร SVG
 tl:SVG na mga dokumento
@@ -15794,6 +16161,7 @@ sat:ᱢᱟᱲᱟᱝᱟᱜ PDF ᱨᱮ ᱪᱤᱱᱦᱟᱹ ᱥᱟᱧᱪᱟᱣ ᱢ�
 sk:Uložiť anotácie do existujúceho PDF
 sl:Shrani pripombe v obstoječi PDF
 sr-rs:&Сачувај белешке у постојећи PDF
+sv:Spara kommentarer till existerande PDF
 ta:குறிப்புரைகளை நடப்பிலுள்ள PDFஇல் சேமித்திடுக
 tl:I-Save ang Annotations sa existing PDF
 tr:Dipnotları geçerli PDF'ye kaydet
@@ -15802,6 +16170,7 @@ uk:Збереження приміток до наявного PDF-файлу
 vn:Lưu Chú Thích và thoát PDF
 :Save Attachment...
 am:Պահել կցորդը...
+ar:احفظ المرفق...
 az:Qoşmanı yadda saxla...
 bg:Запис на прикачения файл...
 br:Salvar Anexo...
@@ -15842,6 +16211,7 @@ sat:ᱪᱟᱴᱷᱟ ᱥᱟᱧᱪᱟᱣᱟ ᱥᱮ ...
 sk:Uložiť prílohu…
 sl:Shrani priponko …
 sr-rs:Сачувај прилог...
+sv:Spara bilaga
 ta:இணைப்பைச் சேமித்திடுக...
 tl:I-Save ang Attachment...
 tr:Eki kaydet
@@ -15893,6 +16263,7 @@ sat:ᱠᱷᱚᱧᱡᱟ ᱠᱟᱱ ᱨᱮᱫᱽ ᱥᱟᱧᱪᱟᱣ ᱢᱮ ...
 sk:Uložiť vložený súbor…
 sl:Shrani vdelano datoteko …
 sr-rs:Сачувај уграђену датотеку...
+sv:Spara inbäddad fil...
 ta:பொதிந்துள்ள கோப்பைச் சேமித்திடுக...
 th:บันทึกไฟล์ฝังรหัส...
 tl:I-save ang naka-embed na file...
@@ -15902,6 +16273,7 @@ uk:Зберегти вкладений файл...
 vn:Lưu Tập Đã Nhúng...
 :Save S&hortcut...
 am:Պահել դ&յուրանցումը...
+ar:احفظ الا&ختصار...
 az:&Qısayolu yadda saxla...
 bg:Запази &пряк път
 br:Salvar A&talho
@@ -15941,6 +16313,7 @@ sat:ᱠᱷ&ᱴᱚᱢᱟᱪᱷᱟ ᱥᱟᱧᱪᱟᱣ ᱢᱮ ᱹᱹᱹ
 sk:Uložiť skra&tku
 sl:S&hrani bližnjico …
 sr-rs:Сачувај пре&чицу...
+sv:Spara genväg...
 ta:&குறுக்குவழியைச் சேமித்திடுக...
 tl:I-Save ang S&hortcu...
 tr:Kısayolu kaydet
@@ -15949,6 +16322,7 @@ uk:Зберегти ярлик...
 vn:Lưu Đ&ường Tắt
 :Save annotations?
 am:Պահե՞լ մեկնաբանությունը?
+ar:أحفظ الشروحات؟
 az:Qeydlər yadda saxlanılsın?
 bg:Да запазя ли обясненията?
 br:Salvar anotações?
@@ -15991,6 +16365,7 @@ sat:ᱪᱤᱱᱦᱟᱹ ᱥᱟᱧᱪᱟᱣᱟ ᱥᱮ ?
 sk:Uložiť anotácie?
 sl:Shraniti opombe?
 sr-rs:Сачувати белешке?
+sv:Spara kommentarer?
 ta:குறிப்புரைகளை சேமித்திடவா?
 th:บันทึกคำอธิบายประกอบหรือไม่
 tl:I-save ang mga anotasyon?
@@ -16046,6 +16421,7 @@ sat:ᱱᱚᱶᱟ PDF ᱨᱮ ᱵᱚᱫᱚᱞᱠᱚ ᱥᱟᱧᱪᱟᱣᱟ ᱥᱮ
 sk:Uloženie zmien do nového PDF
 sl:Shrani spremembe v novo PDF datoteko
 sr-rs:Сачувај измене у нови PDF
+sv:Spara ändringar till ny PDF
 ta:மாற்றங்களை ஒரு புதிய PDFஆகச் சேமித்திடுக
 th:บันทึกการเปลี่ยนแปลงเป็น PDF ใหม่
 tl:I-save ang mga pagbabago sa isang bagong PDF
@@ -16101,6 +16477,7 @@ sat:ᱢᱟᱲᱟᱝᱟᱜ PDF ᱨᱮ ᱵᱚᱫᱚᱞᱠᱚ ᱥᱟᱧᱪᱟᱣᱟ
 sk:Uložiť zmeny do existujúceho PDF
 sl:Shrani spremembe v trenutno PDF datoteko
 sr-rs:Сачувај измене у постојећи PDF
+sv:Spara ändringar till existerande PDF
 ta:மாற்றங்களை நடப்பிலுள்ள PDFஇல் சேமித்திடுக
 th:บันทึกการเปลี่ยนแปลงไปยัง PDF ที่เปิดอยู่
 tl:I-Save ang mga pagbabago sa exising PDF
@@ -16154,6 +16531,7 @@ sat:&ᱱᱟᱶᱟ PDF ᱛᱮ ᱥᱟᱧᱪᱟᱣᱢᱮ
 sk:Uložiť do &nového PDF
 sl:Shrani v &novo PDF datoteko
 sr-rs:Сачувај у &нови PDF
+sv:Spara till &ny PDF
 ta:&புதிய PDFஆகச் சேமித்திடுக
 th:บันทึกไปที่ &​PDF ใหม่
 tl:I-Save sa &new PDF
@@ -16163,6 +16541,7 @@ uk:Зберегти в новому PDF-файлі
 vn:Lưu &PDF mới
 :Saved annotations to '%s'
 am:Պահված մեկնաբանություններ '%s'-ում
+ar:حفظت الشروحات في '%s'
 az:Qeydləri burada yadda saxla: '%s'
 bg:Запазени анотации към '%s'
 br:Salvou as anotações em '%s'
@@ -16205,6 +16584,7 @@ sat:'%s' ᱛᱮ ᱪᱤᱱᱦᱟᱹ ᱥᱟᱧᱪᱟᱣ ᱠᱟᱱᱟ
 sk:Anotácie uložené do '%s'
 sl:Opombe shranjene v '%s'
 sr-rs:Белешке сачуване у "%s"
+sv:Sparade kommentarer till '%s'
 ta:குறிப்புரைகள் '%s'இல் சேமிக்கப்பட்டுள்ளன
 tl:Nai-save ang mga anotasyon sa '%s'
 tr:Dipnotlar şuraya kaydedildi: '%s'
@@ -16213,6 +16593,7 @@ uk:Анотації збережені до '%s'
 vn:Đã lưu chú thích tới '%s'
 :Saving of '%s' failed with: '%s'
 am:'%s'-ի պահումը ձախողվեց հետևյալով՝ '%s'
+ar:فشل حفظ '%s' مع: '%s'
 az:'%s' yadda saxlanılarkən '%s' baş verdi
 bg:Записът на '%s' бе неуспешен с: '%s'
 br:O salvamento do '%s' falhou com: '%s'
@@ -16255,6 +16636,7 @@ sat:'%s' ᱦᱟᱜ ᱥᱟᱧᱪᱟᱣ ᱫᱚ ᱱᱩᱭ ᱥᱟᱶ ᱰᱤᱜᱟᱹ
 sk:Uloženie '%s' zlyhalo s: '%s'
 sl:Shranjevanje '%s' ni uspelo: '%s'
 sr-rs:Чување "%s" није успело због: "%s"
+sv:Sparande av '%s' misslyckades med: '%s'
 ta:'%s': உடன் '%s'ஐச் சேமிப்பது தோல்வியுற்றது
 tl:Saving ng '%s' ay pumalya: '%s'
 tr:'%s' kaydedilmesi başarısız: '%s'
@@ -16307,6 +16689,7 @@ sat:&ᱵᱤᱨ(Bing) ᱥᱟᱶᱛᱮ ᱥᱮᱸᱫᱽᱨᱟᱭ ᱢᱮ
 sk:Vyhľadávanie pomocou &Bing
 sl:Išči z &Bing
 sr-rs:Претражи помоћу Bing-а (&Б)
+sv:Sök med &Bing
 ta:&Bing உடன் தேடுக
 th:ค้นหาด้วย &​Bing
 tl:Maghanap Gamit ang &Bing
@@ -16360,6 +16743,7 @@ sat:ᱜᱩᱜᱩᱞ(Google) ᱥᱟᱶᱛᱮ ᱥᱮᱸᱫᱽᱨᱟᱭ ᱢᱮ
 sk:Hľadať pomocou &Google
 sl:Išči z &Google
 sr-rs:Претражи помоћу Google-а (&Г)
+sv:Sök med &Google
 ta:&Google உடன் தேடுக
 th:ค้นหาด้วย &​Google
 tl:Hanaping gamit ang &Google
@@ -16368,7 +16752,10 @@ tw:使用 Google 搜尋(&G)
 uk:Пошук за допомогою &Google
 vn:Tìm Kiếm Với &Google
 :Search with &Google Scholar
+am:Որոնել &Google Scholar-ում
+ar:بحث في الباحث العلمي من &غوغل
 br:Procurar com o &Google Scholar
+by:Шукаць у &Google Scholar
 ca:Cerca amb el &Google Scholar
 cn:谷歌学术搜索(&G)
 co:Circà cù Google &Scholar
@@ -16378,6 +16765,7 @@ de:Suche mit &Google Scholar
 dk:Søg med &Google Scholar
 el:Αναζήτηση με &Google Scholar
 es:Buscar con &Google Scholar
+fi:Etsi: &Google Scholar
 fo:Leita við &Google Scholar
 fr:Rechercher avec &Google Scholar
 gl:Buscar con &Google Scholar
@@ -16396,9 +16784,14 @@ ru:  Найти в &Google Scholar
 sat:&Google Scholar ᱥᱟᱶᱛᱮ ᱥᱮᱸᱫᱽᱨᱟᱭ ᱢᱮ
 sk:Vyhľadať na &Google Scholar
 sl:Išči z &Google Učenjak (Scholar)
+sv:Sök med &Google Scholar
 tw:使用Google學術搜尋(&G)
 :Search with &Wikipedia
+am:Որոնել &Wikipedia-ում
+ar:بحث في &ويكيبديا
+bg:Търсене с &Wikipedia
 br:Procurar com a &Wikipedia
+by:Шукаць у &Wikipedia
 ca:Cerca amb el &Wikipedia
 cn:维基百科搜索(&W)
 co:Circà cù &Wikipedia
@@ -16408,6 +16801,7 @@ de:Suche mit &Wikipedia
 dk:Søg med &Wikipedia
 el:Αναζήτηση με &Wikipedia
 es:Buscar con &Wikipedia
+fi:Etsi: &Wikipedia
 fo:Leita við &Wikipedia
 fr:Rechercher avec &Wikipedia
 gl:Buscar con &Wikipedia
@@ -16426,6 +16820,7 @@ ru:Найти в &Wikipedia
 sat:&Wikipedia ᱥᱟᱶᱛᱮ ᱥᱮᱸᱫᱽᱨᱟᱭ ᱢᱮ
 sk:Vyhľadať na &Wikipedii
 sl:Išči z &Wikipedijo
+sv:Sök med &Wikipedia
 tw:使用維基百科搜尋(&W)
 :Searching %d of %d...
 am:Փնտրվում է %d-ից %d
@@ -16475,6 +16870,7 @@ sat:%d ᱠᱷᱚᱱ %d ᱥᱮᱸᱫᱽᱨᱟᱜ ᱠᱟᱱᱟ ...
 sk:Vyhľadáva sa %d z/zo %d...
 sl:Preiskovanje strani %d od %d …
 sr-rs:Претраживање %d странице од укупно %d...
+sv:Söker %d av %d...
 ta:%d இல் %d தேடப்படுகிறது....
 th:กำลังค้นหา %d จาก %d ...
 tl:Hinahanap ang %d ng %d...
@@ -16530,6 +16926,7 @@ sat:&ᱡᱷᱚᱛᱚ ᱵᱟᱪᱷᱟᱣ ᱢᱮ
 sk:Vybrať &všetko
 sl:Izberi vse
 sr-rs:Изабери &све
+sv:Markera &allt
 ta:அனைத்தையும் தேர்வு செய்
 th:เลือก &ทั้งหมด
 tl:Piliin lahat
@@ -16585,6 +16982,7 @@ sat:ᱡᱤᱱᱤᱥ ᱫᱚ Ctrl+ᱞᱮᱝᱜᱟ ᱢᱟᱣᱥ ᱵᱩᱛᱟᱹᱢ 
 sk:Označiť obsah s "Ctrl + ľavé tlačidlo myši"
 sl:Izberite vsebino s pritisnjeno tipko Ctrl in levim gumbom miške
 sr-rs:Изаберите садржај користећи Ctrl + лево дугме миша
+sv:Markera innehåll med Ctrl + vänster musknapp
 ta:Ctrl+சுட்டியின் இடது பொத்தான் மூலம் உள்ளடகத்தைத் தேர்வு செய்க
 th:เลือกเนื้อหาด้วย Ctrl+ปุ่มซ้ายของเมาส์
 tl:Mamili ng content gamit ang Ctrl+left mouse button
@@ -16640,6 +17038,7 @@ sat:SumatraPDF ᱵᱚᱦᱟᱞ ᱞᱟᱹᱜᱤᱫ ᱢᱤᱫ ᱯᱚᱴᱚᱢ ᱵ�
 sk:Vyberte adresár, kde sa má SumatraPDF nainštalovať:
 sl:Izberite mapo, kjer naj se namesti SumatraPDF:
 sr-rs:Одабрати фолдер за инсталацију СуматраПДФ
+sv:Välj en katalog där SumatraPDF ska installeras:
 ta:சுமத்ராPDF நிறுவப்பட வேண்டிய கோப்புறையைத் தேர்வு செய்க:
 th:เลือกโฟลเดอร์ที่ควรติดตั้ง SumatraPDF:
 tl:Piliin ang folder kung saan dapat i-install ang SumatraPDF:
@@ -16695,6 +17094,7 @@ sat:ᱵᱟᱪᱷᱟᱣ ᱺ
 sk:Výber:
 sl:Izbor:
 sr-rs:Избор
+sv:Markering:
 ta:தேர்வு:
 th:ตำแหน่งที่เลือก:
 tl:Pagpipilian:
@@ -16750,6 +17150,7 @@ sat:ᱤᱼ&ᱢᱮᱞ ᱞᱮᱠᱟᱛᱮ ᱵᱷᱮᱡᱟᱭ ᱢᱮ ...
 sk:Odoslať e-mailo&m...
 sl:Pošlji po &E-pošti …
 sr-rs:Пошаљи путем &е-поште...
+sv:S&kicka som epost...
 ta:மின்னஞ்சலாக அனுப்பு...
 th:ส่งโดย &อีเมล์...
 tl:Ipadala sa &email...
@@ -16788,7 +17189,7 @@ hr:Omogući unazadnu pretragu
 hu:Fordított keresés parancsának beállítása
 id:Setel perintah pencarian terbalik
 it:Imposta la ricerca inversa via riga di comando
-ja:逆順検索コマンドラインの設定
+ja:逆検索のコマンドラインを設定
 kr:명령줄 역방향 탐색 설정
 kw:Settya linen-arhadow gorthhwilas
 lt:Nustatyti atvirkščios paieškos komandinę eilutę
@@ -16805,6 +17206,7 @@ sat:ᱩᱞᱴᱟᱹ ᱥᱮᱸᱫᱽᱨᱟ ᱟᱫᱮᱥᱼᱞᱟᱹᱭᱤᱱ ᱥ�
 sk:Nastaviť inverzné vyhľadávanie
 sl:Nastavi obratno iskanje ukazne vrstice
 sr-rs:Омогући инверзну претрагу
+sv:Sätt kommandorad för omvänd sökning
 ta:தலைகீழ் தேடல் கட்டளை வரி அமைக்க
 th:ตั้งค่าตรงกันข้ามในการค้นหาในโหมด command-line
 tl:Itakda ang inverse search command-line
@@ -16859,6 +17261,7 @@ sat:ᱯᱩ&ᱛᱷᱤᱪᱤᱱᱦᱟᱹᱠᱚ ᱫᱮᱠᱷᱟᱣ ᱢᱮ
 sk:Zobraziť &Záložky
 sl:Prikaži &zaznamke
 sr-rs:Прикажи обе&лежене
+sv:Visa &Bokmärken
 ta:புத்தகக்குறிகளை காட்டுக
 tl:Ipakita ang &Bookmarks
 tr:Göster &Sık Kullanılanlar
@@ -16913,6 +17316,7 @@ sat:&ᱠᱩᱥᱤᱠᱚ ᱫᱮᱠᱷᱟᱣ ᱢᱮ
 sk:Zobraziť &obľúbené položky
 sl:Pokaži priljubljene
 sr-rs:Прикажи &фаворите
+sv:Visa &favoriter
 ta:&பிடித்தவையைக் காட்டுக
 th:แสดง &รายการโปรด
 tl:Ipakita ang &Favorites
@@ -16968,6 +17372,7 @@ sat:ᱥ&ᱟᱦᱴᱟ ᱞᱮᱛᱟᱲ ᱥᱟᱹᱦᱤᱡ ᱫᱮᱠᱷᱟᱣ ᱢ�
 sk:Zobraziť strany priebe&žne
 sl:&Prikaži strani nepretrgano
 sr-rs:Прикажи &странице без прекида
+sv:Visa sidor fortlöpande
 ta:பக்கங்களை தொடர்ச்சியாக காட்டு
 th:แสดง &หน้าอย่างต่อเนื่อง
 tl:Ipakita nang tuloy-tuloy ang mga &pahina
@@ -17022,6 +17427,7 @@ sat:&ᱠᱷᱚᱥᱨᱚᱫᱵᱟᱨᱠᱚ ᱫᱮᱠᱷᱟᱣᱢᱮ
 sk:Zobraziť po&suvníky
 sl:Pokaži dr&sne trakove
 sr-rs:Прикажи &траке за померање
+sv:Visa &rullister
 ta:உருட்பட்டைகளை காண்பி
 th:แสดงผล &​แถบเลื่อน
 tl:Ipakita ang &Scrollbars
@@ -17060,7 +17466,7 @@ hr:Prikaži alatnu traku
 hu:Eszköztár
 id:Tampilkan &Toolbar
 it:&Barra strumenti
-ja:ツール バーの表示(&T)
+ja:ツールバーを表示(&T)
 kr:도구모음 보이기(&T)
 kw:Diskwedhes toulvar
 lt:Rodyti &priemonių juostą
@@ -17077,6 +17483,7 @@ sat:&ᱦᱟᱹᱛᱤᱭᱟᱹᱨᱵᱟᱨ ᱫᱮᱠᱷᱟᱣ ᱢᱮ
 sk:Zobraziť panel &nástrojov
 sl:Pokaži orodno vrstico
 sr-rs:Трака са &алаткама
+sv:Visa verktygsfält
 ta:கருவிப்பட்டை காண்பி
 th:แสดงแถบเครื่องมือ
 tl:Ipakita ang toolbar
@@ -17126,6 +17533,7 @@ sat:&ᱯᱩᱛᱷᱤ ᱪᱤᱱᱦᱟᱹᱠᱚ ᱫᱮᱠᱷᱟᱣ ᱢᱮ
 sk:Zobraziť záložky
 sl:Pokaži zazna&mke
 sr-rs:Прикажи обеле&живаче
+sv:Visa bok&märken
 ta:புத்தகக்குறிகளைக் காட்டுக
 tl:Ipakita ang Book&marks
 tr:Yer imleri
@@ -17163,7 +17571,7 @@ hr:Prikaži favorite
 hu:Kedvencek megjelenítése
 id:Tampilkan Favorit
 it:Preferiti
-ja:お気に入りの表示
+ja:お気に入りを表示
 kr:즐겨찾기 보이기
 kw:Diskwedhes Taklow Drudh
 lt:Rodyti parankinius
@@ -17180,6 +17588,7 @@ sat:ᱠᱩᱥᱤᱠᱚ ᱫᱮᱠᱷᱟᱣ ᱢᱮ
 sk:Zobraziť obľúbené položky
 sl:Prikaži Priljubljene
 sr-rs:&Прикажи одабране странице
+sv:Visa favoriter
 ta:பிடித்தவைகளை காட்டுக
 th:แสดงรายการโปรด
 tl:Ipakita ang mga paborito
@@ -17234,6 +17643,7 @@ sat:&ᱠᱷᱚᱥᱨᱚᱫᱵᱟᱨᱠᱚ ᱫᱮᱠᱷᱟᱣ ᱢᱮ
 sk:Zobraziť posu&vníky
 sl:Pokaži drsne trak&ove
 sr-rs:Прикажи траке за по&мерање
+sv:Visa rullnings&lister
 ta:உருட்பட்டைகளை காண்பி
 th:&แสดงแถบเลื่อน
 tl:Ipakita ang Scr&ollbars
@@ -17289,6 +17699,7 @@ sat:ᱜᱷᱤᱲᱜᱮ ᱯᱟᱲᱦᱟᱣᱟᱜ ᱫᱮᱠᱷᱟᱣ ᱢᱮ
 sk:Zobraziť často čítané dokumenty
 sl:Prikaži pogosto brane
 sr-rs:Прикажи недавно читане
+sv:Visa mest lästa
 ta:அடிக்கடி படிப்பவை
 th:แสดงการอ่านบ่อย
 tl:Ipakita ang madalas basahin
@@ -17344,6 +17755,7 @@ sat:&ᱯᱚᱴᱚᱢ ᱨᱮ ᱫᱮᱠᱷᱟᱣ ᱢᱮ
 sk:Zobraziť v &priečinku
 sl:Pokaži v &mapi
 sr-rs:Прикажи у &фасцикли
+sv:Visa i &mapp
 ta:கோப்பகத்தில் காண்பி
 th:แสดงใน &โฟลเดอร์
 tl:Ipakita sa &folder
@@ -17353,6 +17765,7 @@ uk:Показати в п&апці
 vn:Hiển thị trong &thư mục
 :Show in folder
 am:Ցուցադրել պանակում
+ar:إظهار في المجلد
 az:Qovluqda göstər
 bg:Покажи в папката
 br:Mostrar na pasta
@@ -17393,6 +17806,7 @@ sat:ᱯᱚᱴᱚᱢᱨᱮ ᱫᱮᱠᱷᱟᱣ ᱢᱮ
 sk:Zobraziť v priečinku
 sl:Pokaži v mapi
 sr-rs:Прикажи у фасцикли
+sv:Visa i mapp
 ta:கோப்புறையில் காட்டுக
 tl:Ipakita sa folder
 tr:Klasörde göster
@@ -17429,7 +17843,7 @@ hr:Prikaži traku &oznaka kad je dostupna
 hu:Dokumentumba ágyazott könyvjelzők mutatása
 id:Tampilkan kolom &markah jika tersedia
 it:Visualizza &barra laterale segnalibri quando disponibile
-ja:利用可能ならブックマーク サイド バーを表示(&B)
+ja:ブックマークが利用可能ならサイドバーで表示(&B)
 kr:가능한 경우 북마크 사이드바 표시(&B)
 kw:Diskwedhes &amalvar an lyververkyow mars eus onan
 lt:Rodyti &žymų parankinę, kai yra žymų
@@ -17446,6 +17860,7 @@ sat:ᱛᱟᱦᱮᱸᱱ ᱠᱷᱟᱱ ᱥᱟᱭᱤᱰᱵᱟᱨ &ᱯᱩᱛᱷᱤᱪ
 sk:Zobraziť bočný panel &záložiek, pokiaľ je dostupný
 sl:Pokaži podokno z &zaznamki, če so na voljo
 sr-rs:Прикажи бочну траку са обе&леживачима
+sv:Visa sidopanel för &bokmärken när de finns
 ta:புத்தககுறி பட்டை இருந்தல் காட்டு
 th:แสดง &แถบข้างบุ๊คมาร์คเมื่อพร้อมใช้งาน
 tl:Ipakita ang &bookmarks sidebar kung naangkop
@@ -17501,6 +17916,7 @@ sat:ᱢᱤᱫᱴᱟᱹᱝ ᱥᱟᱦᱴᱟ
 sk:Jedna strana
 sl:Enostransko
 sr-rs:Једна страница
+sv:Enkel sida
 ta:ஒற்றைப் பக்கம்
 th:หน้าเดียว
 tl:Iisang Pahina
@@ -17510,6 +17926,7 @@ uk:Одна сторінка
 vn:Trang đơn
 :Skip this version
 am:Բաց թողնել այս տարբերակը
+ar:تجاوز هذا الإصدار
 az:Bu versiyanı burax
 bg:Пропусни тази версия
 br:Ignorar esta versão
@@ -17553,6 +17970,7 @@ sat:ᱱᱚᱶᱟ ᱦᱟᱹᱞᱤᱭᱟᱹᱠ ᱟᱲᱟᱜ ᱠᱟᱜ ᱢᱮ
 sk:Preskočiť túto verziu
 sl:Preskoči to različico
 sr-rs:Прескочи ову верзију
+sv:Hoppa över denna version
 ta:இந்தப் பதிப்பைத் தவிர்த்திடுக
 th:ข้ามรุ่นนี้
 tl:Laktawan ang bersyong ito
@@ -17608,6 +18026,7 @@ sat:ᱤᱠᱟᱹ, ᱚᱱᱟ ᱫᱚ ᱦᱩᱱᱟᱹᱝ ᱵᱟᱝ ᱦᱩᱭ ᱠᱚ
 sk:Ospravedlňujeme sa, nemalo sa to stať.\n\nAk nám chcete pomôcť vyriešiť príčinu tohto zlyhania programu, stlačte tlačidlo 'Storno'.
 sl:Oprostite, to se ne bi smelo zgoditi!\n\nČe želite pomagati pri določitvi vzroka za sesutje pritisnite 'Prekliči'.
 sr-rs:Опростите, ово није требало да се догоди!\n\nПритисните дугме 'Откажи' ако желите да нам помогнете у решавању овог проблема.
+sv:Ledsen, det där borde inte ha hänt!\n\nVar god tryck 'Avbryt', om du vill hjälpa oss att korrigera orsaken till denna krash.
 ta:மன்னிக்கவும், இது நடந்திருக்கக் கூடாது! \n\nஇந்த முறிவுக்கான காரணத்தை நாங்கள் சரிசெய்வதற்கு நீங்கள் உதவ விரும்பினால், தயவுசெய்து 'விலக்கிடுக'வை அழுத்திடுக.
 th:ขออภัยนั่นไม่น่าจะเกิดขึ้น! \n\n กรุณากด 'ยกเลิก' หากคุณต้องการช่วยเราแก้ไขสาเหตุของความผิดพลาดนี้
 tl:Paumanhin, hindi dapat nangyari iyon!\n\nPakipindot ang 'Kanselahin', kung gusto mong tulungan kaming ayusin ang sanhi ng pag-crash na ito.
@@ -17663,6 +18082,7 @@ sat:ᱥᱨᱚᱛ ᱨᱮᱫᱽ %s ᱴᱷᱮᱱ ᱪᱮᱫ ᱦᱚᱸ ᱟᱹᱭᱩ�
 sk:Zdrojový súbor %s nemá synchronizačný bod
 sl:Izvorna datoteka %s nima točke sinhronizacije
 sr-rs:Изворна датотека %s нема тачку усклађивања
+sv:Källfilen %s har ingen synkroniseringspunkt
 ta:%s முல கோப்பிர்க்கு ஒத்தியங்கு மையம் எதுவும் இல்லை
 th:ไฟล์ต้นฉบับ %s ไม่มีจุดประสาน
 tl:Walang synchronization point ang source file na %s
@@ -17718,6 +18138,7 @@ sat:ᱜᱷᱚᱬᱥᱟ
 sk:Štvorec
 sl:Kvadrat
 sr-rs:Квадрат
+sv:Fyrkant
 ta:நாற்கரம்
 th:สี่เหลี่ยม
 tl:Parisukat
@@ -17773,6 +18194,7 @@ sat:SumatraPDF ᱮᱛᱦᱚᱵ ᱢᱮ
 sk:Spustiť SumatraPDF
 sl:Zaženi SumatraPDF
 sr-rs:Старовати СуматраПДФ
+sv:Starta SumatraPDF
 ta:சுமத்ராPDFஐத் தொடங்குக
 th:เริ่มต้น SumatraPDF
 tl:Simulan ang SumatraPDF
@@ -17828,6 +18250,7 @@ sat:ᱥᱟᱛᱟᱢ ᱺ
 sk:Predmet:
 sl:Zadeva:
 sr-rs:Предмет:
+sv:Ämne:
 ta:எழுவாய்:
 th:เรื่อง:
 tl:Paksa:
@@ -17883,6 +18306,7 @@ sat:SumatraPDF %s ᱤᱱᱥᱴᱚᱞᱚᱨ
 sk:SumatraPDF %s inštalátor
 sl:SumatraPDF %s namestitev
 sr-rs:СуматраПДФ %s инсталација
+sv:Installationsprogram för SumatraPDF %s
 ta:சுமத்ராPDF %s நிறுவி
 th:ตัวติดตั้ง %s SumatraPDF
 tl:Installer ng SumatraPDF %s
@@ -17938,6 +18362,7 @@ sat:SumatraPDF %s ᱚᱪᱚᱜᱤᱭᱟᱹ
 sk:SumatraPDF %s odinštalátor
 sl:SumatraPDF %s odstranitev
 sr-rs:СуматраПДФ %s деинсталација
+sv:Avinstallationsprogram för SumatraPDF %s
 ta:சுமத்ராPDF %s நிறுவல்நீக்கி
 th:ถอนการติดตั้ง SumatraPDF %s
 tl:Uninstaller ng SumatraPDF %s
@@ -17993,6 +18418,7 @@ sat:SumatraPDF ᱵᱚᱪᱷᱟᱣ
 sk:Nastavenia SumatraPDF
 sl:Možnosti SumatraPDF
 sr-rs:Подешавања програма SumatraPDF
+sv:SumatraPDF Inställningar
 ta:சுமத்ராPDFஇன் விருப்பப பேரம்
 th:ตัวเลือก SumatraPDF
 tl:Mga Opsyon para sa SumatraPDF
@@ -18048,6 +18474,7 @@ sat:SumatraPDF ᱦᱟᱹᱞᱤᱭᱟᱹᱠ
 sk:Aktualizácia SumatraPDF
 sl:Posodobitev SumatraPDF
 sr-rs:Ажурирање SumatraPDF
+sv:SumatraPDF Uppdatering
 ta:சுமத்ராPDF மேம்படுத்து
 th:อัพเดต SumatraPDF
 tl:Update sa SumatraPDF
@@ -18086,7 +18513,7 @@ hr:SumatraPDF se srušio
 hu:SumatraPDF működése leállt
 id:SumatraPDF berhenti berfungsi
 it:SumatraPDF ha incontrato un errore irreparabile
-ja:SumatraPDF がクラッシュしました
+ja:SumatraPDF が強制終了しました
 kr:SumatraPDF 충돌남
 kw:SumatraPDF a hedhas distowgh
 lt:„SumatraPDF“ strigo
@@ -18103,6 +18530,7 @@ sat:SumatraPDF ᱰᱤᱜᱟᱹᱣ ᱮᱱᱟ
 sk:SumatraPDF - zrútenie programu
 sl:SumatraPDF se je sesul
 sr-rs:Програм SumatraPDF је крахирао
+sv:SumatraPDF avslutades oväntat
 ta:சுமத்ராPDF செயலிழந்தது
 th:SumatraPDF ขัดข้อง
 tl:Nag-crash ang SumatraPDF
@@ -18158,6 +18586,7 @@ sat:SumatraPDF ᱫᱚ ᱚᱪᱚᱜᱽ ᱮᱱᱟ ᱾
 sk:Program SumatraPDF bol odinštalovaný.
 sl:SumatraPDF je bil odstranjen.
 sr-rs:СуматраПДФ деинсталиран
+sv:SumatraPDF är nu borttaget.
 ta:சுமத்ராPDF நிறுவல் நீக்கப்பட்டது.
 th:ถอนการติดตั้ง SumatraPDF แล้ว
 tl:Ang SumatraPDF ay na-uninstall.
@@ -18213,6 +18642,7 @@ sat:SumatraPDF ᱵᱚᱦᱟᱞ ᱡᱟᱭᱜᱟ ᱵᱟᱭ ᱧᱟᱢ ᱞᱮᱱᱟ 
 sk:Inštalácia programu SumatraPDF nebola nájdená.
 sl:SumatraPDF namestitve ni mogoče najti.
 sr-rs:СуматраПДФ инсталација није пронађена
+sv:Kunde inte hitta SumatraPDF-installation.
 ta:சுமத்ராPDF நிறுவல் கிடைக்கவில்லை.
 th:ไม่พบการติดตั้ง SumatraPDF
 tl:Hindi natagpuan ang installation ng SumatraPDF.
@@ -18268,6 +18698,7 @@ sat:ᱟᱹᱭᱩᱨᱢᱤᱫ ᱨᱮᱫᱽ ᱫᱚ ᱠᱷᱩᱞᱟᱹ ᱵᱟᱭ �
 sk:Synchronizačný súbor nie je možné otvoriť
 sl:Datoteke sinhronizacije ni mogoče odpreti
 sr-rs:Није могуће отворити усклађивачку датотеку
+sv:Synkroniseringsfil kan ej öppnas
 ta:ஒத்தியங்கு கோப்பை திறக்க முடியவில்லை
 th:ไม่สามารถเปิดไฟล์การซิงโครไนซ์ได้
 tl:Hindi mabuksan ang synchronization file
@@ -18323,6 +18754,7 @@ sat:ᱪᱤᱱᱦᱟᱹ ᱠᱟᱱ PDF
 sk:Označený PDF
 sl:Označen PDF
 sr-rs:Означени PDF
+sv:Taggad PDF
 ta:குறியிடப்பட்ட PDF
 th:แท็ก PDF
 tl:Naka-tag na PDF
@@ -18332,6 +18764,7 @@ uk:PDF з мітками
 vn:PDF được gắn thẻ
 :Text Alignment:
 am:Գրվածքի հավասարեցում
+ar:محاذاة النص:
 az:Mətn kənarlarının düzəldilməsi:
 bg:Подравняване на текста
 br:Alinhamento do Texto:
@@ -18376,6 +18809,7 @@ sat:ᱚᱞ ᱥᱟᱡᱟᱣ ᱺ
 sk:Zarovnanie textu:
 sl:Poravnava besedila:
 sr-rs:Поравнање текста:
+sv:Textjustering:
 ta:உரைச் சீரமைவு
 tl:Alignment ng Text:
 tr:Satır Hizası:
@@ -18384,6 +18818,7 @@ uk:Вирівнювання тексту:
 vn:Căn Chỉnh:
 :Text Color:
 am:Գրվածքի գույն
+ar:لون النص:
 az:Mətnin rəngi:
 bg:Цвят на текста
 br:Cor do Texto:
@@ -18428,6 +18863,7 @@ sat:ᱚᱞ ᱨᱚᱝ ᱺ
 sk:Farba textu:
 sl:Barva besedila:
 sr-rs:Боја текста:
+sv:Textfärg:
 ta:உரை நிறம்:
 tl:Kulay ng Text:
 tr:Metin Rengi:
@@ -18436,6 +18872,7 @@ uk:Колір тексту:
 vn:Màu Sắc:
 :Text Size:
 am:Գրվածքի չափ.
+ar:حجم النص:
 az:Mətnin ölçüsü:
 bg:Размер на текста
 br:Tamanho do Texto:
@@ -18480,6 +18917,7 @@ sat:ᱚᱞ ᱢᱟᱯ ᱺ
 sk:Veľkosť textu:
 sl:Velikost besedila:
 sr-rs:Величина текста:
+sv:Textstorlek:
 ta:உரை அளவு:
 tl:Laki ng Text:
 tr:Metin Boyutu:
@@ -18488,6 +18926,7 @@ uk:Розмір тексту:
 vn:Kích Thước:
 :Text Size: %d
 am:Գրվածքի չափը՝ %d
+ar:حجم النص: %d
 az:Mətn ölçüsü: %d
 bg:Текст размер: %d
 br:Tamanho do Texto: %d
@@ -18532,6 +18971,7 @@ sat:ᱚᱞ ᱢᱟᱯ ᱺ %d
 sk:Veľkosť textu: %d
 sl:Velikost besedila: %d
 sr-rs:Величина текста: %d
+sv:Textstorlek: %d
 ta:உரை அளவு: %d
 tl:Laki ng Text: %d
 tr:Metin Boyutu: %d
@@ -18569,7 +19009,7 @@ hr:Tekstualni dokumenti
 hu:Szöveges fájlok
 id:Dokumen teks
 it:Documenti di testo
-ja:テキスト ドキュメント
+ja:テキスト文書
 kr:텍스트 문서
 kw:Restrennow tekst
 lt:Tekstiniai dokumentai
@@ -18586,6 +19026,7 @@ sat:ᱚᱞ ᱫᱚᱞᱤᱞᱠᱚ
 sk:Textové dokumenty
 sl:Tekstovni dokumenti
 sr-rs:Текстуални документи
+sv:Text-dokument
 ta:உரை ஆவணங்கள்
 th:เอกสารข้อความ
 tl:Mga tekstong dokumento
@@ -18641,6 +19082,7 @@ sat:SumatraPDF ᱵᱟᱪᱷᱟᱣ ᱞᱟᱹᱜᱤᱫ ᱟᱢᱟᱜ ᱟᱭᱢᱟ �
 sk:Dakujeme, že ste sa rozhodli pre SumatraPDF!
 sl:Hvala, ker ste izbrali SumatraPDF!
 sr-rs:Хвала на избору СуматраПДФ
+sv:Tack för att du väljer SumatraPDF!
 ta:சுமத்ராPDFஐத் தேர்வு செய்தமைக்கு நன்றி!
 th:ขอขอบคุณที่เลือกใช้ SumatraPDF!
 tl:Salamat sa pagpili sa SumatraPDF
@@ -18696,6 +19138,7 @@ sat:ᱟᱢᱟᱜ ᱥᱟᱨᱦᱟᱣ! SumatraPDF ᱫᱚ ᱵᱚᱦᱟᱞ ᱮᱱᱟ
 sk:Ďakujeme! SumatraPDF bol nainštalovaný.
 sl:Hvala! SumatraPDF je bil nameščen.
 sr-rs:СуматраПДФ инсталиран. Хвала!
+sv:Tack! SumatraPDF är nu installerat.
 ta:நன்றி! சுமத்ரா PDF நிறுவப்பட்டு உள்ளது
 th:ขอบคุณ! ติดตั้ง SumatraPDF แล้ว
 tl:Salamat! Na-install na ang SumatraPDF.
@@ -18751,6 +19194,7 @@ sat:ᱤᱱᱥᱴᱚᱞᱚᱨ ᱫᱚ ᱠᱷᱟᱨᱟᱯ ᱮᱱᱟ ᱾ ᱫᱟᱭ�
 sk:Inštalačný súbor je poškodený. Prosím stiahnite si ho ešte raz. \nOspravedlňujeme sa za ťažkosti!
 sl:Namestitveni program je poškodovan. Prosimo, da ga ponovno prenesete.\nOpravičujemo se za nevšečnost!
 sr-rs:Инсталација је оштећена, молимо преузмите је поново. \nИзвињавамо се на непријатностима!
+sv:Installationsprogrammet är skadat. Vänligen hämta det igen.\nVi ber om ursäkt för problemen.
 ta:நிறுவி கெட்டுள்ளது. மீண்டும் பதிவிறக்கம் செய்யவும். \n சௌகரியமின்மைக்கு வருந்துகிறோம்!
 th:โปรแกรมติดตั้งเสียหาย โปรดดาวน์โหลดอีกครั้ง \n ขออภัยในความไม่สะดวก!
 tl:Nasira ang installer. Paki-download muli.\nPaumanhin sa abala!
@@ -18789,7 +19233,7 @@ hr:Ovaj dokument koristi nepodržane značajke (%s) i možda se neće ispravno p
 hu:Ez a fájl nem támogatott funkciókat (%s) tartalmaz és lehet, hogy nem pontosan kerül megjelenítésre
 id:Dokumen ini menggunakan fitur yang tidak didukung (%s) dan kemungkinan tidak layak dijalankan
 it:Questo documento usa funzioni non supportate (%s) e potrebbe non essere visualizzato bene
-ja:このドキュメントはサポートしていない機能(%s)を使用しているため、正しく描画できない可能性があります
+ja:対応していない機能(%s)を使う文書のため、正しく描画できないかもしれません
 kr:이 문서는 지원되지 않는 기능 (%s)을 사용했고, 제대로 렌더링되지 않을 수 있습니다.
 kw:An skriven ma a us nasyow anskoodhys (%s) hag yth yw possybyl na wra hi rendra yn ta
 lt:Šis dokumentas naudoja nepalaikomas funkcijas (%s) ir gali būti atvaizduotas neteisingai
@@ -18806,6 +19250,7 @@ sat:ᱱᱚᱶᱟ ᱫᱚᱞᱤᱞ ᱫᱚ ᱵᱟᱝ ᱥᱚᱦᱚᱫᱽ ᱯᱷᱤ�
 sk:Tento dokument používa nepodporované funkcie (%s) a týmto sa nemusí vykresliť správne
 sl:Ta dokument uporablja nepodprte funkcije (%s) in se morda ne bo naložil pravilno
 sr-rs:Овај документ користи неподржане опције (%s) и може бити приказан некоректно
+sv:Detta dokument använder funktioner som inte stöds (%s) och kan inte återges korrekt
 ta:இவ்-ஆவணம் ஆதரிக்கப்படாத அம்சங்களை (%s) பயன்படுத்துவதால், திறக்கப்படுவதில் தோல்வி ஏற்படலாம்
 th:เอกสารนี้ใช้คุณสมบัติที่ไม่รองรับ (%s) และอาจแสดงผลไม่ถูกต้อง
 tl:Gumagamit ang dokumentong ito ng mga hindi sinusuportahang feature (%s) at maaaring hindi mai-render nang maayos
@@ -18861,6 +19306,7 @@ sat:ᱧᱩᱛᱩᱢ ᱺ
 sk:Názov:
 sl:Naslov:
 sr-rs:Наслов:
+sv:Titel:
 ta:தலைப்பு:
 th:หัวข้อ:
 tl:Pamagat:
@@ -18914,6 +19360,7 @@ sat:&ᱰᱤᱯᱮᱞ(DeepL) ᱥᱟᱶᱛᱮ ᱛᱚᱨᱡᱚᱢᱟᱭ ᱢᱮ
 sk:Preložiť pomocou &DeepL
 sl:Prevedi z &DeepL
 sr-rs:Преведи помоћу DeepL-а (&Д)
+sv:Översätt med &Deepl
 ta:&DeepL உடன் மொழிபெயர்த்திடுக
 th:แปลด้วย &​DeepL
 tl:I-Translate gamit ang &DeepL
@@ -18969,6 +19416,7 @@ sat:SumatraPDF ᱚᱪᱚᱜᱽ ᱢᱮ
 sk:Odinštalovanie SumatraPDF
 sl:Odstrani SumatraPDF
 sr-rs:Деинсталирање СуматраПДФ
+sv:Avinstallera SumatraPDF
 ta:சுமத்ராPDFஐ நிறுவல் நீக்கு
 th:ถอนการติดตั้ง SumatraPDF
 tl:I-uninstall ang SumatraPDF
@@ -19024,6 +19472,7 @@ sat:ᱚᱪᱚᱜᱽ ᱨᱮ ᱰᱤᱜᱟᱹᱣ ᱦᱩᱭᱮᱱᱟ
 sk:Odinštalovanie sa nepodarilo
 sl:Odstranitev ni uspela
 sr-rs:Деинсталирање неуспело
+sv:Avinstallationen misslyckades
 ta:நிறுவல் நீக்கம் தோல்வி
 th:การถอนการติดตั้งล้มเหลว
 tl:Nabigo ang pag-uninstall
@@ -19079,6 +19528,7 @@ sat:ᱚᱪᱚᱜ ᱠᱟᱹᱢᱤ ᱪᱟᱹᱞᱩ ᱠᱟᱱᱟ ...
 sk:Prebieha odinštalovanie...
 sl:Odstranjevanje poteka …
 sr-rs:Деинсталирање у току ...
+sv:Avinstallerar...
 ta:நிறுவல் நீக்கம் செயல்படுகிறது...
 th:กำลังถอนการติดตั้งอยู่ ...
 tl:Kasalukuyang isinasagawa ang pag-uninstall...
@@ -19134,6 +19584,7 @@ sat:ᱵᱟᱝ ᱵᱟᱲᱟᱭ ᱥᱨᱚᱛ ᱨᱮᱫᱽ (%s)
 sk:Neznámy zdrojový súbor (%s)
 sl:Neznana izvorna datoteka (%s)
 sr-rs:Непозната изворна датотека (%s)
+sv:Okänd källfil (%s)
 ta:(%s) மூல கோப்பு கிடைக்கவில்லை
 th:ไฟล์แหล่งที่ไม่รู้จัก (%s)
 tl:Hindi alam na source file (%s)
@@ -19143,6 +19594,7 @@ uk:Невідомий файл-джерело (%s)
 vn:Không rõ tập tin nguồn (%s)
 :Unsaved annotations
 am:Չպահված մեկնաբանություններ
+ar:شروحات غير محفوظة
 az:Yadda saxlanılmamış qeydlər
 bg:Незапазени обяснения
 br:Anotações não salvas
@@ -19187,6 +19639,7 @@ sat:ᱵᱟᱝ ᱥᱟᱧᱪᱟᱣ ᱪᱤᱱᱦᱟᱹᱠᱚ
 sk:Neuložené anotácie
 sl:Neshranjene opombe
 sr-rs:Несачуване белешке
+sv:Ej sparade kommentarer
 ta:சேமிக்கப்படாத குறிப்புரைகள்
 th:ไม่ได้บันทึกคำอธิบายประกอบ
 tl:Mga hindi na-save na anotasyon
@@ -19196,6 +19649,7 @@ uk:Незбережені анотації
 vn:Ghi chú không được lưu
 :Unsaved annotations in '%s'
 am:Չպահված մեկնաբանություններ '%s'-ում
+ar:شروحات غير محفوظة في '%s'
 az:Yadda saxlanılmamış qeydlər burada: '%s'
 bg:Незаписани анотации в '%s'
 br:Anotações não salvas em '%s'
@@ -19238,6 +19692,7 @@ sat: '%s' ᱨᱮ ᱵᱟᱝᱥᱟᱧᱪᱟᱣ ᱠᱟᱱ ᱪᱤᱱᱦᱟᱹᱠᱚ
 sk:Neuložené anotácie v '%s'
 sl:Neshranjene opombe v '%s'
 sr-rs:Несачуване белешке у "%s"
+sv:Osparade kommentarer i '%s'
 ta:'%s'இல் சேமிக்கப்படாத குறிப்புரைகள்
 th:ไม่บันทึกคำอธิบายประกอบ ภายใน '%s'
 tl:Hindi na-save na mga anotasyon sa '%s'
@@ -19276,7 +19731,7 @@ hr:Koristi &kartice
 hu:Fülek használata
 id:Gunakan &tab
 it:Usa &schede
-ja:タブを使う(&t)
+ja:タブを使う(&T)
 kr:탭 사용(&T)
 kw:Usya &tabbys
 lt:Naudoti k&orteles
@@ -19293,6 +19748,7 @@ sat:&ᱴᱮᱵᱽᱠᱚ ᱵᱮᱵᱷᱟᱨ ᱢᱮ
 sk:Povoliť &záložky
 sl:Uporabljaj &zavihke
 sr-rs:Користи &картице
+sv:Använd flikar
 ta:தாவல்களைப் பயன்படுத்துக (&T)
 th:ใช้แท็บ
 tl:Gamitin ang &tabs
@@ -19348,6 +19804,7 @@ sat:ᱧᱮᱞ
 sk:Zobraziť
 sl:Pogled
 sr-rs:Приказ
+sv:Visa
 ta:நோக்கு
 th:มุมมอง
 tl:Tignan
@@ -19386,7 +19843,7 @@ hr:&Posjeti internetsku stranicu
 hu:&Weboldal
 id:&Kunjungi Situs
 it:Visita il sito &web
-ja:Web サイトの訪問(&W)
+ja:ウェブサイトを訪問(&W)
 kr:웹 사이트 방문(&W)
 kw:&Mos dhe'n wiasva
 lt:Interneto &svetainė
@@ -19403,6 +19860,7 @@ sat:&ᱣᱮᱵᱽᱥᱟᱭᱤᱴ ᱛᱮ ᱪᱟᱞᱟᱜ ᱢᱮ
 sk:&Navštíviť webovú stránku
 sl:Ob&išči domačo stran
 sr-rs:Посети &веб-сајт
+sv:Besök webbplats
 ta:வலைத்தளம் செல்
 th:เยี่ยม &เว็บไชด์
 tl:bisitahin &Website
@@ -19458,6 +19916,7 @@ sat:ᱦᱩᱥᱤᱭᱟᱨ
 sk:Upozornenie
 sl:Opozorilo
 sr-rs:Упозорење
+sv:Varning
 ta:எக்சரிக்கை
 th:คำเตือน
 tl:Babala
@@ -19513,6 +19972,7 @@ sat:XPS ᱫᱚᱞᱤᱞᱠᱚ
 sk:XPS dokumenty
 sl:XPS dokumenti
 sr-rs:XPS документи
+sv:XPS-dokument
 ta:XPS ஆவணங்கள்
 th:เอกสาร XPS
 tl:XPS na mga dokumento
@@ -19522,7 +19982,9 @@ uk:Документи XPS
 vn:Tập tin XPS
 :Yes
 am:Այո
+ar:نعم
 br:Sim
+by:Так
 ca:Sí
 cn:是
 co:Sì
@@ -19532,6 +19994,7 @@ de:Ja
 dk:Ja
 el:Ναι
 es:Sí
+fi:Kyllä
 fo:Ja
 fr:Oui
 ga:Tá
@@ -19551,6 +20014,7 @@ ru:Да
 sat:ᱦᱚᱭ
 sk:Áno
 sl:Da
+sv:Ja
 tw:是
 :You have the latest version.
 am:Սա վերջին տարբերակն է։
@@ -19600,6 +20064,7 @@ sat:ᱟᱢ ᱴᱷᱮᱱ ᱱᱟᱶᱟᱱ ᱵᱷᱚᱨᱥᱚᱱ ᱢᱮᱱᱟᱜ �
 sk:Používate najnovšiu verziu.
 sl:Imate najnovejšo različico.
 sr-rs:Ваша верзија је ажурна.
+sv:Du har den senaste versionen.
 ta:உங்களிடம் புதிய பதிப்பு உள்ளது
 th:โปรแกรมของคุณเป็นรุ่นล่าสุดอยู่แล้ว
 tl:Mayroon kang pinakabagong bersyon.
@@ -19654,6 +20119,7 @@ sat:ᱟᱢ ᱴᱷᱮᱱ ᱵᱟᱝᱥᱟᱧᱪᱟᱣ ᱠᱟᱱ ᱪᱤᱱᱦᱟᱹ
 sk:Máte neuložené anotácie
 sl:Imaš neshranjene opombe
 sr-rs:Имате несачуване белешке
+sv:Du har osparade kommentarer
 ta:உங்களிடம் சேமிக்கப்படாத குறிப்புரைகள் உள்ளன
 th:คุณไม่ได้บันทึกคำอธิบายประกอบ
 tl:Mayroon kang mga hindi na-save na anotasyon
@@ -19663,6 +20129,7 @@ uk:Анотації не збережено
 vn:Bạn có lưu chú chưa lưu
 :You have version '%s' and version '%s' is available.\nDo you want to install new version?
 am:Ձեր տարբերակն է՝ '%s', իսկ մատչելի է '%s' տարբերակը:\nՑանկանո՞ւմ եք տեղադրել նոր տարբերակը:
+ar:لديك الإصدار '%s' ويتوفر الإصدار '%s'.\nأتريد تثبيت الإصدار الجديد؟
 az:Sizin versiya: '%s'. Mövcud versiya: '%s'.\nYeni versiyanı quraşdırmaq istəyirsinizmi?
 bg:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nИмате версия '%s' а версия '%s' е достъпна.\nИскате ли да инсталирате новата версия?
 br:Você tem a versão '%s' e a versão '%s' está disponível.\nVocê quer instalar a nova versão?
@@ -19705,6 +20172,7 @@ sat:ᱟᱢ ᱴᱷᱮᱱ '%s' ᱦᱟᱹᱞᱤᱭᱟᱹᱠ ᱟᱨ '%s' ᱦᱟᱹ�
 sk:Máte verziu '%s' a k dispozícii je verzia '%s'.\nChcete nainštalovať novú verziu?
 sl:Nameščeno je različica '%s'. Na voljo je novejša različica '%s'.\n Ali jo želite namestiti?
 sr-rs:Користите верзију "%s", а доступна је верзија "%s".\nЖелите ли да инсталирате нову верзију?
+sv:Du har version '%s' och version '%s' finns tillgänglig.\nVill du installera den nya versionen?
 ta:உங்களிடம் பதிப்பு '%s' உள்ளது பதிப்பு '%s' கிடைக்கப்பெறுகிறது. \nபுதிய பதிப்பை நீங்கள் நிறுவ விரும்புகிறீர்களா?
 th:คุณมีรุ่น '%s'​ และรุ่น '%s'​ ใช่ได้ \nคุณต้องการจะติดตั้งรุ่นใหม่หรือไม่
 tl:Mayroon kang bersyon na '%s' at available ang bersyon na '%s'.\nGusto mo bang mag-install ng bagong bersyon?
@@ -19714,6 +20182,7 @@ uk:У вас є версія '%s'.Версія '%s' доступна.\nВи хо
 vn:Bạn có phiên bản '%s' và phiên bản '%s' sẵn sàng. \nBạn muốn cài đặt phiên bản mới?
 :You're installing 32-bit SumatraPDF on 64-bit OS.\nWould you like to download\n64-bit version?
 am:Դուք տեադրում եք SumatraPDF-ի 32 բիթային տարբերակը 64 բիթային OS-ում:\nՑանկանո՞ւմ եք ներբեռնել\n64 բիթային տարբերակը:
+ar:أنت تثبّت القارئ SumatraPDF‏ 32-بت على نظام تشغيلي 64-بت.\nأتودّ تحميل\nإصدار 64-بت؟
 az:Siz 32-bitlik SumatraPDF proqramını 64-bitlik əməliyyat sistemində quraşdırırsınız.\nProqramın\n64-bitlik versiyasını endirmək istəyərdinizmi?
 bg:Вие инсталирате 32-битова версия на SumatraPDF на 64-битова ОС.\nИскате ли да свалите\n64-битовата версия?
 br:Você está instalando o SumatraPDF de 32 bits num\nSO de 64 bits. Você gostaria de\nbaixar a versão de 64 bits?
@@ -19756,6 +20225,7 @@ sat:ᱟᱢ ᱫᱚ 64-bit OS ᱨᱮ 32-bit SumatraPDFᱮᱢ ᱵᱚᱦᱟᱞ ᱮ�
 sk:Inštalujete 32-bitovú verziu SumatraPDF na 64-bitový operačný systém.\nChcete stiahnuť\n64-bitovú verziu?
 sl:32-bitni SumatraPDF bo nameščen v 64-bitni operacijski sistem.\nAli bi raje prenesli in namestili 64-bitno različico?
 sr-rs:Инсталирате 32-битни SumatraPDF на 64-битном ОС-у.\nДа ли бисте желели да преузмете\n64-битну верзију?
+sv:Du installerar 32-bitars SumatraPDF på 64-bitars OS.\nVill du hämta 64-bitarsversionen?
 ta:நீங்கள் 32-பிட் சுமத்ராPDFஐ 64-பிட் இயங்குதளத்தில் நிறுவிக்கொண்டுள்ளீர்கள். \n64-பிட் பதிப்பைப் \nபதிவிறக்க விரும்புகிறீர்களா?
 th:คุณกำลังติดตั้ง SumatraPDF รุ่น 32-บิต บนระบปฏิบัติการ 64-บิต.\nคุณต้องการดาวน์โหลดหรือไม่\nรุ่น 64-บิต
 tl:Nag-i-install ka ng 32-bit na SumatraPDF sa 64-bit na OS.\nGusto mo bang mag-download ng\n64-bit na bersyon?
@@ -19794,7 +20264,7 @@ hr:Uvećanje
 hu:Beállít
 id:Sesuaikan
 it:Zoom
-ja:OK
+ja:ズーム
 kr:확대/축소
 kw:Zoumya
 lt:Mastelis
@@ -19811,6 +20281,7 @@ sat:ᱦᱩᱰᱤᱧᱢᱟᱨᱟᱝ
 sk:Zmeniť veľkosť
 sl:Povečava
 sr-rs:Увећај
+sv:Zoom
 ta:காணுருவளவு
 th:ขยายเข้าออก
 tl:Mag-zoom
@@ -19866,6 +20337,7 @@ sat:ᱢᱟᱨᱟᱝᱪᱷᱚ
 sk:Zväčšiť
 sl:Povečaj
 sr-rs:Увећај
+sv:Zooma in
 ta:பெரிதாக்கு
 th:ขยายเข้า
 tl:Palakihin
@@ -19921,6 +20393,7 @@ sat:ᱦᱩᱲᱤᱧᱪᱷᱚ
 sk:Zmenšiť
 sl:Pomanjšaj
 sr-rs:Умањи
+sv:Zooma ut
 ta:சிறிதாக்கு
 th:ขยายออก
 tl:Paliitin
@@ -19976,6 +20449,7 @@ sat:ᱦᱩᱰᱤᱧᱢᱟᱨᱟᱝ ᱜᱩᱱᱟᱹ
 sk:Veľkosť zobrazenia
 sl:Faktor povečave
 sr-rs:Проценат увећања
+sv:Zoomfaktor
 ta:காணுருவளவுக் காரணி
 th:อัตราการขยายเข้าออก
 tl:Antas ng laki
@@ -20031,6 +20505,7 @@ sat:[ᱵᱚᱫᱚᱞᱠᱚ ᱪᱤᱱᱦᱟᱹᱯ ᱮᱱᱟ; ᱛᱚᱡᱟᱜ ᱠ�
 sk:[Boli zistené zmeny, znovu sa načítava] %s
 sl:[Spremembe zaznane; osvežitev poteka] %s
 sr-rs:[Промене су примећене; освежавање] %s
+sv:[Ändringar detekterade; uppdaterar] %s
 ta:[மாற்றங்கள் கண்டுபிடிக்க பட்டுள்ளது; புதுபிக்கிறது]%s
 th:[พบการเปลี่ยนแปลง; กำลังเรียกใหม่] %s
 tl:[May napansing mga pagbabago; nagre-refresh] %s
@@ -20086,6 +20561,7 @@ sat:ᱚᱞ ᱱᱚᱠᱚᱞᱚᱜ ᱠᱟᱱᱟ
 sk:prebieha kopírovanie textu
 sl:kopiranje besedila
 sr-rs:копирање текста
+sv:kopierar text
 ta:உரை படியெடுக்கப்படுகிறது
 th:การคัดลอกข้อความ
 tl:kinokopya ang mensahe
@@ -20141,6 +20617,7 @@ sat:ᱫᱚᱞᱤᱞ ᱪᱷᱟᱯᱟᱜ ᱠᱟᱱᱟ
 sk:prebieha tlač dokumentu
 sl:tiskanje dokumenta
 sr-rs:штампање документа
+sv:skriver ut dokument
 ta:கோப்பு அக்சிடப்படுகிறது
 th:เอกสารการพิมพ์
 tl:ipini-print ang dokumento
