@@ -201,7 +201,8 @@ ACCEL gBuiltInAccelerators[] = {
     // TODO: maybe add CmdCreateAnnotHighlightAndOpenWindow (kind of clumsy)
     {0, 'a', CmdCreateAnnotHighlight},
     {0, 'A', CmdCreateAnnotHighlight},
-
+    {0, 'G', CmdTranslateSelectionWithGoogle},
+    {0, 'B', CmdSearchSelectionWithBing},
     {0, 'u', CmdCreateAnnotUnderline},
     {0, 'U', CmdCreateAnnotUnderline},
 
