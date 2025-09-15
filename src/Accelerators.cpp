@@ -144,7 +144,7 @@ ACCEL gBuiltInAccelerators[] = {
     {FCONTROL | FVIRTKEY, 'D', CmdProperties},
     {FCONTROL | FVIRTKEY, 'F', CmdFindFirst},
     {FCONTROL | FVIRTKEY, 'G', CmdGoToPage},
-    {0, 'g', CmdGoToPage},
+
     {FCONTROL | FVIRTKEY, 'K', CmdCommandPalette},
     //{FALT | FVIRTKEY, 'K', CmdCommandPaletteOnlyTabs}, // removed in 3.6
     {FSHIFT | FCONTROL | FVIRTKEY, 'S', CmdSaveAnnotations},
@@ -201,8 +201,8 @@ ACCEL gBuiltInAccelerators[] = {
     // TODO: maybe add CmdCreateAnnotHighlightAndOpenWindow (kind of clumsy)
     {0, 'a', CmdCreateAnnotHighlight},
     {0, 'A', CmdCreateAnnotHighlight},
-    {0, 'G', CmdTranslateSelectionWithGoogle},
-    {0, 'B', CmdSearchSelectionWithBing},
+    {0, 'g', CmdTranslateSelectionWithGoogle},
+    {0, 'b', CmdSearchSelectionWithBing},
     {0, 'u', CmdCreateAnnotUnderline},
     {0, 'U', CmdCreateAnnotUnderline},
 
